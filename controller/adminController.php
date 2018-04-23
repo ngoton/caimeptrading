@@ -213,11 +213,14 @@ Class adminController Extends baseController {
 
             $info_staff['dh'][$tire->sale] = isset($info_staff['dh'][$tire->sale])?$info_staff['dh'][$tire->sale]+1:1;
 
-            if(!in_array($tire->customer,$c[$tire->sale])){
+            if (isset($c[$tire->sale])) {
+                if(!in_array($tire->customer,$c[$tire->sale])){
 
-                $info_staff['kh'][$tire->sale] = isset($info_staff['kh'][$tire->sale])?$info_staff['kh'][$tire->sale]+1:1;
+                    $info_staff['kh'][$tire->sale] = isset($info_staff['kh'][$tire->sale])?$info_staff['kh'][$tire->sale]+1:1;
 
+                }
             }
+            
 
             $c[$tire->sale][] = $tire->customer;
 

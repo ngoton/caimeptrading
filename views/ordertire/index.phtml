@@ -254,12 +254,13 @@ $(".next").click(function(){
     var contact = $('#contact').val().trim();
     var due_date = $('#due_date').val().trim();
     
+    var sdt = phone.replace(/ /g, "");
 
     if (customer == "") {
         alert("Vui lòng nhập vào tên khách hàng!");
         $('#customer').focus();
     }
-    else if (phone == "") {
+    else if (phone == "" || sdt.toString().length<10) {
         alert("Vui lòng nhập vào số điện thoại!");
         $('#phone').focus();
     }
@@ -406,17 +407,15 @@ $('.phone').keyup(function(event) {
   });
 });
 
+$('#company').focus(function(){
+    $('#customer_list_id').slideUp(200); 
+});
+
 $('#company').change(function(){
     var company = $(this).val().trim();
-    var mst = $('#mst').val().trim();
-    var phone = $('#phone').attr('value');
-    if ($('#phone').attr('data') != "" && $('#phone').attr('data') != "undefined") {
-        phone = phone.substring(0, phone.length - 3)+$('#phone').attr('data');
-    }
-    var email = $('#email').attr('value');
-    if ($('#email').attr('data') != "" && $('#email').attr('data') != "undefined") {
-        email = $('#email').attr('data')+email.substring(5, email.length);
-    }
+    var mst = "";
+    var phone = "";
+    var email = "";
     var staff = $("#order_staff").val();
     var type = $("input[name=customer_type]:checked").val();
     var customer_name = $('#customer').val();
@@ -431,17 +430,25 @@ $('#company').change(function(){
             data: {mst:mst,company:company,phone:phone,email:email,staff:staff,type:type,customer_name:customer_name,customer:customer,address:address,contact:contact},
             success:function(data){
                 var data = jQuery.parseJSON(data);
-                $('#company').val(data.company);
-                $('#mst').val(data.mst);
-                $('#phone').attr('data',data.phone.slice(-3));
-                $('#phone').val(data.phone);
-                if (data.phone != "") {
-                    $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                if (data.company.trim() != "") {
+                    $('#company').val(data.company);
                 }
-                $('#email').attr('data',data.email.slice(0,5));
-                $('#email').val(data.email);
-                if (data.email != "") {
-                    $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                if (data.mst.trim() != "") {
+                    $('#mst').val(data.mst);
+                }
+                if (data.phone.trim() != "") {
+                    $('#phone').attr('data',data.phone.slice(-3));
+                    $('#phone').val(data.phone);
+                    if (data.phone != "") {
+                        $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                    }
+                }
+                if (data.email.trim() != "") {
+                    $('#email').attr('data',data.email.slice(0,5));
+                    $('#email').val(data.email);
+                    if (data.email != "") {
+                        $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                    }
                 }
                 $("#order_staff option[value=" + data.staff + "]").attr('selected', 'selected');
                 $("input[name=customer_type][value=" + data.type + "]").attr('checked', 'checked');
@@ -455,15 +462,9 @@ $('#company').change(function(){
 });
 $('#mst').change(function(){
     var mst = $(this).val().trim();
-    var company = $('#company').val().trim();
-    var phone = $('#phone').attr('value');
-    if ($('#phone').attr('data') != "" && $('#phone').attr('data') != "undefined") {
-        phone = phone.substring(0, phone.length - 3)+$('#phone').attr('data');
-    }
-    var email = $('#email').attr('value');
-    if ($('#email').attr('data') != "" && $('#email').attr('data') != "undefined") {
-        email = $('#email').attr('data')+email.substring(5, email.length);
-    }
+    var company = "";
+    var phone = "";
+    var email = "";
     var staff = $("#order_staff").val();
     var type = $("input[name=customer_type]:checked").val();
     var customer_name = $('#customer').val();
@@ -478,17 +479,25 @@ $('#mst').change(function(){
             data: {mst:mst,company:company,phone:phone,email:email,staff:staff,type:type,customer_name:customer_name,customer:customer,address:address,contact:contact},
             success:function(data){
                 var data = jQuery.parseJSON(data);
-                $('#company').val(data.company);
-                $('#mst').val(data.mst);
-                $('#phone').attr('data',data.phone.slice(-3));
-                $('#phone').val(data.phone);
-                if (data.phone != "") {
-                    $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                if (data.company.trim() != "") {
+                    $('#company').val(data.company);
                 }
-                $('#email').attr('data',data.email.slice(0,5));
-                $('#email').val(data.email);
-                if (data.email != "") {
-                    $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                if (data.mst.trim() != "") {
+                    $('#mst').val(data.mst);
+                }
+                if (data.phone.trim() != "") {
+                    $('#phone').attr('data',data.phone.slice(-3));
+                    $('#phone').val(data.phone);
+                    if (data.phone != "") {
+                        $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                    }
+                }
+                if (data.email.trim() != "") {
+                    $('#email').attr('data',data.email.slice(0,5));
+                    $('#email').val(data.email);
+                    if (data.email != "") {
+                        $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                    }
                 }
                 $("#order_staff option[value=" + data.staff + "]").attr('selected', 'selected');
                 $("input[name=customer_type][value=" + data.type + "]").attr('checked', 'checked');
@@ -501,16 +510,13 @@ $('#mst').change(function(){
     }
 });
 $('#phone').change(function(){
-    var mst = $('#mst').val().trim();
-    var company = $('#company').val().trim();
+    var mst = "";
+    var company = "";
     var phone = $('#phone').attr('value');
     if ($('#phone').attr('data') != "" && $('#phone').attr('data') != "undefined") {
         phone = phone.substring(0, phone.length - 3)+$('#phone').attr('data');
     }
-    var email = $('#email').attr('value');
-    if ($('#email').attr('data') != "" && $('#email').attr('data') != "undefined") {
-        email = $('#email').attr('data')+email.substring(5, email.length);
-    }
+    var email = "";
     var staff = $("#order_staff").val();
     var type = $("input[name=customer_type]:checked").val();
     var customer_name = $('#customer').val();
@@ -525,17 +531,25 @@ $('#phone').change(function(){
             data: {mst:mst,company:company,phone:phone,email:email,staff:staff,type:type,customer_name:customer_name,customer:customer,address:address,contact:contact},
             success:function(data){
                 var data = jQuery.parseJSON(data);
-                $('#company').val(data.company);
-                $('#mst').val(data.mst);
-                $('#phone').attr('data',data.phone.slice(-3));
-                $('#phone').val(data.phone);
-                if (data.phone != "") {
-                    $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                if (data.company.trim() != "") {
+                    $('#company').val(data.company);
                 }
-                $('#email').attr('data',data.email.slice(0,5));
-                $('#email').val(data.email);
-                if (data.email != "") {
-                    $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                if (data.mst.trim() != "") {
+                    $('#mst').val(data.mst);
+                }
+                if (data.phone.trim() != "") {
+                    $('#phone').attr('data',data.phone.slice(-3));
+                    $('#phone').val(data.phone);
+                    if (data.phone != "") {
+                        $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                    }
+                }
+                if (data.email.trim() != "") {
+                    $('#email').attr('data',data.email.slice(0,5));
+                    $('#email').val(data.email);
+                    if (data.email != "") {
+                        $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                    }
                 }
                 $("#order_staff option[value=" + data.staff + "]").attr('selected', 'selected');
                 $("input[name=customer_type][value=" + data.type + "]").attr('checked', 'checked');
@@ -548,12 +562,9 @@ $('#phone').change(function(){
     }
 });
 $('#email').change(function(){
-    var mst = $('#mst').val().trim();
-    var company = $('#company').val().trim();
-    var phone = $('#phone').attr('value');
-    if ($('#phone').attr('data') != "" && $('#phone').attr('data') != "undefined") {
-        phone = phone.substring(0, phone.length - 3)+$('#phone').attr('data');
-    }
+    var mst = "";
+    var company = "";
+    var phone = "";
     var email = $('#email').attr('value');
     if ($('#email').attr('data') != "" && $('#email').attr('data') != "undefined") {
         email = $('#email').attr('data')+email.substring(5, email.length);
@@ -572,18 +583,29 @@ $('#email').change(function(){
             data: {mst:mst,company:company,phone:phone,email:email,staff:staff,type:type,customer_name:customer_name,customer:customer,address:address,contact:contact},
             success:function(data){
                 var data = jQuery.parseJSON(data);
-                $('#company').val(data.company);
-                $('#mst').val(data.mst);
-                $('#phone').attr('data',data.phone.slice(-3));
-                $('#phone').val(data.phone);
-                if (data.phone != "") {
-                    $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                if (data.company.trim() != "") {
+                    $('#company').val(data.company);
                 }
-                $('#email').attr('data',data.email.slice(0,5));
-                $('#email').val(data.email);
-                if (data.email != "") {
-                    $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                if (data.mst.trim() != "") {
+                    $('#mst').val(data.mst);
                 }
+                if (data.phone.trim() != "") {
+                    $('#phone').attr('data',data.phone.slice(-3));
+                    $('#phone').val(data.phone);
+                    if (data.phone != "") {
+                        $('#phone').val(data.phone.substring(0, data.phone.length - 3)+"xxx");
+                    }
+                }
+                if (data.email.trim() != "") {
+                    $('#email').attr('data',data.email.slice(0,5));
+                    $('#email').val(data.email);
+                    if (data.email != "") {
+                        $('#email').val("xxxxx"+data.email.substring(5, data.email.length));
+                    }
+                }
+                
+                
+                
                 $("#order_staff option[value=" + data.staff + "]").attr('selected', 'selected');
                 $("input[name=customer_type][value=" + data.type + "]").attr('checked', 'checked');
                 $('#customer').val(data.customer_name);
@@ -737,6 +759,27 @@ $('.tire_brand').change(function(){
                 });
                 $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                 $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                var thanhtien = 0;
+
+                $('.tire_price').each(function() { 
+                    var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex4 = row4[0].rowIndex;
+
+                    var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                    var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                    thanhtien += soluong*dongia;
+                });
+
+                $('#thanhtien').val(thanhtien);
+
+                $('#thanhtien').val(function(index, value) {
+                    return value
+                      .replace(/\D/g, "")
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    ;
+                });
             }
         });
     }
@@ -815,6 +858,27 @@ $('.tire_size').change(function(){
                 });
                 $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                 $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                var thanhtien = 0;
+
+                $('.tire_price').each(function() { 
+                    var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex4 = row4[0].rowIndex;
+
+                    var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                    var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                    thanhtien += soluong*dongia;
+                });
+
+                $('#thanhtien').val(thanhtien);
+
+                $('#thanhtien').val(function(index, value) {
+                    return value
+                      .replace(/\D/g, "")
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    ;
+                });
             }
         });
     }    
@@ -883,6 +947,27 @@ $('.tire_pattern').change(function(){
                 });
                 $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                 $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                var thanhtien = 0;
+
+                $('.tire_price').each(function() { 
+                    var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex4 = row4[0].rowIndex;
+
+                    var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                    var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                    thanhtien += soluong*dongia;
+                });
+
+                $('#thanhtien').val(thanhtien);
+
+                $('#thanhtien').val(function(index, value) {
+                    return value
+                      .replace(/\D/g, "")
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    ;
+                });
             }
         });
     }    
@@ -1221,12 +1306,7 @@ $('#discount').keyup(function(){
 });
 
 $('#last_next').click(function(){
-    var due_date = $('#due_date').val().trim();
-    if (due_date == "") {
-        alert('Vui lòng chọn ngày thanh toán!');
-        $('#due_date').focus();
-    }
-    else{
+    
 
         $('.tr_new').remove();
         var i = 1; var new_row = "";
@@ -1305,7 +1385,7 @@ $('#last_next').click(function(){
               .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             ;
         });
-    }
+    
 
 });
 
@@ -2032,6 +2112,27 @@ function addRow(tableID){
                     });
                     $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                     $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                    var thanhtien = 0;
+
+                    $('.tire_price').each(function() { 
+                        var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                        var rowIndex4 = row4[0].rowIndex;
+
+                        var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                        var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                        thanhtien += soluong*dongia;
+                    });
+
+                    $('#thanhtien').val(thanhtien);
+
+                    $('#thanhtien').val(function(index, value) {
+                        return value
+                          .replace(/\D/g, "")
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ;
+                    });
                 }
             });
         }
@@ -2109,6 +2210,27 @@ function addRow(tableID){
                     });
                     $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                     $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                    var thanhtien = 0;
+
+                    $('.tire_price').each(function() { 
+                        var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                        var rowIndex4 = row4[0].rowIndex;
+
+                        var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                        var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                        thanhtien += soluong*dongia;
+                    });
+
+                    $('#thanhtien').val(thanhtien);
+
+                    $('#thanhtien').val(function(index, value) {
+                        return value
+                          .replace(/\D/g, "")
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ;
+                    });
                 }
             });
         }    
@@ -2176,6 +2298,27 @@ function addRow(tableID){
                     });
                     $('.date_manufacture:eq('+rowIndex+')').html("<option>Ngày SX</option>"+data.date);
                     $('.date_manufacture:eq('+rowIndex+') option:last').prop('selected', true);
+
+                    var thanhtien = 0;
+
+                    $('.tire_price').each(function() { 
+                        var row4 = $(this).parent().parent().parent().parent().parent().parent();
+                        var rowIndex4 = row4[0].rowIndex;
+
+                        var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+                        var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+                        thanhtien += soluong*dongia;
+                    });
+
+                    $('#thanhtien').val(thanhtien);
+
+                    $('#thanhtien').val(function(index, value) {
+                        return value
+                          .replace(/\D/g, "")
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ;
+                    });
                 }
             });
         }    
@@ -2307,8 +2450,8 @@ function addRow(tableID){
     
     var field_height = $('.field-sp').height();
     var min_height = $('.content-wrapper').height();
-    if (field_height > 897) {
-        min_height += 77;
+    if (field_height > 790) {
+        min_height += 150;
         $('.content-wrapper').height(min_height);
     }
 

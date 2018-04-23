@@ -157,7 +157,7 @@ elseif ($order_by == 'date_manufacture')
             </td>
             
             <td  class="fix"><?php echo $i++; ?></td>
-            <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/<?php echo $link_picture[$tire_buy->tire_buy_id]['image']; ?>" width="50" height="50" /></td>
+            <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/<?php echo isset($link_picture[$tire_buy->tire_buy_id]['image'])?$link_picture[$tire_buy->tire_buy_id]['image']:null; ?>" width="50" height="50" /></td>
             <td class="fix" id="tire_buy_date_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $lib->hien_thi_ngay_thang($tire_buy->tire_buy_date); ?></td>
             <td class="fix" id="code_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->code; ?></td>
             <td class="fix" id="tire_buy_brand_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_brand_name; ?></td>

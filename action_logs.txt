@@ -6993,3 +6993,869 @@ bxep: 6x14 = 84k-5-4--1484000
 
 13/02/2018 16:52:22|admincmg|add|4819|daily|1-----oanh-1518476400-a----1-0---0--0-1-0--
 
+06/03/2018 08:01:09|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1517180400-13.69-22600-22800-200000-1000000--200-1260000-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 09:15:33|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1517180400-13.69-22600-22800-200000-1000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000.00-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 09:21:47|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520550000-13.69-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 10:52:12|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520550000-13.69-1000000-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 10:59:48|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520550000-13.69-1000000-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 11:02:05|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520550000-13.69--1000000-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+09/03/2018 11:11:56|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520550000-13.69--2000000-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+13/03/2018 09:28:57|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000-66376201-6696362-19430001-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-11000000-500000-0-6000-7000
+
+13/03/2018 09:35:09|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-1100000-500000-0-6000-7000
+
+13/03/2018 09:40:06|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000-66376201-6696362-19430001-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-11000000-500000-0-6000-7000
+
+13/03/2018 13:12:48|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000.00-66376200-6696360-19430000-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-11000000-500000-0-6000-7000
+
+13/03/2018 13:32:46|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000.00-66376200-6696360-19430000-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-11000000-500000-0-6000-7000
+
+15/03/2018 08:57:57|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 08:58:20|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 09:01:09|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 09:01:33|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 09:01:44|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 09:03:01|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+15/03/2018 09:03:12|admincmg|edit|1|payment_request|TT01-TT tiền-1518130800-Nguyễn A-BGD-96000-BK01-2
+
+16/03/2018 09:09:16|admincmg|edit|216|customer|Đoàn Tuấn Di Linh-Số 8/3, Lê Văn Tám, tổ dân phố 8, Thị trấn Di Linh, Huyện Di Linh, Lâm Đồng-097 980 3256-doantuan306@gmail.com-DNTN Đoàn Tuấn Di Linh--5801270247---null-0-0---Số 8/3, Lê Văn Tám, tổ dân phố 8-Thị trấn Di Linh-Huyện Di Linh--37-DTDLINH---1-1521166156
+
+16/03/2018 09:12:54|admincmg|edit|216|customer|Đoàn Tuấn Di Linh-Số 8/3, Lê Văn Tám, tổ dân phố 8, Thị trấn Di Linh, Huyện Di Linh, Lâm Đồng-097 980 3256-doantuan306@gmail.com-DNTN Đoàn Tuấn Di Linh--5801270247---null-0-0---Số 8/3, Lê Văn Tám, tổ dân phố 8-Thị trấn Di Linh-Huyện Di Linh--37-DTDLINH---1-1521166374
+
+16/03/2018 09:13:43|admincmg|edit|216|customer|Đoàn Tuấn Di Linh-Số 8/3, Lê Văn Tám, tổ dân phố 8, Thị trấn Di Linh, Huyện Di Linh, Lâm Đồng-097 980 3256-doantuan306@gmail.com-DNTN Đoàn Tuấn Di Linh--5801270247---null-0-0---Số 8/3, Lê Văn Tám, tổ dân phố 8-Thị trấn Di Linh-Huyện Di Linh--37-DTDLINH---1-1521166423
+
+16/03/2018 09:14:46|admincmg|edit|216|customer|Đoàn Tuấn Di Linh-Số 8/3, Lê Văn Tám, tổ dân phố 8, Thị trấn Di Linh, Huyện Di Linh, Lâm Đồng-097 980 3256-doantuan306@gmail.com-DNTN Đoàn Tuấn Di Linh--5801270247---null-0-0---Số 8/3, Lê Văn Tám, tổ dân phố 8-Thị trấn Di Linh-Huyện Di Linh--37-DTDLINH---1-1521166486
+
+20/03/2018 10:19:06|admincmg|edit|216|customer|Đoàn Tuấn Di Linh-Số 8/3, Lê Văn Tám, tổ dân phố 8, Thị trấn Di Linh, Huyện Di Linh, Lâm Đồng-097 980 3256-doantuan306@gmail.com-DNTN Đoàn Tuấn Di Linh--5801270247---null-0-0---Số 8/3, Lê Văn Tám, tổ dân phố 8-Thị trấn Di Linh-Huyện Di Linh--37-DTDLINH---2--1-1521515946
+
+20/03/2018 13:49:24|admincmg|add|488|customer|Vina Trade----Vina Trade-----null---------1-VNTRADE---1--1-03/2018
+
+20/03/2018 15:31:14|admincmg|edit|488|customer|Vina Trade----Vina Trade-----null-0-0-------1-VNTRADE---1-http://goodtyres.local-1-1521534674
+
+20/03/2018 15:51:26|http://goodtyres.local|agent_order|1081|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1
+
+20/03/2018 16:04:06|admincmg|delete|1081|order_tire|
+
+20/03/2018 16:04:51|http://goodtyres.local|agent_order|1082|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-3
+
+20/03/2018 16:11:50|admincmg|delete|1082|order_tire|
+
+20/03/2018 16:12:47|http://goodtyres.local|agent_order|1083|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-4
+
+20/03/2018 16:13:10|admincmg|delete|1083|order_tire|
+
+20/03/2018 16:14:24|http://goodtyres.local|agent_order|1084|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-5
+
+20/03/2018 16:38:47|admincmg|delete|1084|order_tire|
+
+20/03/2018 16:39:30|http://goodtyres.local|agent_order|1085|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-6
+
+20/03/2018 16:44:26|admincmg|delete|1085|order_tire|
+
+20/03/2018 16:47:10|http://goodtyres.local|agent_order|1086|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-8
+
+20/03/2018 16:49:37|admincmg|delete|1086|order_tire|
+
+20/03/2018 16:50:07|http://goodtyres.local|agent_order|1087|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-9
+
+20/03/2018 16:52:59|admincmg|delete|1087|order_tire|
+
+20/03/2018 16:54:02|http://goodtyres.local|agent_order|1088|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-10
+
+20/03/2018 16:57:24|admincmg|delete|1088|order_tire|
+
+20/03/2018 17:08:03|http://goodtyres.local|agent_order|1089|order_tire|1-1521500400-1-1-488-1-----------0-0-0---10---1521500400---0-1-11
+
+21/03/2018 07:55:44|admincmg|delete|1089|order_tire|
+
+21/03/2018 07:58:46|http://goodtyres.local|agent_order|1090|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-12
+
+21/03/2018 08:01:34|admincmg|delete|1090|order_tire|
+
+21/03/2018 08:02:06|http://goodtyres.local|agent_order|1091|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-13
+
+21/03/2018 08:02:45|488|deleteorderagent|1091|order_tire|
+
+21/03/2018 08:06:26|http://goodtyres.local|agent_order|1092|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-14
+
+21/03/2018 08:06:40|488|deleteorderagent|1092|order_tire|
+
+21/03/2018 08:47:31|http://goodtyres.local|agent_order|1093|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-15
+
+21/03/2018 08:52:35|488|addagent|---2-1093-0-0|order_tire_list|
+
+21/03/2018 09:02:07|488|deleteorderagent|1093|order_tire|
+
+21/03/2018 09:02:30|http://goodtyres.local|agent_order|1094|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-16
+
+21/03/2018 09:03:18|488|editagent|1464|43-104-1-2|order_tire_list|
+
+21/03/2018 09:06:24|488|editagent|1464|43-104-1-3|order_tire_list|
+
+21/03/2018 09:09:59|488|editagent|1464|43-104-1-4|order_tire_list|
+
+21/03/2018 09:11:02|488|editagent|1464|43-104-1-5|order_tire_list|
+
+21/03/2018 09:12:19|488|editagent|1464|43-104-1-6|order_tire_list|
+
+21/03/2018 09:17:50|488|editagent|1464|43-104-1-7|order_tire_list|
+
+21/03/2018 09:19:07|488|editagent|1464|43-104-1-5|order_tire_list|
+
+21/03/2018 09:20:14|488|editagent|1464|43-104-1-6|order_tire_list|
+
+21/03/2018 09:20:30|488|editagent|1464|43-104-1-6|order_tire_list|
+
+21/03/2018 09:21:39|488|editagent|1464|43-104-1-5|order_tire_list|
+
+21/03/2018 09:22:35|488|editagent|2155|43-104-1-6|order_tire_list|
+
+21/03/2018 09:37:22|488|addagent|43-104-2-4-1094-4789932-5268925|order_tire_list|
+
+21/03/2018 09:39:26|488|deleteagentorder|2156|order_tire_list|
+
+21/03/2018 09:39:57|488|editagent|2156|43-104-2-4|order_tire_list|
+
+21/03/2018 09:42:33|488|addagent|43-107-2-2-1094-5646705-6211375|order_tire_list|
+
+21/03/2018 09:45:01|488|deleteorderagent|1094|order_tire|
+
+21/03/2018 09:45:26|http://goodtyres.local|agent_order|1095|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-17
+
+21/03/2018 09:45:54|488|addagent|43-104-5-5-1095-4122773-4535050|order_tire_list|
+
+21/03/2018 09:46:47|488|editagent|2159|43-104-5-4|order_tire_list|
+
+21/03/2018 09:57:59|488|editagent|2159|43-104-1-6-4178955-4596850|order_tire_list|
+
+21/03/2018 09:58:52|488|editagent|2159|43-136-15-5-3567977-3924775|order_tire_list|
+
+21/03/2018 11:08:11|488|deleteorderagent|1095|order_tire|
+
+21/03/2018 11:09:04|http://goodtyres.local|agent_order|1096|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-18
+
+21/03/2018 11:19:12|488|deleteorderagent|1096|order_tire|
+
+21/03/2018 11:19:48|http://goodtyres.local|agent_order|1097|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-19
+
+21/03/2018 16:09:40|http://goodtyres.local|agent_order|1098|order_tire|1-1521586800-1-1-488-1-----------0-0-0---10---1521586800---0-1-20-1
+
+22/03/2018 09:32:46|488|editagent|2164|43-104-1-2-4178955-4596850|order_tire_list|
+
+22/03/2018 09:39:31|488|editagent|2164|43-104-1-3-4178955-4596850|order_tire_list|
+
+22/03/2018 09:39:53|488|editagent|2164|43-104-1-4-4178955-4596850|order_tire_list|
+
+22/03/2018 09:40:38|488|addagent|43-104-2-2-1098-4789932-5268925|order_tire_list|
+
+22/03/2018 09:43:58|488|editagent|2165|43-104-2-2-4789932-5268925|order_tire_list|
+
+22/03/2018 09:44:33|488|addagent|43-111-6-4-1098-3659273-4025200|order_tire_list|
+
+22/03/2018 09:50:38|488|editagent|2166|43-111-6-2-3659273-4025200|order_tire_list|
+
+22/03/2018 09:51:15|488|addagent|43-104-5-2-1098-4122773-4535050|order_tire_list|
+
+22/03/2018 09:53:28|488|addagent|43-106-2-4-1098-0-0|order_tire_list|
+
+22/03/2018 10:36:33|488|addagent|43-107-2-2-1098-5646705-6211375|order_tire_list|
+
+22/03/2018 10:37:40|488|addagent|43-106-6-1-1098-3539886-3893875|order_tire_list|
+
+22/03/2018 10:38:16|488|editagent|2170|43-106-6-1-3539886-3893875|order_tire_list|
+
+22/03/2018 10:38:29|488|deleteagentorder|2170|order_tire_list|
+
+22/03/2018 10:39:30|488|addagent|43-106-1-1-1098-4375591-4813150|order_tire_list|
+
+22/03/2018 10:39:49|488|editagent|2171|43-106-1-1-4375591-4813150|order_tire_list|
+
+22/03/2018 10:40:56|488|editagent|2171|43-106-1-1-4375591-4813150|order_tire_list|
+
+22/03/2018 10:41:02|488|deleteorderagent|1098|order_tire|
+
+22/03/2018 10:41:07|488|deleteorderagent|1097|order_tire|
+
+22/03/2018 10:41:33|http://goodtyres.local|agent_order|1099|order_tire|1-1521673200-1-1-488-1-----------0-0-0---10---1521673200---0-1-21-1
+
+22/03/2018 10:42:10|488|addagent|43-106-1-1-1099-4375591-4813150|order_tire_list|
+
+22/03/2018 10:46:41|488|deleteagentorder|2173|order_tire_list|
+
+22/03/2018 10:50:21|488|deleteagentorder|2173|order_tire_list|
+
+22/03/2018 10:50:37|488|deleteorderagent|1099|order_tire|
+
+22/03/2018 10:54:44|http://goodtyres.local|agent_order|1100|order_tire|1-1521673200-1-1-488-1-----------0-0-0---10---1521673200---0-1-22-1
+
+22/03/2018 10:55:07|488|addagent|43-106-1-1-1100-4375591-4813150|order_tire_list|
+
+22/03/2018 10:56:21|488|deleteagentorder|2175|order_tire_list|
+
+22/03/2018 10:57:00|488|deleteagentorder|2175|order_tire_list|
+
+22/03/2018 10:57:22|488|deleteorderagent|1100|order_tire|
+
+22/03/2018 10:57:49|http://goodtyres.local|agent_order|1101|order_tire|1-1521673200-1-1-488-1-----------0-0-0---10---1521673200---0-1-23-1
+
+22/03/2018 10:57:56|488|deleteagentorder|2177|order_tire_list|
+
+22/03/2018 11:01:57|488|deleteagentorder|2177|order_tire_list|
+
+22/03/2018 11:02:32|488|deleteagentorder|2176|order_tire_list|
+
+22/03/2018 11:03:35|488|deleteorderagent|1101|order_tire|
+
+22/03/2018 11:04:00|http://goodtyres.local|agent_order|1102|order_tire|1-1521673200-1-1-488-1-----------0-0-0---10---1521673200---0-1-24-1
+
+22/03/2018 11:04:16|488|deleteagentorder|2179|order_tire_list|
+
+22/03/2018 11:17:47|admincmg|edit|approve|1102|order_tire|
+
+22/03/2018 14:42:19|admincmg|edit|approve|1102|order_tire|
+
+22/03/2018 14:57:34|admincmg|edit|approve|1102|order_tire|
+
+22/03/2018 14:57:58|admincmg|edit|approve|1102|order_tire|
+
+22/03/2018 15:07:34|admincmg|edit|approve|1102|order_tire|
+
+22/03/2018 15:07:42|admincmg|edit|exstock|1102|order_tire|
+
+22/03/2018 15:59:14|admincmg|edit|revert|1102|order_tire|
+
+22/03/2018 16:01:25|admincmg|edit|exstock|1102|order_tire|
+
+22/03/2018 16:01:37|admincmg|edit|revert|1102|order_tire|
+
+23/03/2018 09:20:08|admincmg|edit|exstock|1102|order_tire|
+
+27/03/2018 11:10:14|http://goodtyres.local|agent_order|1103|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-1-1
+
+27/03/2018 11:11:47|http://goodtyres.local|agent_order|1104|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-2-1
+
+27/03/2018 11:13:49|http://goodtyres.local|agent_order|1105|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-3-1
+
+27/03/2018 11:14:50|http://goodtyres.local|agent_order|1106|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-4-1
+
+27/03/2018 11:15:53|http://goodtyres.local|agent_order|1107|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-5-1
+
+27/03/2018 11:16:33|http://goodtyres.local|agent_order|1108|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-6-1
+
+27/03/2018 11:17:16|http://goodtyres.local|agent_order|1109|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-7-1
+
+27/03/2018 11:18:27|http://goodtyres.local|agent_order|1110|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-8-1
+
+27/03/2018 11:20:21|http://goodtyres.local|agent_order|1111|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-9-1
+
+27/03/2018 11:21:50|http://goodtyres.local|agent_order|1112|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-10-1
+
+27/03/2018 11:22:52|http://goodtyres.local|agent_order|1113|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-11-1
+
+27/03/2018 11:23:42|http://goodtyres.local|agent_order|1114|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-12-1
+
+27/03/2018 11:24:26|http://goodtyres.local|agent_order|1115|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-13-1
+
+27/03/2018 11:25:21|http://goodtyres.local|agent_order|1116|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-14-1
+
+27/03/2018 11:26:40|http://goodtyres.local|agent_order|1117|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-15-1
+
+27/03/2018 11:27:38|http://goodtyres.local|agent_order|1118|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-16-1
+
+27/03/2018 11:28:33|http://goodtyres.local|agent_order|1119|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-17-1
+
+27/03/2018 11:29:34|http://goodtyres.local|agent_order|1120|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-18-1
+
+27/03/2018 11:30:23|http://goodtyres.local|agent_order|1121|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-19-1
+
+27/03/2018 11:30:51|http://goodtyres.local|agent_order|1122|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-20-1
+
+27/03/2018 11:31:56|http://goodtyres.local|agent_order|1123|order_tire|1-1522101600-1-1-488-1-----------0-0-0---10---1522101600---0-1-21-1
+
+27/03/2018 13:22:37|488|editagent|2183|43-129-2-47-5709909-6280900|order_tire_list|
+
+27/03/2018 14:19:11|admincmg|edit|approve|1113|order_tire|
+
+27/03/2018 14:19:16|admincmg|edit|approve|1114|order_tire|
+
+27/03/2018 14:19:22|admincmg|edit|approve|1115|order_tire|
+
+27/03/2018 14:19:26|admincmg|edit|approve|1116|order_tire|
+
+27/03/2018 14:19:30|admincmg|edit|approve|1117|order_tire|
+
+27/03/2018 14:19:35|admincmg|edit|approve|1118|order_tire|
+
+27/03/2018 14:19:39|admincmg|edit|approve|1119|order_tire|
+
+27/03/2018 14:19:44|admincmg|edit|approve|1120|order_tire|
+
+27/03/2018 14:19:48|admincmg|edit|approve|1121|order_tire|
+
+27/03/2018 14:19:53|admincmg|edit|approve|1122|order_tire|
+
+27/03/2018 14:19:57|admincmg|edit|approve|1112|order_tire|
+
+27/03/2018 14:20:01|admincmg|edit|approve|1111|order_tire|
+
+27/03/2018 14:20:11|admincmg|edit|approve|1103|order_tire|
+
+27/03/2018 14:20:20|admincmg|edit|approve|1104|order_tire|
+
+27/03/2018 14:20:28|admincmg|edit|approve|1105|order_tire|
+
+27/03/2018 14:20:43|admincmg|delete|1102|order_tire|
+
+27/03/2018 14:20:48|admincmg|edit|approve|1106|order_tire|
+
+27/03/2018 14:20:54|admincmg|edit|approve|1107|order_tire|
+
+27/03/2018 14:20:58|admincmg|edit|approve|1108|order_tire|
+
+27/03/2018 14:21:02|admincmg|edit|approve|1109|order_tire|
+
+27/03/2018 14:21:06|admincmg|edit|approve|1110|order_tire|
+
+27/03/2018 14:21:10|admincmg|edit|approve|1123|order_tire|
+
+27/03/2018 14:56:31|admincmg|edit|exstock|1114|order_tire|
+
+27/03/2018 14:56:40|admincmg|edit|exstock|1113|order_tire|
+
+27/03/2018 14:56:49|admincmg|edit|exstock|1115|order_tire|
+
+27/03/2018 14:56:56|admincmg|edit|exstock|1112|order_tire|
+
+27/03/2018 14:57:03|admincmg|edit|exstock|1116|order_tire|
+
+27/03/2018 14:57:15|admincmg|edit|exstock|1111|order_tire|
+
+27/03/2018 14:57:22|admincmg|edit|exstock|1117|order_tire|
+
+27/03/2018 14:59:05|admincmg|edit|exstock|1110|order_tire|
+
+27/03/2018 14:59:09|admincmg|edit|exstock|1123|order_tire|
+
+27/03/2018 14:59:14|admincmg|edit|exstock|1122|order_tire|
+
+27/03/2018 14:59:20|admincmg|edit|exstock|1109|order_tire|
+
+27/03/2018 14:59:25|admincmg|edit|exstock|1118|order_tire|
+
+27/03/2018 14:59:30|admincmg|edit|exstock|1119|order_tire|
+
+27/03/2018 14:59:36|admincmg|edit|exstock|1120|order_tire|
+
+27/03/2018 14:59:48|admincmg|edit|exstock|1121|order_tire|
+
+27/03/2018 14:59:54|admincmg|edit|exstock|1108|order_tire|
+
+27/03/2018 15:00:01|admincmg|edit|exstock|1107|order_tire|
+
+27/03/2018 15:00:06|admincmg|edit|exstock|1106|order_tire|
+
+27/03/2018 15:00:20|admincmg|edit|exstock|1105|order_tire|
+
+27/03/2018 15:00:30|admincmg|edit|exstock|1104|order_tire|
+
+27/03/2018 15:00:54|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 15:17:37|admincmg|delete|1079|order_tire|
+
+27/03/2018 15:17:40|admincmg|delete|1078|order_tire|
+
+27/03/2018 15:17:43|admincmg|delete|1075|order_tire|
+
+27/03/2018 15:17:44|admincmg|delete|1072|order_tire|
+
+27/03/2018 15:17:45|admincmg|delete|991|order_tire|
+
+27/03/2018 15:17:45|admincmg|delete|1064|order_tire|
+
+27/03/2018 15:17:46|admincmg|delete|1080|order_tire|
+
+27/03/2018 15:17:54|admincmg|edit|revert|1114|order_tire|
+
+27/03/2018 15:18:03|admincmg|edit|revert|1115|order_tire|
+
+27/03/2018 15:18:08|admincmg|edit|revert|1116|order_tire|
+
+27/03/2018 15:18:13|admincmg|edit|revert|1117|order_tire|
+
+27/03/2018 15:18:18|admincmg|edit|revert|1118|order_tire|
+
+27/03/2018 15:18:25|admincmg|edit|revert|1119|order_tire|
+
+27/03/2018 15:18:30|admincmg|edit|revert|1120|order_tire|
+
+27/03/2018 15:18:36|admincmg|edit|revert|1121|order_tire|
+
+27/03/2018 15:18:43|admincmg|edit|revert|1122|order_tire|
+
+27/03/2018 15:18:51|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 15:18:58|admincmg|edit|revert|1113|order_tire|
+
+27/03/2018 15:19:04|admincmg|edit|revert|1112|order_tire|
+
+27/03/2018 15:19:11|admincmg|edit|revert|1104|order_tire|
+
+27/03/2018 15:19:18|admincmg|edit|revert|1105|order_tire|
+
+27/03/2018 15:19:25|admincmg|edit|revert|1106|order_tire|
+
+27/03/2018 15:19:31|admincmg|edit|revert|1107|order_tire|
+
+27/03/2018 15:19:36|admincmg|edit|revert|1108|order_tire|
+
+27/03/2018 15:19:42|admincmg|edit|revert|1109|order_tire|
+
+27/03/2018 15:20:48|admincmg|edit|revert|1110|order_tire|
+
+27/03/2018 15:20:54|admincmg|edit|revert|1111|order_tire|
+
+27/03/2018 15:21:01|admincmg|edit|revert|1123|order_tire|
+
+27/03/2018 16:26:57|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 16:35:12|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 16:55:12|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 16:56:24|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 16:56:35|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 16:58:40|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 16:58:49|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 17:00:34|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 17:00:44|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 17:01:36|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 17:01:45|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 17:03:27|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 17:03:42|admincmg|edit|exstock|1103|order_tire|
+
+27/03/2018 17:06:08|admincmg|edit|revert|1103|order_tire|
+
+27/03/2018 17:06:22|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:42:04|admincmg|edit|revert|1103|order_tire|
+
+28/03/2018 07:42:14|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:42:58|admincmg|edit|revert|1103|order_tire|
+
+28/03/2018 07:43:10|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:43:45|admincmg|edit|revert|1103|order_tire|
+
+28/03/2018 07:43:55|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:45:07|admincmg|edit|revert|1103|order_tire|
+
+28/03/2018 07:45:22|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:45:43|admincmg|edit|revert|1103|order_tire|
+
+28/03/2018 07:45:54|admincmg|edit|exstock|1103|order_tire|
+
+28/03/2018 07:46:02|admincmg|edit|exstock|1123|order_tire|
+
+28/03/2018 07:46:19|admincmg|edit|exstock|1113|order_tire|
+
+28/03/2018 07:47:22|admincmg|edit|exstock|1121|order_tire|
+
+28/03/2018 07:47:29|admincmg|edit|exstock|1120|order_tire|
+
+28/03/2018 07:47:36|admincmg|edit|exstock|1112|order_tire|
+
+28/03/2018 07:47:44|admincmg|edit|exstock|1119|order_tire|
+
+28/03/2018 07:47:51|admincmg|edit|exstock|1111|order_tire|
+
+28/03/2018 07:47:57|admincmg|edit|exstock|1118|order_tire|
+
+28/03/2018 07:48:04|admincmg|edit|exstock|1122|order_tire|
+
+28/03/2018 07:48:11|admincmg|edit|exstock|1114|order_tire|
+
+28/03/2018 07:48:22|admincmg|edit|exstock|1117|order_tire|
+
+28/03/2018 07:48:30|admincmg|edit|exstock|1110|order_tire|
+
+28/03/2018 07:48:37|admincmg|edit|exstock|1116|order_tire|
+
+28/03/2018 07:48:44|admincmg|edit|exstock|1108|order_tire|
+
+28/03/2018 07:48:50|admincmg|edit|exstock|1115|order_tire|
+
+28/03/2018 07:48:58|admincmg|edit|exstock|1109|order_tire|
+
+28/03/2018 07:49:06|admincmg|edit|exstock|1104|order_tire|
+
+28/03/2018 07:49:14|admincmg|edit|exstock|1105|order_tire|
+
+28/03/2018 07:49:23|admincmg|edit|exstock|1106|order_tire|
+
+28/03/2018 07:49:34|admincmg|edit|exstock|1107|order_tire|
+
+28/03/2018 08:27:10|http://goodtyres.local|agent_order|1124|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-22-1
+
+28/03/2018 08:28:42|http://goodtyres.local|agent_order|1125|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-23-1
+
+28/03/2018 08:29:38|http://goodtyres.local|agent_order|1126|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-24-1
+
+28/03/2018 08:30:28|http://goodtyres.local|agent_order|1127|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-25-1
+
+28/03/2018 08:32:01|http://goodtyres.local|agent_order|1128|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-26-1
+
+28/03/2018 08:33:50|http://goodtyres.local|agent_order|1129|order_tire|1-1522188000-1-1-488-1-----------0-0-0---10---1522188000---0-1-27-1
+
+28/03/2018 08:33:59|488|editagent|2219|43-106-6-2-3539886-3893875|order_tire_list|
+
+28/03/2018 08:34:21|admincmg|edit|approve|1129|order_tire|
+
+28/03/2018 08:34:25|admincmg|edit|approve|1128|order_tire|
+
+28/03/2018 08:34:29|admincmg|edit|approve|1127|order_tire|
+
+28/03/2018 08:34:32|admincmg|edit|approve|1126|order_tire|
+
+28/03/2018 08:34:34|admincmg|edit|approve|1125|order_tire|
+
+28/03/2018 08:34:37|admincmg|edit|approve|1124|order_tire|
+
+28/03/2018 08:35:14|admincmg|edit|exstock|1124|order_tire|
+
+28/03/2018 08:35:21|admincmg|edit|exstock|1125|order_tire|
+
+28/03/2018 08:35:28|admincmg|edit|exstock|1126|order_tire|
+
+28/03/2018 08:35:33|admincmg|edit|exstock|1127|order_tire|
+
+28/03/2018 08:35:38|admincmg|edit|exstock|1128|order_tire|
+
+28/03/2018 08:35:45|admincmg|edit|exstock|1129|order_tire|
+
+28/03/2018 10:57:31|admincmg|edit|vat|1070|order_tire|
+
+28/03/2018 10:58:02|admincmg|edit|vat|1070|order_tire|
+
+28/03/2018 10:58:43|admincmg|lock|1077|ordertire|0
+
+28/03/2018 10:58:58|admincmg|edit|vat|1077|order_tire|
+
+28/03/2018 10:59:18|admincmg|edit|vat|1077|order_tire|
+
+28/03/2018 10:59:32|admincmg|edit|vat|1077|order_tire|
+
+28/03/2018 10:59:52|admincmg|edit|vat|1077|order_tire|
+
+28/03/2018 11:00:03|admincmg|edit|2128|43-106-6-1-4600000-4600000-Chọn|order_tire_list|
+
+29/03/2018 09:08:10|http://goodtyres.local|agent_order|1130|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-28-1
+
+29/03/2018 09:08:58|488|addagent|43-162-1-10-1130-5381818-5920000|order_tire_list|
+
+29/03/2018 09:11:47|http://goodtyres.local|agent_order|1131|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-29-1
+
+29/03/2018 09:29:10|http://goodtyres.local|agent_order|1132|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-30-1
+
+29/03/2018 09:33:51|http://goodtyres.local|agent_order|1133|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-31-1
+
+29/03/2018 09:49:57|http://goodtyres.local|agent_order|1134|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-32-1
+
+29/03/2018 09:53:30|http://goodtyres.local|agent_order|1135|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-33-1
+
+29/03/2018 09:57:41|http://goodtyres.local|agent_order|1136|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-34-1
+
+29/03/2018 10:01:30|http://goodtyres.local|agent_order|1137|order_tire|1-1522274400-1-1-488-1-----------0-0-0---10---1522274400---0-1-35-1
+
+29/03/2018 10:17:50|admincmg|edit|approve|1136|order_tire|
+
+29/03/2018 10:17:54|admincmg|edit|approve|1135|order_tire|
+
+29/03/2018 10:17:57|admincmg|edit|approve|1134|order_tire|
+
+29/03/2018 10:18:00|admincmg|edit|approve|1133|order_tire|
+
+29/03/2018 10:18:03|admincmg|edit|approve|1132|order_tire|
+
+29/03/2018 10:18:07|admincmg|edit|approve|1131|order_tire|
+
+29/03/2018 10:18:10|admincmg|edit|approve|1130|order_tire|
+
+29/03/2018 10:18:14|admincmg|edit|approve|1137|order_tire|
+
+29/03/2018 10:19:37|admincmg|edit|exstock|1136|order_tire|
+
+29/03/2018 10:19:43|admincmg|edit|exstock|1135|order_tire|
+
+29/03/2018 10:19:48|admincmg|edit|exstock|1134|order_tire|
+
+29/03/2018 10:19:53|admincmg|edit|exstock|1133|order_tire|
+
+29/03/2018 10:19:58|admincmg|edit|exstock|1132|order_tire|
+
+29/03/2018 10:20:04|admincmg|edit|exstock|1130|order_tire|
+
+29/03/2018 10:20:11|admincmg|edit|exstock|1131|order_tire|
+
+29/03/2018 10:20:16|admincmg|edit|exstock|1137|order_tire|
+
+29/03/2018 10:34:33|admincmg|edit|revert|1136|order_tire|
+
+29/03/2018 10:34:38|admincmg|edit|revert|1135|order_tire|
+
+29/03/2018 10:34:43|admincmg|edit|revert|1134|order_tire|
+
+29/03/2018 10:45:29|admincmg|edit|revert|1133|order_tire|
+
+29/03/2018 10:45:34|admincmg|edit|revert|1132|order_tire|
+
+29/03/2018 10:45:40|admincmg|edit|revert|1131|order_tire|
+
+29/03/2018 10:45:47|admincmg|edit|revert|1130|order_tire|
+
+29/03/2018 10:45:55|admincmg|edit|revert|1137|order_tire|
+
+29/03/2018 11:00:04|admincmg|edit|revert|1126|order_tire|
+
+29/03/2018 11:00:14|admincmg|edit|exstock|1126|order_tire|
+
+29/03/2018 11:02:19|admincmg|edit|revert|1126|order_tire|
+
+29/03/2018 11:03:12|admincmg|edit|exstock|1126|order_tire|
+
+29/03/2018 11:07:57|admincmg|edit|revert|1126|order_tire|
+
+29/03/2018 11:09:55|admincmg|edit|exstock|1126|order_tire|
+
+29/03/2018 11:10:19|admincmg|edit|exstock|1136|order_tire|
+
+29/03/2018 11:10:29|admincmg|edit|exstock|1135|order_tire|
+
+29/03/2018 11:10:35|admincmg|edit|exstock|1134|order_tire|
+
+29/03/2018 11:10:47|admincmg|edit|exstock|1133|order_tire|
+
+29/03/2018 11:10:52|admincmg|edit|exstock|1132|order_tire|
+
+29/03/2018 11:10:59|admincmg|edit|exstock|1131|order_tire|
+
+29/03/2018 11:11:05|admincmg|edit|exstock|1130|order_tire|
+
+29/03/2018 11:11:12|admincmg|edit|exstock|1137|order_tire|
+
+02/04/2018 15:05:54|http://goodtyres.local|agent_order|1138|order_tire|1-1522620000-1-1-488-1-----------0-0-0---10---1522620000---0-1-36-1
+
+02/04/2018 15:06:33|admincmg|edit|approve|1138|order_tire|
+
+02/04/2018 15:06:44|admincmg|edit|exstock|1138|order_tire|
+
+02/04/2018 15:11:32|http://goodtyres.local|agent_order|1139|order_tire|1-1522620000-1-1-488-1-----------0-0-0---10---1522620000---0-1-37-1
+
+02/04/2018 15:11:44|admincmg|edit|approve|1139|order_tire|
+
+02/04/2018 15:11:56|admincmg|edit|exstock|1139|order_tire|
+
+02/04/2018 15:29:37|http://goodtyres.local|agent_order|1140|order_tire|1-1522620000-1-1-488-1-----------0-0-0---10---1522620000---0-1-38-1
+
+02/04/2018 15:29:46|admincmg|edit|approve|1140|order_tire|
+
+02/04/2018 15:29:55|admincmg|edit|exstock|1140|order_tire|
+
+03/04/2018 11:05:13|http://goodtyres.local|agent_order|1141|order_tire|1-1522706400-1-1-488-1-----------0-0-0---10---1522706400---0-1-39-1
+
+03/04/2018 11:07:20|admincmg|edit|approve|1141|order_tire|
+
+03/04/2018 11:07:29|admincmg|edit|exstock|1141|order_tire|
+
+03/04/2018 11:11:47|http://goodtyres.local|agent_order|1142|order_tire|1-1522706400-1-1-488-1-----------0-0-0---10---1522706400---0-1-40-1
+
+03/04/2018 11:11:53|admincmg|edit|approve|1142|order_tire|
+
+03/04/2018 11:12:00|admincmg|edit|exstock|1142|order_tire|
+
+03/04/2018 11:13:10|admincmg|edit|revert|1142|order_tire|
+
+03/04/2018 11:13:56|488|deleteorderagent|1142|order_tire|
+
+04/04/2018 09:46:05|admincmg|delete|205|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|211|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|196|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|197|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|198|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|199|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|200|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|201|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|202|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|203|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|210|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|209|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|208|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|207|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|206|tire_price_discount|
+
+04/04/2018 09:46:05|admincmg|delete|204|tire_price_discount|
+
+04/04/2018 17:20:02|http://goodtyres.local|agent_order|1142|order_tire|1-1522792800-1-1-488-1-----------0-0-0---10---1522792800---0-1-40-1
+
+04/04/2018 17:20:38|488|deleteorderagent|1142|order_tire|
+
+09/04/2018 15:36:13|admincmg|edit|1|import_tire_order|--1-nhập-281-2-3-203-1-1517180400-1520895600-13.69--2000000-22600-22800-200000-10000000--200-1260000.00-66376201-6696362-9530005-2737-0-16-101000-1260000-0-0-2420000-0-0-4000000-0-750000-11000000-500000-0-6000-7000-1
+
+13/04/2018 16:12:39|admincmg|edit|comment||order_tire|
+
+13/04/2018 16:13:58|admincmg|edit|comment||order_tire|
+
+13/04/2018 16:38:21|admincmg|edit|comment|1077|order_tire|
+
+14/04/2018 08:01:31|admincmg|edit|comment|1077|order_tire|
+
+16/04/2018 09:41:03|admincmg|edit|revert|1103|order_tire|
+
+16/04/2018 09:42:00|488|editagent|2180|43-106-3-8-4104545-4515000|order_tire_list|
+
+16/04/2018 09:43:36|admincmg|delete|45|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|46|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|47|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|48|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|49|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|50|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|51|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|52|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|53|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|54|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|55|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|56|tire_price_agent|
+
+16/04/2018 09:43:36|admincmg|delete|57|tire_price_agent|
+
+16/04/2018 09:43:37|admincmg|delete|58|tire_price_agent|
+
+16/04/2018 09:43:37|admincmg|delete|59|tire_price_agent|
+
+16/04/2018 09:43:37|admincmg|delete|60|tire_price_agent|
+
+16/04/2018 09:44:02|488|editagent|2180|43-106-3-8--|order_tire_list|
+
+16/04/2018 09:44:52|admincmg|edit|39|tire_price_agent|1514934000-1525039200-43-3-106-4372825-488
+
+16/04/2018 09:45:01|488|editagent|2180|43-106-3-8-3975295-4372825|order_tire_list|
+
+16/04/2018 09:46:42|admincmg|edit|exstock|1103|order_tire|
+
+16/04/2018 14:24:39|admincmg|delete|221|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|222|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|223|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|224|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|225|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|226|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|220|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|219|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|218|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|217|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|216|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|215|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|214|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|213|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|212|tire_price_discount|
+
+16/04/2018 14:24:39|admincmg|delete|227|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|237|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|238|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|239|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|240|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|241|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|242|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|243|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|236|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|235|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|234|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|233|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|232|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|231|tire_price_discount|
+
+16/04/2018 14:30:38|admincmg|delete|230|tire_price_discount|
+
+16/04/2018 14:30:39|admincmg|delete|229|tire_price_discount|
+
+16/04/2018 14:30:39|admincmg|delete|228|tire_price_discount|
+
+16/04/2018 14:30:39|admincmg|delete|244|tire_price_discount|
+
+20/04/2018 07:43:38|admincmg|add|2|check_salary_percent|15-9000-0-0-1522533600
+

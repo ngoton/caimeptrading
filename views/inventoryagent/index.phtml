@@ -1,0 +1,364 @@
+<!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/js/adminbar/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Morris chart -->
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/js/adminbar/plugins/morris/morris.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/js/adminbar/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/js/adminbar/dist/css/skins/_all-skins.min.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/style.css">
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/js/ui/jquery-ui.css">
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/ui/jquery-ui.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/html5.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.form.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/custom.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/localization/messages_vi.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/colResizable-1.5.min.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.stickyheader.js"></script>
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/jquery.ba-throttle-debounce.min.js"></script>
+  <script type="text/javascript" src="<?php echo BASE_URL ?>/public/js/jquery.battatech.excelexport.js"></script>
+  <link rel="stylesheet" type="text/css" href="<?php BASE_URL ?>/public/css/component.css" />
+  <script src="<?php BASE_URL ?>/public/js/pace.min.js"></script>
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/css/head.css">
+  <script type="text/javascript" src="<?php BASE_URL ?>/public/js/head.js"></script>
+  <!-- InputMask -->
+  <script src="<?php BASE_URL ?>/public/js/adminbar/plugins/input-mask/jquery.inputmask.js"></script>
+  <script src="<?php BASE_URL ?>/public/js/adminbar/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+  <script src="<?php BASE_URL ?>/public/js/adminbar/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/css/bootstrap-select.min.css" />
+  <script src="<?php BASE_URL ?>/public/js/bootstrap-select.min.js"></script>
+
+  <link rel="stylesheet" href="<?php BASE_URL ?>/public/js/chosen/chosen.css">
+  <script src="<?php echo BASE_URL ?>/public/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+
+<?php
+    $today = strtotime($ngay);
+    $max = $max < strtotime(date('d-m-Y')) ? strtotime(date('d-m-Y')) : $max;
+    $total = $total;
+    $now = $total;
+
+    $k=1;
+?>
+<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+<div id="loading"></div>
+<div id="winpopup"></div>
+
+<div id="content" style="padding:5px;">
+    <center style="clear:both;"><h1> TỒN KHO</h1></center>
+
+</div>
+<div style="width:90%;">
+    <form id="inven" method="post" action="">
+    <div style="text-align:left">
+            Ngày: <input style="width:90px" type="text"  id="date" name="date" value="<?php echo $ngay ?>"><input type="submit" id="check" value="Kiểm tra">     
+    </div>
+    <div class="add-box">
+        <select id="thuonghieu" name="thuonghieu" style="width:120px">
+            <option value="0">Thương hiệu</option>
+            <?php foreach ($tire_brands as $tire_brand) { ?>
+                <option value="<?php echo $tire_brand->tire_brand_id ?>"><?php echo $tire_brand->tire_brand_name ?></option>
+            <?php } ?>
+        </select>
+        <select id="kichco" name="kichco" style="width:100px">
+            <option value="0">Kích cỡ</option>
+            <?php foreach ($tire_sizes as $tire_size) { ?>
+                <option value="<?php echo $tire_size->tire_size_id ?>"><?php echo $tire_size->tire_size_number ?></option>
+            <?php } ?>
+        </select>
+        <select id="magai" name="magai" style="width:80px">
+            <option value="0">Mã gai</option>
+            <?php foreach ($tire_patterns as $tire_pattern) { ?>
+                <option value="<?php echo $tire_pattern->tire_pattern_id ?>"><?php echo $tire_pattern->tire_pattern_name ?></option>
+            <?php } ?>
+        </select>
+        <input type="submit" id="check2" value="Chọn">
+    </div>
+    </form>
+</div>
+<div class="add-box">
+    <a class="add_button" id="btnExport" >Export Excel</a>
+    
+</div>
+<div style="clear:both"></div>
+
+
+<div style="width:100%;float:right">
+    <table id="tblExport" class="table_data">
+<thead>
+    <tr>
+        <th  class="fix" >
+            <a class="sort" >STT </a>
+        </th>
+        <th  class="fix" >
+        </th>
+        <th  class="fix">
+            <a class="sort" >Thương hiệu </a>
+        </th>
+        <th  class="fix">
+            <a class="sort" >Size </a>
+        </th>
+        <th  class="fix">
+            <a class="sort " >Mã gai </a>
+        </th>
+        
+        <th  class="fix">
+            <a class="sort" >Tồn kho </a>
+        </th>
+        <th  class="fix">
+            <a class="sort" >Đã đặt </a>
+        </th>
+        
+        <th  class="fix">
+            <a class="sort" >Đang về </a>
+        </th>
+        <th  class="fix">
+            <a class="sort" >Còn lại </a>
+        </th>
+        <th  class="fix">
+            <a class="sort" >Ngày SX </a>
+        </th>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $doanhthu=0; $chiphi=0; $loinhuan=0; $soluong = 0; $daban=0; $tonkho=0; $tongve=0; $tongdat=0; ?>
+    <?php foreach ($tire_buys as $tire_buy) : ?>
+    
+    <?php 
+        $doanhthu += (isset($tire_buy_data[$tire_buy->tire_buy_id]['revenue'])?$tire_buy_data[$tire_buy->tire_buy_id]['revenue']:0);
+        $chiphi += (isset($tire_buy_data[$tire_buy->tire_buy_id]['cost'])?$tire_buy_data[$tire_buy->tire_buy_id]['cost']:0);
+        $soluong += $tire_buy->soluong;
+        $daban += (isset($sell[$tire_buy->tire_buy_id]['number'])?$sell[$tire_buy->tire_buy_id]['number']:0);
+
+        $ton = $tire_buy->soluong - (isset($sell[$tire_buy->tire_buy_id]['number'])?$sell[$tire_buy->tire_buy_id]['number']:0);
+
+        $dangve = isset($going[$tire_buy->tire_buy_id])?$going[$tire_buy->tire_buy_id]:null;
+        $dathang = isset($order_tire[$tire_buy->tire_buy_id])?$order_tire[$tire_buy->tire_buy_id]:null;
+
+        $tongve += $dangve;
+        $tongdat += $dathang;
+
+        if($ton > 0){
+
+        $timeDiff = $today - $tire_buy->date_manufacture;
+
+        $numberDays = $timeDiff/86400;  // 86400 seconds in one day
+
+        // and you might want to convert to integer
+        $numberDays = intval($numberDays); 
+    ?>
+        
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $tire_buy->tire_buy_id ?>" class="edit_tr masterTooltip" <?php echo $numberDays>180?'title="Hàng quá hạn 6 tháng từ ngày sản xuất" style="color:red"':null ?> >
+            
+            
+            <td  class="fix"><?php echo $k++; ?></td>
+            <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/<?php echo $link_picture[$tire_buy->tire_buy_id]['image']; ?>" width="50" height="50" /></td>
+            <td class="fix" data="<?php echo $tire_buy->tire_buy_brand; ?>" id="tire_buy_brand_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_brand_name; ?></td>
+            <td class="fix" data="<?php echo $tire_buy->tire_buy_size; ?>" id="tire_buy_size_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_size_number; ?></td>
+            <td class="fix" data="<?php echo $tire_buy->tire_buy_pattern; ?>" id="tire_buy_pattern_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_pattern_name; ?></td>
+            
+            <td class="fix" id="conlai_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $lib->formatMoney($ton ); ?></td>
+            <td class="fix" id="dathang_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $lib->formatMoney($dathang ); ?></td>
+            
+            <td class="fix" id="dangve_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $lib->formatMoney($dangve); ?></td>
+            <td style="font-weight: bold;" class="fix" id="dangve_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $lib->formatMoney($ton+$dangve-$dathang); ?></td>
+            <td class="fix" id="date_manufacture_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->date_manufacture>0?date('m/Y',$tire_buy->date_manufacture):null; ?></td>
+        </tr>
+
+    <?php } ?>
+    <?php endforeach; ?>
+
+    <tr style="text-align:center; font-weight: bold; color: red;">
+        <td class="fix" colspan="5" >Tổng cộng</td>
+        <td class="fix"><?php echo $soluong-$daban; ?></td>
+        <td class="fix" ><?php echo $tongdat; ?></td>
+        
+        <td class="fix" ><?php echo $tongve; ?></td>
+        <td class="fix"><?php echo $soluong-$daban-$tongdat+$tongve; ?></td>
+        <td class="fix" ></td>
+    </tr>
+     
+   </tbody>
+</table>
+</div>
+<div style="clear:both"></div>
+
+    <div id="chart"></div>
+    <div id="chart2"></div>  
+    <div id="chart3"></div>  
+
+
+<script type="text/javascript">
+    
+var ngay = "<?php echo $ngay ?>";
+var t = "<?php echo $thuonghieu ?>";
+$('#thuonghieu option[value='+t+']').attr('selected','selected');
+var s = "<?php echo $kichco ?>";
+$('#kichco option[value='+s+']').attr('selected','selected');
+var p = "<?php echo $magai ?>";
+$('#magai option[value='+p+']').attr('selected','selected');
+
+/*        //load the Google Visualization API and the chart
+    google.load('visualization', '1', {'packages':['corechart']});
+ 
+    //set callback
+    google.setOnLoadCallback (createChart);
+    google.setOnLoadCallback (createChart2);
+    google.setOnLoadCallback (createChart3);
+ 
+    //callback function
+    function createChart() {
+     var jsonData = null;
+
+        var json = $.ajax({
+          url: "<?php echo BASE_URL ?>/inventory/brand/0/0/"+ngay, // make this url point to the data file
+          dataType: "json",
+          async: false,
+          success: (
+        function(data) {
+            jsonData = data;
+        // Create and populate the data table.
+        var data = new google.visualization.DataTable(jsonData);
+        // Create and draw the visualization.
+      var chart= new google.visualization.PieChart(document.getElementById('chart')).
+            draw(data, {
+                        is3D: true,
+                        title: 'Tồn kho tính đến ' + ngay,
+                    }
+                );
+
+        })
+        }).responseText;
+    }
+
+    function createChart2() {
+     var jsonData = null;
+
+        var json = $.ajax({
+          url: "<?php echo BASE_URL ?>/inventory/size/0/0/"+ngay, // make this url point to the data file
+          dataType: "json",
+          async: false,
+          success: (
+        function(data) {
+            jsonData = data;
+
+        // Create and populate the data table.
+        var data = new google.visualization.DataTable(jsonData);
+
+        // Create and draw the visualization.
+      var chart= new google.visualization.ColumnChart(document.getElementById('chart2')).
+            draw(data, {curveType: "function",
+                        is3D: true,
+                        isStacked: true,
+                        legend: { position: 'top', maxLines: 3 },
+                    }
+                );
+
+        })
+        }).responseText;
+    }
+
+    function createChart3() {
+     var jsonData = null;
+
+        var json = $.ajax({
+          url: "<?php echo BASE_URL ?>/inventory/pattern/0/0/"+ngay, // make this url point to the data file
+          dataType: "json",
+          async: false,
+          success: (
+        function(data) {
+            jsonData = data;
+
+        // Create and populate the data table.
+        var data = new google.visualization.DataTable(jsonData);
+
+        // Create and draw the visualization.
+      var chart= new google.visualization.ColumnChart(document.getElementById('chart3')).
+            draw(data, {curveType: "function",
+                        is3D: true,
+                        isStacked: true,
+                        legend: { position: 'top', maxLines: 3 },
+                    }
+                );
+
+        })
+        }).responseText;
+    }
+*/
+
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $("#date").datepicker(pickerOpay2);
+
+$(document).ready(function() {
+// Tooltip only Text
+$('.masterTooltip').hover(function(){
+        // Hover over code
+        var title = $(this).attr('title');
+        $(this).data('tipText', title).removeAttr('title');
+        if (title != "") {
+            $('<p class="showtooltip"></p>')
+            .text(title)
+            .appendTo('body')
+            .fadeIn('slow');
+        }
+        
+}, function() {
+        // Hover out code
+        $(this).attr('title', $(this).data('tipText'));
+        $('.showtooltip').remove();
+}).mousemove(function(e) {
+        var mousex = e.pageX - 100; //Get X coordinates
+        var mousey = e.pageY + 20; //Get Y coordinates
+        $('.showtooltip')
+        .css({ top: mousey, left: mousex })
+});
+
+
+});
+</script> 
+<style type="text/css">
+.showtooltip {
+    display:none;
+    position:absolute;
+    border:1px solid #333;
+    background-color:#161616;
+    border-radius:5px;
+    padding:10px;
+    color:#fff;
+    font-size:12px Arial;
+}
+</style>
