@@ -161,13 +161,12 @@ elseif ($order_by == 'staff_name')
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','position','<?php echo $url_order ?>')">Chức vụ <?php if ($order_by == 'position'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th rowspan="2" class="fix">Lương <br> chức vụ</th>
-        <th rowspan="2" class="fix">Thâm niên</th>
-        <th colspan="2" class="fix">Hệ số</th>
-        <th rowspan="2" class="fix">Lương TG</th>
         <th rowspan="2" class="fix">Lương <br> SP</th>
         <th rowspan="2" class="fix">Lương <br> giao nhận</th>
         <th rowspan="2" class="fix">Cộng lương</th>
-        <th colspan="5" class="fix">Phụ cấp</th>
+        <th colspan="2" class="fix">Hệ số</th>
+        <th rowspan="2" class="fix">Lương TG</th>
+        <th colspan="4" class="fix">Phụ cấp</th>
         <th rowspan="2" class="fix">Tổng lương</th>
         <th colspan="2" class="fix">Trừ</th>
         <th rowspan="2" class="fix">Thực lĩnh</th>
@@ -178,7 +177,6 @@ elseif ($order_by == 'staff_name')
         <th class="fix">ĐG</th>
         <th class="fix">TG</th>
         <th class="fix">CT</th>
-        <th class="fix">N.Giờ</th>
         <th class="fix">ĐT</th>
         <th class="fix">Cơm</th>
         <th class="fix">Bảo hiểm</th>
@@ -214,22 +212,49 @@ elseif ($order_by == 'staff_name')
 
     $tongngaylamviec = countDays(date('Y',strtotime('01-'.$ngaytao)), date('m',strtotime('01-'.$ngaytao)), array(0, 7), $t7);
 
+    $chucvu_tuvan=0; $sanpham_tuvan=0; $giaonhan_tuvan=0; $phone_tuvan=0; $ngoaikhoa_tuvan=0; $com_tuvan=0; $tienbh_tuvan=0; $congluong_tuvan=0; $tienbhnv_tuvan=0; $sono_tuvan=0; $luongtg_tuvan=0; $tongluong_tuvan=0; $thuclinh_tuvan=0; $heso_thoigian_tuvan=null; $heso_danhgia_tuvan=null; $check_tuvan=0;
 
-    $tongchucvu=0; $tongthamnien=0; $tongphone=0; $tongngoaikhoa=0; $tongngoaigio=0; $tongcom=0; $tongbh=0; $tongbhnv=0; $tongkpi=0; $tongsp=0; $tonggiaonhan=0; $tongluong=0; $tongthuclinh=0; $tonggiuluong=0; $tongcongluong=0; $tongluongtg=0; $tongkhnothangtruoc=0; $tongkhnothangnay=0; $tongkhdatra=0;
+    $tongchucvu=0; $tongphone=0; $tongngoaikhoa=0; $tongcom=0; $tongbh=0; $tongbhnv=0; $tongkpi=0; $tongsp=0; $tonggiaonhan=0; $tongluong=0; $tongthuclinh=0; $tonggiuluong=0; $tongcongluong=0; $tongluongtg=0; $tongkhnothangtruoc=0; $tongkhnothangnay=0; $tongkhdatra=0;
     foreach ($staffs as $salary) : ?>
     <?php
+    $sanpham = 0;
+    $sanpham1 = 0;
 
+        
             $chucvu = isset($arr_position_salary[$salary->staff_id])?$arr_position_salary[$salary->staff_id]:0;
             $tongchucvu += $chucvu;
 
-            $thamnien = isset($arr_time_salary[$salary->staff_id])?$arr_time_salary[$salary->staff_id]:0;
-            $tongthamnien += $thamnien;
+            if ($salary->position=="Kế toán") {
+                $sanpham1 = isset($luong_sp[$salary->staff_id])?$luong_sp[$salary->staff_id]:0;
+                $sanpham1 += isset($luong_vuotgia[$salary->staff_id])?$luong_vuotgia[$salary->staff_id]:0;
+                $sanpham1 += isset($luong_kpi[$salary->staff_id])?$luong_kpi[$salary->staff_id]:0;
 
-            $sanpham = isset($luong_sp[$salary->staff_id])?$luong_sp[$salary->staff_id]:0;
-            $sanpham += isset($luong_vuotgia[$salary->staff_id])?$luong_vuotgia[$salary->staff_id]:0;
+                //$sanpham1 = $sanpham1*2;
+
+                $sanpham_tuvan += $sanpham1;
+                $luongtg_tuvan += $sanpham1;
+                $congluong_tuvan += $sanpham1;
+                $tongluong_tuvan += $sanpham1;
+                $thuclinh_tuvan += $sanpham1;
+                $tongsp += $sanpham1;
+                $tongcongluong += $sanpham1;
+                $tongluongtg += $sanpham1;
+                $tongluong += $sanpham1;
+                $tongthuclinh += $sanpham1;
+            }
+            else{
+                $sanpham = isset($luong_sp[$salary->staff_id])?$luong_sp[$salary->staff_id]:0;
+                $sanpham += isset($luong_vuotgia[$salary->staff_id])?$luong_vuotgia[$salary->staff_id]:0;
+                
+                $sanpham += isset($luong_kpi[$salary->staff_id])?$luong_kpi[$salary->staff_id]:0;
+                $tongsp += $sanpham;
+            }
             
-            $sanpham += isset($luong_kpi[$salary->staff_id])?$luong_kpi[$salary->staff_id]:0;
-            $tongsp += $sanpham;
+            /*if ($salary->user_group==10) {
+                $sanpham_tuvan += $sanpham;
+                $chiluong_tuvan += $sanpham;
+                $congluong_tuvan += $sanpham;
+            }*/
             
 
             $giaonhan = isset($arr_lift[$salary->staff_id])?$arr_lift[$salary->staff_id]:0;
@@ -241,9 +266,6 @@ elseif ($order_by == 'staff_name')
             $ngoaikhoa = isset($arr_curricular[$salary->staff_id])?$arr_curricular[$salary->staff_id]:0;
             $tongngoaikhoa += $ngoaikhoa;
 
-            $ngoaigio = isset($arr_overtime_salary[$salary->staff_id])?$arr_overtime_salary[$salary->staff_id]:0;
-            $tongngoaigio += $ngoaigio;
-
             $com = isset($arr_eating_allowance[$salary->staff_id])?$arr_eating_allowance[$salary->staff_id]:0;
             $tongcom += $com;
 
@@ -253,7 +275,9 @@ elseif ($order_by == 'staff_name')
             $tongbh += $tienbh; 
             $tongbhnv += $tienbhnv;
 
-            $luong1 = $chucvu+$thamnien;
+            $luong1 = $chucvu+$sanpham+$giaonhan;
+            $tongcongluong += $luong1;
+
             
             $heso_thoigian = isset($arr_attend[$salary->staff_id])?round($arr_attend[$salary->staff_id]/$tongngaylamviec,2):"";
             $heso_danhgia = isset($position_evaluate[$salary->staff_id])?round((100+$position_evaluate[$salary->staff_id])/100,2):"";
@@ -271,11 +295,7 @@ elseif ($order_by == 'staff_name')
             }
             $tongluongtg += $luong2;
 
-            $congluong = $luong2+$sanpham+$giaonhan;
-
-            $tongcongluong += $congluong;
-
-            $luong3 = $congluong+$ngoaigio+$phone+$ngoaikhoa+$com+$tienbh;
+            $luong3 = $luong2+$phone+$ngoaikhoa+$com+$tienbh;
 
             $tongluong += $luong3;
 
@@ -303,7 +323,7 @@ elseif ($order_by == 'staff_name')
 
             
 
-            $giuluong = round($sanpham*$tyle_giuluong);
+            $giuluong = round($thuclinh*$tyle_giuluong);
 
             if (isset($arr_salary_keep[$salary->staff_id])) {
                 $giuluong = $arr_salary_keep[$salary->staff_id];
@@ -322,16 +342,13 @@ elseif ($order_by == 'staff_name')
                 <td class="fix" id="staff_name_<?php echo $salary->staff_id; ?>"><?php echo $salary->staff_name; ?></td>
                 <td class="fix" id="position_<?php echo $salary->staff_id; ?>"><?php echo $salary->position; ?></td>
                 <td class="fix text-right" id="chucvu_<?php echo $salary->staff_id; ?>"><a href="positionsalary/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($chucvu); ?></a></td>
-                <td class="fix text-right" id="thamnien_<?php echo $salary->staff_id; ?>"><a href="timesalary/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($thamnien); ?></a></td>
+                <td class="fix text-right" id="luongsp_<?php echo $salary->staff_id; ?>"><a href="checksalary/index/<?php echo $salary->staff_id ?>/1/order_number/ASC/<?php echo strtotime('01-'.$ngaytao) ?>"><?php echo $lib->formatMoney($sanpham); ?></a></td>
+                <td class="fix text-right" id="luonggiaonhan_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($giaonhan); ?></td>
+                <td class="fix text-right"><b><?php echo $lib->formatMoney($luong1) ?></b></td>
                 <td class="fix text-right"><a href="<?php echo $this->url('positionstaffevaluate/index/-1/'.$salary->staff_id.'/'.strtotime('01-'.$ngaytao)) ?>" ><?php echo $heso_danhgia ?></a></td>
                 <td class="fix text-right"><a href="attendance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $heso_thoigian ?></a></td>
                 <td class="fix text-right"><b><?php echo $lib->formatMoney($luong2) ?></b></td>
-                <td class="fix text-right" id="luongsp_<?php echo $salary->staff_id; ?>"><a href="checksalary/index/<?php echo $salary->staff_id ?>/1/order_number/ASC/<?php echo strtotime('01-'.$ngaytao) ?>"><?php echo $lib->formatMoney($sanpham); ?></a></td>
-                <td class="fix text-right" id="luonggiaonhan_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($giaonhan); ?></td>
-                <td class="fix text-right"><b><?php echo $lib->formatMoney($congluong) ?></b></td>
-                
                 <td class="fix text-right editable" data="<?php echo $salary->staff_id; ?>" id="ngoaikhoa_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($ngoaikhoa) ?></td>
-                <td class="fix text-right editable4" data="<?php echo $salary->staff_id; ?>" id="ngoaigio_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($ngoaigio) ?></td>
                 <td class="fix text-right"><a href="phoneallowance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($phone) ?></a></td>
                 <td class="fix text-right"><a href="eatingallowance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($com) ?><a></td>
                 <td class="fix text-right"><a href="insurrance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($tienbh) ?></a></td>
@@ -346,21 +363,43 @@ elseif ($order_by == 'staff_name')
             </tr>
         
     <?php endforeach; ?> 
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');"  class="edit_tr">
+                
+            <td class="fix"><?php echo $i++; ?></td>
+            <td class="fix">Tư vấn</td>
+            <td class="fix">SEO</td>
+            <td class="fix text-right"><a href="positionsalary/index/<?php echo strtotime('01-'.$ngaytao) ?>"></a></td>
+            <td class="fix text-right"><a href="checksalary/index/0/1/order_number/ASC/<?php echo strtotime('01-'.$ngaytao) ?>"><?php echo $lib->formatMoney($sanpham_tuvan); ?></a></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($congluong_tuvan) ?></b></td>
+            <td class="fix text-right" ></td>
+            <td class="fix text-right" ></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($luongtg_tuvan) ?></b></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongluong_tuvan) ?></b></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($thuclinh_tuvan) ?></b></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            
+        </tr>
    </tbody>
    <tfoot>
        <tr style="font-weight:bold"> 
            <td colspan="3">Tổng cộng</td>
            <td class="fix text-right"><?php echo $lib->formatMoney($tongchucvu) ?></td>
-           <td class="fix text-right"><?php echo $lib->formatMoney($tongthamnien) ?></td>
-           <td class="fix text-right"></td>
-            <td class="fix text-right"></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongluongtg) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongsp) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tonggiaonhan) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongcongluong) ?></td>
-            
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"><?php echo $lib->formatMoney($tongluongtg) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongngoaikhoa) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongngoaigio) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongphone) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongcom) ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongbh) ?></td>
@@ -604,56 +643,6 @@ $('.editable3').dblclick(function(e){
                     data: {data:id,keyword:keyword,thang:thang},
                     success:function(data){
                         $(currentEle).html(keyword);
-                    }
-                });
-        });
-    }
-
-$('.editable4').dblclick(function(e){  
-        var i=0;
-        var id=$(this).attr('id');
-        e.stopPropagation();      //<-------stop the bubbling of the event here
-        var value = $('#'+id).html();
-        var data=$(this).attr('data');
-
-        updateVal4('#'+id, value, data);
-        
-    });
-    function updateVal4(currentEle, value, id) {
-        var id = id;
-        $(currentEle).html('<input class="thVal4" style="width:50px"  type="text" value="'+value+'" />');
-        $(".thVal4").focus();
-        $(".thVal4").keyup(function (event) {
-            if (event.keyCode == 13) {
-                var keyword = $(".thVal4").val().trim();
-                var thang = $('#chonngaytao').val();
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/checksalarytotal/ngoaigio',
-                    type: 'POST',
-                    data: {data:id,keyword:keyword,thang:thang},
-                    success:function(data){
-                        $(currentEle).html(keyword);
-                        setTimeout(function() {
-                                        searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                      }, 100);
-                    }
-                });
-
-            }
-        });
-        
-        $(".thVal4").focusout(function () { // you can use $('html')
-            var keyword = $(".thVal4").val().trim();
-            var thang = $('#chonngaytao').val();
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/checksalarytotal/ngoaigio',
-                    type: 'POST',
-                    data: {data:id,keyword:keyword,thang:thang},
-                    success:function(data){
-                        $(currentEle).html(keyword);
-                        setTimeout(function() {
-                                        searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
-                                      }, 100);
                     }
                 });
         });
