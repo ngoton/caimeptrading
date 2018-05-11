@@ -590,54 +590,106 @@ Class importtireorderController Extends baseController {
                 // }
                 // /*Mua lốp*/
                 // ///
+                $chenhlech = round($import_orders->import_tire_order_claim*$import_orders->import_tire_order_bank_rate)-$import_orders->import_tire_order_rate_diff;
+                if ($chenhlech>=0) {
+                    $credits = $account_model->getAccountByWhere(array('account_number'=>'711'));
+                    if (!$credits) {
+                        $account_model->createAccount(array('account_number'=>'711'));
+                        $credit = $account_model->getLastAccount()->account_id;
+                    }
+                    else{
+                        $credit = $credits->account_id;
+                    }
+                    $debits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$import_orders->import_tire_order_code));
+                    if (!$debits) {
+                        $account_model->createAccount(array('account_number'=>'156_'.$import_orders->import_tire_order_code,'account_name'=>'Lô '.$import_orders->import_tire_order_code,'account_parent'=>$tk_156));
+                        $debit = $account_model->getLastAccount()->account_id;
+                    }
+                    else{
+                        $debit = $debits->account_id;
+                    }
+
+                    $data_additional = array(
+                        'document_date' => $dauthang,
+                        'additional_date' => $dauthang,
+                        'additional_comment' => $import_orders->import_tire_order_comment,
+                        'debit' => $debit,
+                        'credit' => $credit,
+                        'money' => $chenhlech,
+                        'code' => $import_orders->import_tire_order_code,
+                    );
+                    $additional_model->createAdditional($data_additional);
+                    $additional_id = $additional_model->getLastAdditional()->additional_id;
+
+                    $data_debit = array(
+                        'account_balance_date' => $data_additional['additional_date'],
+                        'account' => $data_additional['debit'],
+                        'money' => $data_additional['money'],
+                        'week' => (int)date('W', $data_additional['additional_date']),
+                        'year' => (int)date('Y', $data_additional['additional_date']),
+                        'additional' => $additional_id,
+                    );
+                    $data_credit = array(
+                        'account_balance_date' => $data_additional['additional_date'],
+                        'account' => $data_additional['credit'],
+                        'money' => (0-$data_additional['money']),
+                        'week' => (int)date('W', $data_additional['additional_date']),
+                        'year' => (int)date('Y', $data_additional['additional_date']),
+                        'additional' => $additional_id,
+                    );
+                    $account_balance_model->createAccount($data_debit);
+                    $account_balance_model->createAccount($data_credit);
+                }
+                else{
+                    $debits = $account_model->getAccountByWhere(array('account_number'=>'811'));
+                    if (!$debits) {
+                        $account_model->createAccount(array('account_number'=>'811'));
+                        $debit = $account_model->getLastAccount()->account_id;
+                    }
+                    else{
+                        $debit = $debits->account_id;
+                    }
+                    $credits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$import_orders->import_tire_order_code));
+                    if (!$credits) {
+                        $account_model->createAccount(array('account_number'=>'156_'.$import_orders->import_tire_order_code,'account_name'=>'Lô '.$import_orders->import_tire_order_code,'account_parent'=>$tk_156));
+                        $credit = $account_model->getLastAccount()->account_id;
+                    }
+                    else{
+                        $credit = $credits->account_id;
+                    }
+
+                    $data_additional = array(
+                        'document_date' => $dauthang,
+                        'additional_date' => $dauthang,
+                        'additional_comment' => $import_orders->import_tire_order_comment,
+                        'debit' => $debit,
+                        'credit' => $credit,
+                        'money' => (0-$chenhlech),
+                        'code' => $import_orders->import_tire_order_code,
+                    );
+                    $additional_model->createAdditional($data_additional);
+                    $additional_id = $additional_model->getLastAdditional()->additional_id;
+
+                    $data_debit = array(
+                        'account_balance_date' => $data_additional['additional_date'],
+                        'account' => $data_additional['debit'],
+                        'money' => $data_additional['money'],
+                        'week' => (int)date('W', $data_additional['additional_date']),
+                        'year' => (int)date('Y', $data_additional['additional_date']),
+                        'additional' => $additional_id,
+                    );
+                    $data_credit = array(
+                        'account_balance_date' => $data_additional['additional_date'],
+                        'account' => $data_additional['credit'],
+                        'money' => (0-$data_additional['money']),
+                        'week' => (int)date('W', $data_additional['additional_date']),
+                        'year' => (int)date('Y', $data_additional['additional_date']),
+                        'additional' => $additional_id,
+                    );
+                    $account_balance_model->createAccount($data_debit);
+                    $account_balance_model->createAccount($data_credit);
+                }
                 
-                $credits = $account_model->getAccountByWhere(array('account_number'=>'711'));
-                if (!$credits) {
-                    $account_model->createAccount(array('account_number'=>'711'));
-                    $credit = $account_model->getLastAccount()->account_id;
-                }
-                else{
-                    $credit = $credits->account_id;
-                }
-                $debits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$import_orders->import_tire_order_code));
-                if (!$debits) {
-                    $account_model->createAccount(array('account_number'=>'156_'.$import_orders->import_tire_order_code,'account_name'=>'Lô '.$import_orders->import_tire_order_code,'account_parent'=>$tk_156));
-                    $debit = $account_model->getLastAccount()->account_id;
-                }
-                else{
-                    $debit = $debits->account_id;
-                }
-
-                $data_additional = array(
-                    'document_date' => $dauthang,
-                    'additional_date' => $dauthang,
-                    'additional_comment' => $import_orders->import_tire_order_comment,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'money' => round($import_orders->import_tire_order_claim*$import_orders->import_tire_order_bank_rate)-$import_orders->import_tire_order_rate_diff,
-                    'code' => $import_orders->import_tire_order_code,
-                );
-                $additional_model->createAdditional($data_additional);
-                $additional_id = $additional_model->getLastAdditional()->additional_id;
-
-                $data_debit = array(
-                    'account_balance_date' => $data_additional['additional_date'],
-                    'account' => $data_additional['debit'],
-                    'money' => $data_additional['money'],
-                    'week' => (int)date('W', $data_additional['additional_date']),
-                    'year' => (int)date('Y', $data_additional['additional_date']),
-                    'additional' => $additional_id,
-                );
-                $data_credit = array(
-                    'account_balance_date' => $data_additional['additional_date'],
-                    'account' => $data_additional['credit'],
-                    'money' => (0-$data_additional['money']),
-                    'week' => (int)date('W', $data_additional['additional_date']),
-                    'year' => (int)date('Y', $data_additional['additional_date']),
-                    'additional' => $additional_id,
-                );
-                $account_balance_model->createAccount($data_debit);
-                $account_balance_model->createAccount($data_credit);
                 // ////
 
                 // /*THuế*/
@@ -1009,7 +1061,20 @@ Class importtireorderController Extends baseController {
                     $credit = $credits->account_id;
                 }
 
+                $debits = $account_model->getAccountByWhere(array('account_number'=>'811'));
+                if (!$debits) {
+                    $account_model->createAccount(array('account_number'=>'811'));
+                    $debit = $account_model->getLastAccount()->account_id;
+                }
+                else{
+                    $debit = $debits->account_id;
+                }
+
                 $additionals = $additional_model->getAdditionalByWhere(array('credit'=>$credit,'code'=>$import_orders->import_tire_order_code));
+                $account_balance_model->queryAccount('DELETE FROM account_balance WHERE additional='.$additionals->additional_id);
+                $additional_model->queryAdditional('DELETE FROM additional WHERE additional_id='.$additionals->additional_id);
+
+                $additionals = $additional_model->getAdditionalByWhere(array('debit'=>$debit,'code'=>$import_orders->import_tire_order_code));
                 $account_balance_model->queryAccount('DELETE FROM account_balance WHERE additional='.$additionals->additional_id);
                 $additional_model->queryAdditional('DELETE FROM additional WHERE additional_id='.$additionals->additional_id);
 
@@ -1597,89 +1662,180 @@ Class importtireorderController Extends baseController {
                     }
                     /*Mua lốp*/
 
+                    $chenhlech = round($data['import_tire_order_claim']*$data['import_tire_order_bank_rate'])-$data['import_tire_order_rate_diff'];
 
-                     $credits = $account_model->getAccountByWhere(array('account_number'=>'711'));
-                    if (!$credits) {
-                        $account_model->createAccount(array('account_number'=>'711'));
-                        $credit = $account_model->getLastAccount()->account_id;
+                    if ($chenhlech>=0) {
+                        $credits = $account_model->getAccountByWhere(array('account_number'=>'711'));
+                        if (!$credits) {
+                            $account_model->createAccount(array('account_number'=>'711'));
+                            $credit = $account_model->getLastAccount()->account_id;
+                        }
+                        else{
+                            $credit = $credits->account_id;
+                        }
+                        $debits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$data['import_tire_order_code']));
+                        if (!$debits) {
+                            $account_model->createAccount(array('account_number'=>'156_'.$data['import_tire_order_code'],'account_name'=>'Lô '.$data['import_tire_order_code'],'account_parent'=>$tk_156));
+                            $debit = $account_model->getLastAccount()->account_id;
+                        }
+                        else{
+                            $debit = $debits->account_id;
+                        }
+
+                        $add = $additional_model->getAdditionalByWhere(array('credit' => $credit,'code' => $import_orders->import_tire_order_code));
+                        if (!$add) {
+                            // $data_additional = array(
+                            //     'document_date' => $data['import_tire_order_date'],
+                            //     'additional_date' => $data['import_tire_order_date'],
+                            //     'additional_comment' => $data['import_tire_order_comment'],
+                            //     'debit' => $debit,
+                            //     'credit' => $credit,
+                            //     'money' => round($data['import_tire_order_claim']*$data['import_tire_order_bank_rate']),
+                            //     'code' => $data['import_tire_order_code'],
+                            // );
+                            // $additional_model->createAdditional($data_additional);
+                            // $additional_id = $additional_model->getLastAdditional()->additional_id;
+
+                            // $data_debit = array(
+                            //     'account_balance_date' => $data_additional['additional_date'],
+                            //     'account' => $data_additional['debit'],
+                            //     'money' => $data_additional['money'],
+                            //     'week' => (int)date('W', $data_additional['additional_date']),
+                            //     'year' => (int)date('Y', $data_additional['additional_date']),
+                            //     'additional' => $additional_id,
+                            // );
+                            // $data_credit = array(
+                            //     'account_balance_date' => $data_additional['additional_date'],
+                            //     'account' => $data_additional['credit'],
+                            //     'money' => (0-$data_additional['money']),
+                            //     'week' => (int)date('W', $data_additional['additional_date']),
+                            //     'year' => (int)date('Y', $data_additional['additional_date']),
+                            //     'additional' => $additional_id,
+                            // );
+                            // $account_balance_model->createAccount($data_debit);
+                            // $account_balance_model->createAccount($data_credit);
+                        }
+                        else{
+                            $data_additional = array(
+                                'document_date' => $data['import_tire_order_expect_date'],
+                                'additional_date' => $data['import_tire_order_expect_date'],
+                                'additional_comment' => $data['import_tire_order_comment'],
+                                'debit' => $debit,
+                                'credit' => $credit,
+                                'money' => $chenhlech,
+                                'code' => $data['import_tire_order_code'],
+                            );
+                            $additional_model->updateAdditional($data_additional,array('additional_id'=>$add->additional_id));
+                            $additional_id = $add->additional_id;
+
+                            $data_debit = array(
+                                'account_balance_date' => $data_additional['additional_date'],
+                                'account' => $data_additional['debit'],
+                                'money' => $data_additional['money'],
+                                'week' => (int)date('W', $data_additional['additional_date']),
+                                'year' => (int)date('Y', $data_additional['additional_date']),
+                                'additional' => $additional_id,
+                            );
+                            $data_credit = array(
+                                'account_balance_date' => $data_additional['additional_date'],
+                                'account' => $data_additional['credit'],
+                                'money' => (0-$data_additional['money']),
+                                'week' => (int)date('W', $data_additional['additional_date']),
+                                'year' => (int)date('Y', $data_additional['additional_date']),
+                                'additional' => $additional_id,
+                            );
+                            $account_balance_model->updateAccount($data_debit,array('additional' => $additional_id,'account'=>$add->debit));
+                            $account_balance_model->updateAccount($data_credit,array('additional' => $additional_id,'account'=>$add->credit));
+                        }
                     }
                     else{
-                        $credit = $credits->account_id;
-                    }
-                    $debits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$data['import_tire_order_code']));
-                    if (!$debits) {
-                        $account_model->createAccount(array('account_number'=>'156_'.$data['import_tire_order_code'],'account_name'=>'Lô '.$data['import_tire_order_code'],'account_parent'=>$tk_156));
-                        $debit = $account_model->getLastAccount()->account_id;
-                    }
-                    else{
-                        $debit = $debits->account_id;
+                        $debits = $account_model->getAccountByWhere(array('account_number'=>'811'));
+                        if (!$debits) {
+                            $account_model->createAccount(array('account_number'=>'811'));
+                            $debit = $account_model->getLastAccount()->account_id;
+                        }
+                        else{
+                            $debit = $debits->account_id;
+                        }
+                        $credits = $account_model->getAccountByWhere(array('account_number'=>'156_'.$data['import_tire_order_code']));
+                        if (!$credits) {
+                            $account_model->createAccount(array('account_number'=>'156_'.$data['import_tire_order_code'],'account_name'=>'Lô '.$data['import_tire_order_code'],'account_parent'=>$tk_156));
+                            $credit = $account_model->getLastAccount()->account_id;
+                        }
+                        else{
+                            $credit = $credits->account_id;
+                        }
+
+                        $add = $additional_model->getAdditionalByWhere(array('debit' => $debit,'code' => $import_orders->import_tire_order_code));
+                        if (!$add) {
+                            // $data_additional = array(
+                            //     'document_date' => $data['import_tire_order_date'],
+                            //     'additional_date' => $data['import_tire_order_date'],
+                            //     'additional_comment' => $data['import_tire_order_comment'],
+                            //     'debit' => $debit,
+                            //     'credit' => $credit,
+                            //     'money' => round($data['import_tire_order_claim']*$data['import_tire_order_bank_rate']),
+                            //     'code' => $data['import_tire_order_code'],
+                            // );
+                            // $additional_model->createAdditional($data_additional);
+                            // $additional_id = $additional_model->getLastAdditional()->additional_id;
+
+                            // $data_debit = array(
+                            //     'account_balance_date' => $data_additional['additional_date'],
+                            //     'account' => $data_additional['debit'],
+                            //     'money' => $data_additional['money'],
+                            //     'week' => (int)date('W', $data_additional['additional_date']),
+                            //     'year' => (int)date('Y', $data_additional['additional_date']),
+                            //     'additional' => $additional_id,
+                            // );
+                            // $data_credit = array(
+                            //     'account_balance_date' => $data_additional['additional_date'],
+                            //     'account' => $data_additional['credit'],
+                            //     'money' => (0-$data_additional['money']),
+                            //     'week' => (int)date('W', $data_additional['additional_date']),
+                            //     'year' => (int)date('Y', $data_additional['additional_date']),
+                            //     'additional' => $additional_id,
+                            // );
+                            // $account_balance_model->createAccount($data_debit);
+                            // $account_balance_model->createAccount($data_credit);
+                        }
+                        else{
+                            $data_additional = array(
+                                'document_date' => $data['import_tire_order_expect_date'],
+                                'additional_date' => $data['import_tire_order_expect_date'],
+                                'additional_comment' => $data['import_tire_order_comment'],
+                                'debit' => $debit,
+                                'credit' => $credit,
+                                'money' => $chenhlech,
+                                'code' => $data['import_tire_order_code'],
+                            );
+                            $additional_model->updateAdditional($data_additional,array('additional_id'=>$add->additional_id));
+                            $additional_id = $add->additional_id;
+
+                            $data_debit = array(
+                                'account_balance_date' => $data_additional['additional_date'],
+                                'account' => $data_additional['debit'],
+                                'money' => $data_additional['money'],
+                                'week' => (int)date('W', $data_additional['additional_date']),
+                                'year' => (int)date('Y', $data_additional['additional_date']),
+                                'additional' => $additional_id,
+                            );
+                            $data_credit = array(
+                                'account_balance_date' => $data_additional['additional_date'],
+                                'account' => $data_additional['credit'],
+                                'money' => (0-$data_additional['money']),
+                                'week' => (int)date('W', $data_additional['additional_date']),
+                                'year' => (int)date('Y', $data_additional['additional_date']),
+                                'additional' => $additional_id,
+                            );
+                            $account_balance_model->updateAccount($data_debit,array('additional' => $additional_id,'account'=>$add->debit));
+                            $account_balance_model->updateAccount($data_credit,array('additional' => $additional_id,'account'=>$add->credit));
+                        }
                     }
 
-                    $add = $additional_model->getAdditionalByWhere(array('credit' => $credit,'code' => $import_orders->import_tire_order_code));
-                    if (!$add) {
-                        // $data_additional = array(
-                        //     'document_date' => $data['import_tire_order_date'],
-                        //     'additional_date' => $data['import_tire_order_date'],
-                        //     'additional_comment' => $data['import_tire_order_comment'],
-                        //     'debit' => $debit,
-                        //     'credit' => $credit,
-                        //     'money' => round($data['import_tire_order_claim']*$data['import_tire_order_bank_rate']),
-                        //     'code' => $data['import_tire_order_code'],
-                        // );
-                        // $additional_model->createAdditional($data_additional);
-                        // $additional_id = $additional_model->getLastAdditional()->additional_id;
+                     
 
-                        // $data_debit = array(
-                        //     'account_balance_date' => $data_additional['additional_date'],
-                        //     'account' => $data_additional['debit'],
-                        //     'money' => $data_additional['money'],
-                        //     'week' => (int)date('W', $data_additional['additional_date']),
-                        //     'year' => (int)date('Y', $data_additional['additional_date']),
-                        //     'additional' => $additional_id,
-                        // );
-                        // $data_credit = array(
-                        //     'account_balance_date' => $data_additional['additional_date'],
-                        //     'account' => $data_additional['credit'],
-                        //     'money' => (0-$data_additional['money']),
-                        //     'week' => (int)date('W', $data_additional['additional_date']),
-                        //     'year' => (int)date('Y', $data_additional['additional_date']),
-                        //     'additional' => $additional_id,
-                        // );
-                        // $account_balance_model->createAccount($data_debit);
-                        // $account_balance_model->createAccount($data_credit);
-                    }
-                    else{
-                        $data_additional = array(
-                            'document_date' => $data['import_tire_order_expect_date'],
-                            'additional_date' => $data['import_tire_order_expect_date'],
-                            'additional_comment' => $data['import_tire_order_comment'],
-                            'debit' => $debit,
-                            'credit' => $credit,
-                            'money' => round($data['import_tire_order_claim']*$data['import_tire_order_bank_rate'])-$data['import_tire_order_rate_diff'],
-                            'code' => $data['import_tire_order_code'],
-                        );
-                        $additional_model->updateAdditional($data_additional,array('additional_id'=>$add->additional_id));
-                        $additional_id = $add->additional_id;
 
-                        $data_debit = array(
-                            'account_balance_date' => $data_additional['additional_date'],
-                            'account' => $data_additional['debit'],
-                            'money' => $data_additional['money'],
-                            'week' => (int)date('W', $data_additional['additional_date']),
-                            'year' => (int)date('Y', $data_additional['additional_date']),
-                            'additional' => $additional_id,
-                        );
-                        $data_credit = array(
-                            'account_balance_date' => $data_additional['additional_date'],
-                            'account' => $data_additional['credit'],
-                            'money' => (0-$data_additional['money']),
-                            'week' => (int)date('W', $data_additional['additional_date']),
-                            'year' => (int)date('Y', $data_additional['additional_date']),
-                            'additional' => $additional_id,
-                        );
-                        $account_balance_model->updateAccount($data_debit,array('additional' => $additional_id,'account'=>$add->debit));
-                        $account_balance_model->updateAccount($data_credit,array('additional' => $additional_id,'account'=>$add->credit));
-                    }
                     
                     ////
 

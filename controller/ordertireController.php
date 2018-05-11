@@ -683,7 +683,27 @@ Class ordertireController Extends baseController {
         $last_month = array();
         $bonus_salary = array();
 
+        $group_order = array();
+
         foreach ($order_tires as $tire) {
+
+            $sum_order_month = $order_tire_model->queryTire('SELECT COUNT(order_tire_id) AS tong FROM order_tire WHERE customer='.$tire->customer.' AND (order_tire_status IS NULL OR order_tire_status!=1) GROUP BY customer');
+            if ($tire->order_tire_status!=1) {
+                $total_order_month = 0;
+                foreach ($sum_order_month as $sum) {
+                    $total_order_month = $sum->tong;
+                }
+
+                if ($total_order_month>1) {
+                    $group_order[$tire->customer]['order'][] = $tire;
+                    $group_order[$tire->customer]['customer'] = $tire->customer_name;
+                    $group_order[$tire->customer]['sl'] = isset($group_order[$tire->customer]['sl'])?$group_order[$tire->customer]['sl']+$tire->order_tire_number:$tire->order_tire_number;
+                    $group_order[$tire->customer]['vat'] = isset($group_order[$tire->customer]['vat'])?$group_order[$tire->customer]['vat']+$tire->vat:$tire->vat;
+                    $group_order[$tire->customer]['discount'] = isset($group_order[$tire->customer]['discount'])?$group_order[$tire->customer]['discount']+$tire->discount+$tire->reduce:$tire->discount+$tire->reduce;
+                    $group_order[$tire->customer]['total'] = isset($group_order[$tire->customer]['total'])?$group_order[$tire->customer]['total']+$tire->total:$tire->total;
+                }
+            }
+
             $lifts = $lift_model->getLiftByWhere(array('order_tire'=>$tire->order_tire_id));
             if ($lifts) {
                 $sts = explode(',', $lifts->staff);
@@ -857,7 +877,7 @@ Class ordertireController Extends baseController {
 
                 if ($tire->vat==0) {
                     if ($tire_prices<5000000) {
-                        $discount = 100000;
+                        $discount = 160000;
                     }
                     else{
                         $discount = 200000;
@@ -908,6 +928,8 @@ Class ordertireController Extends baseController {
         $this->view->data['lift'] = $lift;
 
         $this->view->data['order_tires'] = $order_tires;
+
+        $this->view->data['group_order'] = $group_order;
 
         $this->view->data['lastID'] = isset($order_tire_model->getLastTire()->order_tire_id)?$order_tire_model->getLastTire()->order_tire_id:0;
 
@@ -1951,6 +1973,10 @@ Class ordertireController Extends baseController {
                         $approve = "";
                     }
 
+                    if ($customers->customer_status==2) {
+                        $approve = 1;
+                    }
+
                     $arr = array(
                         'company'=>$customers->company_name,
                         'mst'=>$customers->mst,
@@ -1987,6 +2013,10 @@ Class ordertireController Extends baseController {
                         $type = 1;
                         $last_staff = "";
                         $approve = "";
+                    }
+
+                    if ($customers->customer_status==2) {
+                        $approve = 1;
                     }
 
                     $arr = array(
@@ -2030,6 +2060,10 @@ Class ordertireController Extends baseController {
                         $approve = "";
                     }
 
+                    if ($customers->customer_status==2) {
+                        $approve = 1;
+                    }
+
                     $arr = array(
                         'company'=>$customers->company_name,
                         'mst'=>$customers->mst,
@@ -2066,6 +2100,10 @@ Class ordertireController Extends baseController {
                         $type = 1;
                         $last_staff = "";
                         $approve = "";
+                    }
+
+                    if ($customers->customer_status==2) {
+                        $approve = 1;
                     }
 
                     $arr = array(
@@ -4876,6 +4914,27 @@ Class ordertireController Extends baseController {
                     }
                 }
             }
+        }
+    }
+    public function getordernumber(){
+        if(isset($_GET['data'])){
+            $order_tire_model = $this->model->get('ordertireModel');
+            $order_tires = $order_tire_model->getTire($_GET['data']);
+
+            $str = $order_tires->order_number;
+
+            if ($str == "") {
+                $last = "";
+                $lasts = $order_tire_model->getAllTire(array('order_by'=>'order_number DESC','limit'=>1));
+                foreach ($lasts as $tire) {
+                    $last = str_replace('lx-', '', $tire->order_number);
+                }
+                $last++;
+                
+                $str = 'lx-'.$last;
+            }
+
+            echo $str;
         }
     }
     public function getordervat(){

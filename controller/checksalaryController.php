@@ -409,7 +409,7 @@ Class checksalaryController Extends baseController {
                     // Không lấy Hđ
                     if ($order_tire->vat==0) {
                         if ($tire_prices<5000000) {
-                            $discount = 100000;
+                            $discount = 160000;
                         }
                         else{
                             $discount = 200000;
@@ -738,7 +738,7 @@ Class checksalaryController Extends baseController {
                     // Không lấy Hđ
                     if ($order_tire->vat==0) {
                         if ($tire_prices<5000000) {
-                            $discount = 100000;
+                            $discount = 160000;
                         }
                         else{
                             $discount = 200000;

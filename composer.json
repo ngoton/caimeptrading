@@ -1,0 +1,22 @@
+{
+    "name": "ngoton/caimeptrading",
+    "description": "CMG System",
+    "keywords" : ["cmg", "system"],
+    "license": "CMG",
+    "authors": [
+        {
+            "name": "Tin Hoc Tai Nha",
+            "email": "ngoton@tinhoctainha.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "phpseclib/phpseclib": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kunnu\\Dropbox\\": "lib/Dropbox",
+            "phpseclib\\": "phpseclib/"
+        }
+    }
+}

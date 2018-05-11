@@ -1,4 +1,8 @@
 <?php
+require "vendor/autoload.php";
+use phpseclib\Crypt\AES;
+use phpseclib\Crypt\Random;
+
 Class vatController Extends baseController {
     public function index() {
         $this->view->setLayout('admin');
@@ -368,6 +372,184 @@ Class vatController Extends baseController {
         }
    }
 
+   public function createEHoaDon(){ 
+        $BkavPartnerGUID = "68D8219C-9AFB-43A1-9A93-7824D5949841";
+        $BkavPartnerToken = "8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==";
+        $Mode = 6;
+        $CmdType = 100; //Tạo HĐ, eHD tự cấp InvoiceForm, InvoiceSerial; InvoiceNo = 0 (tạo HĐ mới)
+        $items = array();
+        $EncryptedCommandData = $this->RemoteCommand($BkavPartnerToken, $Mode, $CmdType, $items);
+        
+        $params = array(
+            'partnerGUID' => $BkavPartnerGUID,
+            'CommandData' => $EncryptedCommandData
+        );
+
+        $webServiceClient = $this->connectBKAV();
+        $response = $webServiceClient->__soapCall('ExecCommand', array('parameters' => $params));
+
+        echo $response->ExecCommandResult;
+   }
+
+   public function connectBKAV(){
+        $wsdlAddress = "https://wsdemo.ehoadon.vn/WSPublicEHoaDon.asmx?WSDL";
+        
+        $options = array(
+            "soap_version" => SOAP_1_2,
+            "cache_wsdl" => WSDL_CACHE_NONE,
+            "trace" => 1,
+            "exceptions" => true
+        );
+
+        $webServiceClient = new SoapClient($wsdlAddress, $options);
+
+        return $webServiceClient;
+   }
+   public function RemoteCommand($BkavPartnerToken, $Mode = 6, $CmdType, $items = array()){
+        $CommandData = array(
+            'CommandType' => null,
+            'CommandObject' => null
+        );
+
+        $CommandObject[] = array(
+            'Invoice' => array(
+                'InvoiceTypeID' => 1,
+                'InvoiceDate' => date('m/d/Y h:i:s a', time()),
+                'BuyerName' => "Nguyễn Văn A Update",
+                'BuyerTaxCode' => "0104746603",
+                'BuyerUnitName' => "Công Ty Luật TNHH ABC",
+                'BuyerAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+                'BuyerBankAccount' => "",
+                'PayMethodID' => 1,
+                'ReceiveTypeID' => 3,
+                'ReceiverEmail' => "ngoton007@yahoo.com",
+                'ReceiverMobile' => "0902085911",
+                'ReceiverAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+                'ReceiverName' => "Nguyễn Văn A",
+                'Note' => "Test eHoaDon",
+                'BillCode' => "",
+                'CurrencyID' => "VND",
+                'ExchangeRate' => 1,
+                'InvoiceStatusID' => 1,
+                'SignedDate' => date('m/d/Y h:i:s a', time()),
+            ),
+            'ListInvoiceDetailsWS' => array(),
+            'PartnerInvoiceID' => 0,
+            'PartnerInvoiceStringID' => '',
+        );
+
+        $items = array(1,2);
+        foreach ($items as $item) {
+            $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
+                'ItemName' => "Chữ ký số Bkav CA ENT BN (bao gồm Thiết bị USB Token) update",
+                'UnitName' => "Gói",
+                'Qty' => 1,
+                'Price' => 600000,
+                'Amount' => 600000,
+                'TaxRateID' => 3,
+                'TaxAmount' => 60000,
+                'IsDiscount' => false,
+                'IsIncrease' => null,
+            );
+        }
+
+        $CommandData = array(
+            'CommandType' => $CmdType,
+            'CommandObject' => $CommandObject
+        );
+
+        $CommandData = json_encode($CommandData);
+        //$CommandData = unpack("C*",$CommandData); // Convert to byte array
+        $token = explode(':', $BkavPartnerToken);
+
+        $result = $this->Encryption($this->Zip($CommandData), $token[0], $token[1], "AES-256-CBC");
+
+        return $result;
+   }
+
+   public function Encryption($plaintext, $key, $iv, $method){
+        // $ivsize = openssl_cipher_iv_length($method);
+        // $iv = openssl_random_pseudo_bytes($ivsize);
+        return base64_encode(openssl_encrypt($plaintext, $method, base64_decode($key), OPENSSL_RAW_DATA, base64_decode($iv)));
+   }
+   public function Decryption($plaintext, $key, $method){
+        $ivsize = openssl_cipher_iv_length($method);
+        $iv = openssl_random_pseudo_bytes($ivsize);
+        return openssl_decrypt(base64_decode($plaintext), $method, base64_decode($key), OPENSSL_RAW_DATA, $iv);
+   }
+   public function Zip($str){
+        return gzencode($str);
+   }
+   public function Unzip($str){
+        return gzuncompress($str);
+   }
+
+   public function de(){
+    var_dump(hex2bin('8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU='));
+    // $cipher = new AES(); 
+    // $cipher->setKey('8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=');
+    // $cipher->setIV('slmm5fyrdZDQASy7hjQ33g==');
+    // echo $encrypted = base64_encode($cipher->encrypt('{\"CmdType\":100,\"CommandObject\":[{\"Invoice\":{\"InvoiceTypeID\":1,\"InvoiceDate\":\"05/04/2018 10:14:59 am\",\"BuyerName\":\"Nguy\u1ec5n V\u0103n A Update\",\"BuyerTaxCode\":\"0104746603\",\"BuyerUnitName\":\"C\u00f4ng Ty Lu\u1eadt TNHH ABC\",\"BuyerAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"BuyerBankAccount\":\"\",\"PayMethodID\":1,\"ReceiveTypeID\":3,\"ReceiverEmail\":\"ngoton007@yahoo.com\",\"ReceiverMobile\":\"0902085911\",\"ReceiverAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"ReceiverName\":\"Nguy\u1ec5n V\u0103n A\",\"Note\":\"Test eHoaDon\",\"BillCode\":\"\",\"CurrencyID\":\"VND\",\"ExchangeRate\":1,\"InvoiceStatusID\":1,\"SignedDate\":\"05/04/2018 10:14:59 am\"},\"ListInvoiceDetailsWS\":[{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null},{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null}],\"PartnerInvoiceID\":0,\"PartnerInvoiceStringID\":\"\"}]}'));
+
+    // var_dump($cipher->decrypt(base64_decode("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")));
+
+    $a = $this->Zip('{\"CmdType\":100,\"CommandObject\":[{\"Invoice\":{\"InvoiceTypeID\":1,\"InvoiceDate\":\"05/04/2018 10:14:59 am\",\"BuyerName\":\"Nguy\u1ec5n V\u0103n A Update\",\"BuyerTaxCode\":\"0104746603\",\"BuyerUnitName\":\"C\u00f4ng Ty Lu\u1eadt TNHH ABC\",\"BuyerAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"BuyerBankAccount\":\"\",\"PayMethodID\":1,\"ReceiveTypeID\":3,\"ReceiverEmail\":\"ngoton007@yahoo.com\",\"ReceiverMobile\":\"0902085911\",\"ReceiverAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"ReceiverName\":\"Nguy\u1ec5n V\u0103n A\",\"Note\":\"Test eHoaDon\",\"BillCode\":\"\",\"CurrencyID\":\"VND\",\"ExchangeRate\":1,\"InvoiceStatusID\":1,\"SignedDate\":\"05/04/2018 10:14:59 am\"},\"ListInvoiceDetailsWS\":[{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null},{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null}],\"PartnerInvoiceID\":0,\"PartnerInvoiceStringID\":\"\"}]}');
+    var_dump(unpack("C*",utf8_encode('{\"CmdType\":100,\"CommandObject\":[{\"Invoice\":{\"InvoiceTypeID\":1,\"InvoiceDate\":\"05/04/2018 10:14:59 am\",\"BuyerName\":\"Nguy\u1ec5n V\u0103n A Update\",\"BuyerTaxCode\":\"0104746603\",\"BuyerUnitName\":\"C\u00f4ng Ty Lu\u1eadt TNHH ABC\",\"BuyerAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"BuyerBankAccount\":\"\",\"PayMethodID\":1,\"ReceiveTypeID\":3,\"ReceiverEmail\":\"ngoton007@yahoo.com\",\"ReceiverMobile\":\"0902085911\",\"ReceiverAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"ReceiverName\":\"Nguy\u1ec5n V\u0103n A\",\"Note\":\"Test eHoaDon\",\"BillCode\":\"\",\"CurrencyID\":\"VND\",\"ExchangeRate\":1,\"InvoiceStatusID\":1,\"SignedDate\":\"05/04/2018 10:14:59 am\"},\"ListInvoiceDetailsWS\":[{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null},{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null}],\"PartnerInvoiceID\":0,\"PartnerInvoiceStringID\":\"\"}]}')));
+    //var_dump($this->Decryption("vi/IdLJI1+yqz+9vXc3DYi+y/4VJEUrzvMkLswqHfSJvgfdcVQOKwPTqq6THdU82DW51x1X/5pUNzwlBiC+WDDN5L0xDQ2evzfsO+ZrNTTWz9wPftyeckcaZseF5ftqq6ZJSQjmWZVg1HEJ42TVKyoMpd6XOZqacEWZXwgDq2X91zlAPf5ZV5Ab4C67iCPQK8ibpFa61zoLQP6b//GHIfRUN/3IYXum+vVe3IJIJPRNv2oU+UYmPwONRZ5NEQU8sFPCJpVz8yNCyojPLFh3F/4MtcJnfbQmBsu8ntPTZFnLN/wKJ66Zgmqnm5YrVGWIhy+sZd748zrHBFLRBE4VykFxGBrg0IrGfPo5WOwlQD0HdiayF2wtS4ax7h9xwmI4SevTo7quhwlN3BRS4rfI1SSvX/q2EuOFSntoA9uETBWcKTe6usvOvl+qe+oaC3WzQNae6mpl+6x+LKTBBEV5MW2y1lmd/JfYPoDfPmJTJjSkN00/1s39I0zQIec2uMvu2eb1rq8wbkw6PbNYxUiPv92OTftcDiSmowP7BUlK7jP4Zn5gK4/4xDJB/yix2Xb4IsVcRJB8bhstIvU9D/f6PT09LCYAayA7ZO/tg2jTwVmVUpCTeTKR+P0kaeL3iXS9MaEuDNR5THlKB/uI+lLt62SYKjS5ETJo5hGuoct797WNpAyrN59dR89tKJ0jAbPpc8829pcjVtNfkn5QUtYfQDrzpgvSAwOq0xUGJ+MAkpy/nReOdbi56LrTTpaCeMrEZQvyE81aNZvt46Gs1tQMRTpVyHL5r5DMQcqMqHdp+082eLl2FF6f8Z8tI5U3yPtcHSYDJuaNtnd+xt5MLbR5iXVWpqJlxpct4XQe5bzfdtdf5seFwGn0M730Tqer3CiS+pNmNOgxgpAgYWnlF8l6AqIMpd6XOZqacEWZXwgDq2X+r7eVj2oDkQxUye06+cnk92QxwbJzLRwo13378h4edxUMvS50Rqbizs2DkNnntGbYvBc9q1eJCz4k9H+h7YG2j/4Yriu5gTqe0aKkGJ2XIWZyOjgGQhHylrf+3B5gxKaPkqFfBLLJQY0nFcx92iEqEJVVFozOrv/cHv6qBwPvG/SR1yYFwENKxM1G4ZMdF+aAYnQTp3FRFxGSdV+F3BWcQuJoTMNkSI004nZJ1P+BfJio8fb7Sex4IRiJy4jt6Gv3IGBRBGkR0KdRz2xViy0qx01tduXd7IpIwWRkftxC3rsFhLSxCSc/flqzZpIhT+Rx8P8lrxdpjeZJgVs1Sur+yy2wAxLSAlVGbGaAo26BiGCh03VTh6uPQUVm94kob9A5zgV+oSnzwMF4QPTef9on7vHy5aC/LTM3kVtBQG+Ma2NhsymsJkXAq3YrCXx64fiTRCtT2z1FsSkiSLdwlt2GfGvHGd98dKUnrxhIqyB28DD8KakNHgfowFxskDBT+PEHJ0Z9NZG93k7BdGzMNMk1WNJrdcc+e9CJBbl3zt8iA3jBE5+BmgczNPwYcaGJc+iiWcLlwizx5YXtGSY/AdkfDtHbiEn3zs5fPwgASWRInv9BHa6iYoEGZs5lFczPHc3Y/qwzy3URKbt8vHv2n+dece7M/14ExigadlL3r/SsJA0o0+l1fxPmpcquS7XIJzIZypPzJzaG08koxnKTmFbMz3F0Eux9uiRrrn/zp5TxQf+V1s7bOJmQAcWOsItS5D2aK3BO0EOOhpaHoYEoVwCag92odQHvGYIj5RyfrBI8m+nmdYy455yZGATGRLDl6VBi+niQ67KyB31C+Awxbtd0ngJjRbAu/hkXdCRv6/gMuNDGSRUPuZ0xlZOpzLPzSXOU4kKAA2pRfPQNWvXeOrCdPbas0TkYVFtScCFu1OyZwdA==","8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==", "aes-256-ecb" ));
+   }
+   public function data(){
+        $CommandObject[] = array(
+            'Invoice' => array(
+                'InvoiceTypeID' => 1,
+                'InvoiceDate' => date('m/d/Y h:i:s a', time()),
+                'BuyerName' => "Nguyễn Văn A Update",
+                'BuyerTaxCode' => "0104746603",
+                'BuyerUnitName' => "Công Ty Luật TNHH ABC",
+                'BuyerAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+                'BuyerBankAccount' => "",
+                'PayMethodID' => 1,
+                'ReceiveTypeID' => 3,
+                'ReceiverEmail' => "ngoton007@yahoo.com",
+                'ReceiverMobile' => "0902085911",
+                'ReceiverAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+                'ReceiverName' => "Nguyễn Văn A",
+                'Note' => "Test eHoaDon",
+                'BillCode' => "",
+                'CurrencyID' => "VND",
+                'ExchangeRate' => 1,
+                'InvoiceStatusID' => 1,
+                'SignedDate' => date('m/d/Y h:i:s a', time()),
+            ),
+            'ListInvoiceDetailsWS' => array(),
+            'PartnerInvoiceID' => 0,
+            'PartnerInvoiceStringID' => '',
+        );
+
+        $items = array(1,2);
+        foreach ($items as $item) {
+            $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
+                'ItemName' => "Chữ ký số Bkav CA ENT BN (bao gồm Thiết bị USB Token) update",
+                'UnitName' => "Gói",
+                'Qty' => 1,
+                'Price' => 600000,
+                'Amount' => 600000,
+                'TaxRateID' => 3,
+                'TaxAmount' => 60000,
+                'IsDiscount' => false,
+                'IsIncrease' => null,
+            );
+        }
+
+        $CommandData = array(
+            'CmdType' => 100,
+            'CommandObject' => $CommandObject
+        );
+
+        $CommandData = json_encode($CommandData);
+        $CommandData = unpack('C*', $CommandData);
+        var_dump($CommandData);
+        //echo $this->Zip($CommandData);
+   }
 
 }
 ?>

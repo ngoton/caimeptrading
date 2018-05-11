@@ -1433,6 +1433,10 @@ function add_click(){
             
         });
 
+    $( document ).ajaxComplete(function() {
+      $('.add-field button').attr("disabled",false);
+    });
+
     $( ".add-field" ).dialog( "open" );
 }
 
