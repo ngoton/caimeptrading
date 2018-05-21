@@ -51,7 +51,7 @@ Class vatController Extends baseController {
         if (isset($_GET['sohoadon'])) {
             $invoice_tire_detail_model = $this->model->get('invoicetiredetailModel');
 
-            $invoices = $invoice_tire_detail_model->getAllInvoice(array('where'=>'invoice_tire_detail_number LIKE "%'.$_GET['sohoadon'].'%"','order_by'=>'invoice_tire_detail_date DESC'),array('table'=>'tire_brand,tire_size,tire_pattern','where'=>'invoice_tire_detail_brand=tire_brand_id AND invoice_tire_detail_size=tire_size_id AND invoice_tire_detail_pattern=tire_pattern_id'));
+            $invoices = $invoice_tire_detail_model->getAllInvoice(array('where'=>'invoice_tire_detail_number LIKE "%'.$_GET['sohoadon'].'%" AND invoice_tire_detail_form = "'.$_GET['mauso'].'" AND invoice_tire_detail_symbol = "'.$_GET['kyhieu'].'"','order_by'=>'invoice_tire_detail_date DESC'),array('table'=>'tire_brand,tire_size,tire_pattern','where'=>'invoice_tire_detail_brand=tire_brand_id AND invoice_tire_detail_size=tire_size_id AND invoice_tire_detail_pattern=tire_pattern_id'));
             
             $ngay = "";
             $thang = "";
@@ -157,6 +157,32 @@ Class vatController Extends baseController {
         
         $items = $params;
 
+        $guid = null;
+        if ($items['eHD'][0] == 1) {
+            $invoices = $invoice_tire_model->getAllInvoice(array('where'=>'invoice_tire_number = "'.$items['sohd'][0].'" AND invoice_tire_form = "'.$items['mauso'][0].'" AND invoice_tire_symbol = "'.$items['kyhieu'][0].'"'));
+
+            if (!$invoices) {
+                $CmdType = 111; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
+                $eHD = $this->createEHoaDon($params, $CmdType);
+            }
+            else{
+                $CmdType = 200; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
+                $eHD = $this->createEHoaDon($params, $CmdType);
+
+                foreach ($invoices as $invoice) {
+                    $invoice_tire_model->deleteInvoice($invoice->invoice_tire_id);
+                }
+                $invoices = $invoice_tire_detail_model->getAllInvoice(array('where'=>'invoice_tire_detail_number = "'.$items['sohd'][0].'" AND invoice_tire_detail_form = "'.$items['mauso'][0].'" AND invoice_tire_detail_symbol = "'.$items['kyhieu'][0].'"'));
+                foreach ($invoices as $invoice) {
+                    $invoice_tire_detail_model->deleteInvoice($invoice->invoice_tire_detail_id);
+                }
+            }
+
+            $res = json_decode($eHD->Object);
+            if (isset($res[0]->InvoiceGUID)) {
+                $guid = $res[0]->InvoiceGUID;
+            }
+        }
         
         foreach ($items['order'] as $value) {
             if($value>0){
@@ -165,6 +191,9 @@ Class vatController Extends baseController {
                     'invoice_tire_number'=>$items['sohd'][0],
                     'invoice_tire_date'=> strtotime($items['ngay'][0].'-'.$items['thang'][0].'-20'.$items['nam'][0]),
                     'invoice_tire_create_user'=>$_SESSION['userid_logined'],
+                    'invoice_tire_guid'=>$guid,
+                    'invoice_tire_form'=>$items['mauso'][0],
+                    'invoice_tire_symbol'=>$items['kyhieu'][0],
                 );
                 $invoices = $invoice_tire_model->getInvoiceByWhere(array('order_tire'=>$data_invoice['order_tire'],'invoice_tire_number'=>$data_invoice['invoice_tire_number']));
                 if (!$invoices) {
@@ -215,6 +244,8 @@ Class vatController Extends baseController {
                     'address_hide'=>$items['diachi'][0],
                     'price_hide'=>$dongia_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
                     'total_hide'=>$tt_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
+                    'invoice_tire_detail_form'=>$items['mauso'][0],
+                    'invoice_tire_detail_symbol'=>$items['kyhieu'][0],
                 );
 
                 $invoices = $invoice_tire_detail_model->getInvoiceByWhere(array('order_tire'=>$data_invoice['order_tire'],'order_tire_list'=>$data_invoice['order_tire_list'],'invoice_tire_detail_number'=>$data_invoice['invoice_tire_detail_number']));
@@ -245,6 +276,7 @@ Class vatController Extends baseController {
         $this->view->data['congtien'] = str_replace(',', '', $params['congtien'][0]);
         $this->view->data['tienthue'] = str_replace(',', '', $params['tienthue'][0]);
         $this->view->data['tongcong'] = str_replace(',', '', $params['tongcong'][0]);
+
 
         date_default_timezone_set("Asia/Ho_Chi_Minh"); 
         $filename = "action_logs.txt";
@@ -359,8 +391,10 @@ Class vatController Extends baseController {
             $invoice_tire_model = $this->model->get('invoicetireModel');
             $invoice_tire_detail_model = $this->model->get('invoicetiredetailModel');
 
-            $invoice_tire_model->queryInvoice('DELETE FROM invoice_tire WHERE invoice_tire_number = "'.$_POST['data'].'"');
-            $invoice_tire_detail_model->queryInvoice('DELETE FROM invoice_tire_detail WHERE invoice_tire_detail_number = "'.$_POST['data'].'"');
+            $invoice_tire_model->queryInvoice('UPDATE invoice_tire SET order_tire="", invoice_tire_create_user='.$_SESSION['userid_logined'].', invoice_tire_guid="" WHERE invoice_tire_number="'.$_POST['data'].'" and invoice_tire_form = "'.$_POST['mauso'].'" AND invoice_tire_symbol="'.$_POST['kyhieu'].'"');
+
+            $invoice_tire_detail_model->queryInvoice('UPDATE invoice_tire_detail SET order_tire="", invoice_tire_detail_create_user='.$_SESSION['userid_logined'].', order_tire_list="", invoice_tire_detail_brand="", invoice_tire_detail_size="", invoice_tire_detail_pattern="", invoice_tire_detail_volume="", invoice_tire_detail_price="", invoice_tire_detail_vat=""  WHERE invoice_tire_detail_number="'.$_POST['data'].'" and invoice_tire_detail_form = "'.$_POST['mauso'].'" AND invoice_tire_detail_symbol="'.$_POST['kyhieu'].'"');
+
 
             date_default_timezone_set("Asia/Ho_Chi_Minh"); 
             $filename = "action_logs.txt";
@@ -372,12 +406,11 @@ Class vatController Extends baseController {
         }
    }
 
-   public function createEHoaDon(){ 
+   public function createEHoaDon($items, $CmdType){ 
         $BkavPartnerGUID = "68D8219C-9AFB-43A1-9A93-7824D5949841";
         $BkavPartnerToken = "8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==";
         $Mode = 6;
-        $CmdType = 100; //Tạo HĐ, eHD tự cấp InvoiceForm, InvoiceSerial; InvoiceNo = 0 (tạo HĐ mới)
-        $items = array();
+        
         $EncryptedCommandData = $this->RemoteCommand($BkavPartnerToken, $Mode, $CmdType, $items);
         
         $params = array(
@@ -388,7 +421,7 @@ Class vatController Extends baseController {
         $webServiceClient = $this->connectBKAV();
         $response = $webServiceClient->__soapCall('ExecCommand', array('parameters' => $params));
 
-        echo $response->ExecCommandResult;
+        return json_decode(base64_decode($response->ExecCommandResult));
    }
 
    public function connectBKAV(){
@@ -406,63 +439,97 @@ Class vatController Extends baseController {
         return $webServiceClient;
    }
    public function RemoteCommand($BkavPartnerToken, $Mode = 6, $CmdType, $items = array()){
-        $CommandData = array(
-            'CommandType' => null,
-            'CommandObject' => null
-        );
+        $order_tire_model = $this->model->get('ordertireModel');
+        $customer_model = $this->model->get('customerModel');
+        $tire_brand_model = $this->model->get('tirebrandModel');
+        $tire_size_model = $this->model->get('tiresizeModel');
+        $tire_pattern_model = $this->model->get('tirepatternModel');
+        
+        $dh = array();
+        foreach ($items['order'] as $value) {
+            if($value>0){
+                $orders = $order_tire_model->getTire($value);
+                if (!in_array($orders->order_number, $dh)) {
+                    $dh[] = $orders->order_number;
+                }
+                if (!isset($customers)) {
+                    $customers = $customer_model->getCustomer($orders->customer);
+                }
+                
+            }
+        }
+        
+        $dh = implode(',', $dh);
 
         $CommandObject[] = array(
             'Invoice' => array(
                 'InvoiceTypeID' => 1,
-                'InvoiceDate' => date('m/d/Y h:i:s a', time()),
-                'BuyerName' => "Nguyễn Văn A Update",
-                'BuyerTaxCode' => "0104746603",
-                'BuyerUnitName' => "Công Ty Luật TNHH ABC",
-                'BuyerAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
+                'InvoiceDate' => '20'.$items['nam'][0].'-'.$items['thang'][0].'-'.$items['ngay'][0],
+                'BuyerName' => $items['tennguoimua'][0],
+                'BuyerTaxCode' => $items['mst'][0],
+                'BuyerUnitName' => $items['tendv'][0],
+                'BuyerAddress' => $items['diachi'][0],
                 'BuyerBankAccount' => "",
-                'PayMethodID' => 1,
+                'PayMethodID' => 3,
                 'ReceiveTypeID' => 3,
-                'ReceiverEmail' => "ngoton007@yahoo.com",
-                'ReceiverMobile' => "0902085911",
-                'ReceiverAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
-                'ReceiverName' => "Nguyễn Văn A",
-                'Note' => "Test eHoaDon",
+                'ReceiverEmail' => $customers->customer_email,
+                'ReceiverMobile' => str_replace(" ", "", $customers->customer_phone),
+                'ReceiverAddress' => $customers->customer_address,
+                'ReceiverName' => $customers->customer_contact,
+                'Note' => "HD lập từ viet-trade.org: ".$dh,
                 'BillCode' => "",
                 'CurrencyID' => "VND",
                 'ExchangeRate' => 1,
                 'InvoiceStatusID' => 1,
-                'SignedDate' => date('m/d/Y h:i:s a', time()),
+                'InvoiceForm' => $items['mauso'][0],
+                'InvoiceSerial' => $items['kyhieu'][0],
+                'InvoiceNo' => $items['sohd'][0], 
+                'SignedDate' => '20'.$items['nam'][0].'-'.$items['thang'][0].'-'.$items['ngay'][0],
             ),
             'ListInvoiceDetailsWS' => array(),
-            'PartnerInvoiceID' => 0,
-            'PartnerInvoiceStringID' => '',
+            'PartnerInvoiceID' => $items['sohd'][0],
+            'PartnerInvoiceStringID' => "",
         );
 
-        $items = array(1,2);
-        foreach ($items as $item) {
-            $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
-                'ItemName' => "Chữ ký số Bkav CA ENT BN (bao gồm Thiết bị USB Token) update",
-                'UnitName' => "Gói",
-                'Qty' => 1,
-                'Price' => 600000,
-                'Amount' => 600000,
-                'TaxRateID' => 3,
-                'TaxAmount' => 60000,
-                'IsDiscount' => false,
-                'IsIncrease' => null,
-            );
+        $j=0;
+        foreach ($items['stt'] as $value) {
+            if($value>0){
+
+                $brand = $tire_brand_model->getTire($items['brand'][$j])->tire_brand_name;
+                $size = $tire_size_model->getTire($items['size'][$j])->tire_size_number;
+                $pattern = $tire_pattern_model->getTire($items['pattern'][$j])->tire_pattern_name;
+
+                $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
+                    'ItemName' => $brand.' '.$size.' '.$pattern,
+                    'UnitName' => substr($size, -2)=='.5'?'Cái':'Bộ',
+                    'Qty' => $items['sl'][$j],
+                    'Price' => str_replace(',', '', $items['dg'][$j]),
+                    'Amount' => str_replace(',', '', $items['tt'][$j]),
+                    'TaxRateID' => 3,
+                    'TaxAmount' => round($items['price_hide'][$j]*$items['sl'][$j]*0.1),
+                    'IsDiscount' => false,
+                    'IsIncrease' => null,
+                );
+                
+                
+            }
+
+            $j++;
         }
+        
 
         $CommandData = array(
-            'CommandType' => $CmdType,
+            'CmdType' => $CmdType,
             'CommandObject' => $CommandObject
         );
 
         $CommandData = json_encode($CommandData);
         //$CommandData = unpack("C*",$CommandData); // Convert to byte array
-        $token = explode(':', $BkavPartnerToken);
+        //$token = explode(':', $BkavPartnerToken);
 
-        $result = $this->Encryption($this->Zip($CommandData), $token[0], $token[1], "AES-256-CBC");
+        //$result = $this->Encryption($this->Zip($CommandData), $token[0], $token[1], "AES-256-CBC");
+
+        $result = base64_encode($CommandData);
 
         return $result;
    }
@@ -485,7 +552,10 @@ Class vatController Extends baseController {
    }
 
    public function de(){
-    var_dump(hex2bin('8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU='));
+$a = json_decode('{"Status":0,"Object":[{"PartnerInvoiceID":0,"PartnerInvoiceStringID":" aaaaaa","InvoiceGUID":"9ea9db57-b8c4-4149-9dce-2fd8b73712fd","InvoiceForm":"01GTKT0/001","InvoiceSerial":"AA/17E","InvoiceNo":0,"Status":0,"MessLog":null}],"isOk":true,"isError":false}');
+    var_dump($a->Object[0]->InvoiceGUID);
+    //var_dump(base64_decode("eyJTdGF0dXMiOjAsIk9iamVjdCI6Ilt7XCJQYXJ0bmVySW52b2ljZUlEXCI6NSxcIlBhcnRuZXJJbnZvaWNlU3RyaW5nSURcIjpcIlwiLFwiSW52b2ljZUdVSURcIjpcIjU2NWQ3NmFiLTM2NGYtNGMxMy04ZjM0LTc1M2E3YzNlNjhlNVwiLFwiSW52b2ljZUZvcm1cIjpcIjAxR1RLVDAvMDAxXCIsXCJJbnZvaWNlU2VyaWFsXCI6XCJBQS8xOEVcIixcIkludm9pY2VOb1wiOjAsXCJTdGF0dXNcIjowLFwiTWVzc0xvZ1wiOlwiXCJ9XSIsImlzT2siOnRydWUsImlzRXJyb3IiOmZhbHNlfQ=="));
+    //var_dump(hex2bin('8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU='));
     // $cipher = new AES(); 
     // $cipher->setKey('8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=');
     // $cipher->setIV('slmm5fyrdZDQASy7hjQ33g==');
@@ -496,59 +566,6 @@ Class vatController Extends baseController {
     $a = $this->Zip('{\"CmdType\":100,\"CommandObject\":[{\"Invoice\":{\"InvoiceTypeID\":1,\"InvoiceDate\":\"05/04/2018 10:14:59 am\",\"BuyerName\":\"Nguy\u1ec5n V\u0103n A Update\",\"BuyerTaxCode\":\"0104746603\",\"BuyerUnitName\":\"C\u00f4ng Ty Lu\u1eadt TNHH ABC\",\"BuyerAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"BuyerBankAccount\":\"\",\"PayMethodID\":1,\"ReceiveTypeID\":3,\"ReceiverEmail\":\"ngoton007@yahoo.com\",\"ReceiverMobile\":\"0902085911\",\"ReceiverAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"ReceiverName\":\"Nguy\u1ec5n V\u0103n A\",\"Note\":\"Test eHoaDon\",\"BillCode\":\"\",\"CurrencyID\":\"VND\",\"ExchangeRate\":1,\"InvoiceStatusID\":1,\"SignedDate\":\"05/04/2018 10:14:59 am\"},\"ListInvoiceDetailsWS\":[{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null},{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null}],\"PartnerInvoiceID\":0,\"PartnerInvoiceStringID\":\"\"}]}');
     var_dump(unpack("C*",utf8_encode('{\"CmdType\":100,\"CommandObject\":[{\"Invoice\":{\"InvoiceTypeID\":1,\"InvoiceDate\":\"05/04/2018 10:14:59 am\",\"BuyerName\":\"Nguy\u1ec5n V\u0103n A Update\",\"BuyerTaxCode\":\"0104746603\",\"BuyerUnitName\":\"C\u00f4ng Ty Lu\u1eadt TNHH ABC\",\"BuyerAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"BuyerBankAccount\":\"\",\"PayMethodID\":1,\"ReceiveTypeID\":3,\"ReceiverEmail\":\"ngoton007@yahoo.com\",\"ReceiverMobile\":\"0902085911\",\"ReceiverAddress\":\"Nh\u00e0 N2D Khu \u0110T Trung Ho\u00e0-Nh\u00e2n Ch\u00ednh, Ph\u01b0\u1eddng Nh\u00e2n Ch\u00ednh, Qu\u1eadn Thanh Xu\u00e2n, H\u00e0 N\u1ed9i\",\"ReceiverName\":\"Nguy\u1ec5n V\u0103n A\",\"Note\":\"Test eHoaDon\",\"BillCode\":\"\",\"CurrencyID\":\"VND\",\"ExchangeRate\":1,\"InvoiceStatusID\":1,\"SignedDate\":\"05/04/2018 10:14:59 am\"},\"ListInvoiceDetailsWS\":[{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null},{\"ItemName\":\"Ch\u1eef k\u00fd s\u1ed1 Bkav CA ENT BN (bao g\u1ed3m Thi\u1ebft b\u1ecb USB Token) update\",\"UnitName\":\"G\u00f3i\",\"Qty\":1,\"Price\":600000,\"Amount\":600000,\"TaxRateID\":3,\"TaxAmount\":60000,\"IsDiscount\":false,\"IsIncrease\":null}],\"PartnerInvoiceID\":0,\"PartnerInvoiceStringID\":\"\"}]}')));
     //var_dump($this->Decryption("vi/IdLJI1+yqz+9vXc3DYi+y/4VJEUrzvMkLswqHfSJvgfdcVQOKwPTqq6THdU82DW51x1X/5pUNzwlBiC+WDDN5L0xDQ2evzfsO+ZrNTTWz9wPftyeckcaZseF5ftqq6ZJSQjmWZVg1HEJ42TVKyoMpd6XOZqacEWZXwgDq2X91zlAPf5ZV5Ab4C67iCPQK8ibpFa61zoLQP6b//GHIfRUN/3IYXum+vVe3IJIJPRNv2oU+UYmPwONRZ5NEQU8sFPCJpVz8yNCyojPLFh3F/4MtcJnfbQmBsu8ntPTZFnLN/wKJ66Zgmqnm5YrVGWIhy+sZd748zrHBFLRBE4VykFxGBrg0IrGfPo5WOwlQD0HdiayF2wtS4ax7h9xwmI4SevTo7quhwlN3BRS4rfI1SSvX/q2EuOFSntoA9uETBWcKTe6usvOvl+qe+oaC3WzQNae6mpl+6x+LKTBBEV5MW2y1lmd/JfYPoDfPmJTJjSkN00/1s39I0zQIec2uMvu2eb1rq8wbkw6PbNYxUiPv92OTftcDiSmowP7BUlK7jP4Zn5gK4/4xDJB/yix2Xb4IsVcRJB8bhstIvU9D/f6PT09LCYAayA7ZO/tg2jTwVmVUpCTeTKR+P0kaeL3iXS9MaEuDNR5THlKB/uI+lLt62SYKjS5ETJo5hGuoct797WNpAyrN59dR89tKJ0jAbPpc8829pcjVtNfkn5QUtYfQDrzpgvSAwOq0xUGJ+MAkpy/nReOdbi56LrTTpaCeMrEZQvyE81aNZvt46Gs1tQMRTpVyHL5r5DMQcqMqHdp+082eLl2FF6f8Z8tI5U3yPtcHSYDJuaNtnd+xt5MLbR5iXVWpqJlxpct4XQe5bzfdtdf5seFwGn0M730Tqer3CiS+pNmNOgxgpAgYWnlF8l6AqIMpd6XOZqacEWZXwgDq2X+r7eVj2oDkQxUye06+cnk92QxwbJzLRwo13378h4edxUMvS50Rqbizs2DkNnntGbYvBc9q1eJCz4k9H+h7YG2j/4Yriu5gTqe0aKkGJ2XIWZyOjgGQhHylrf+3B5gxKaPkqFfBLLJQY0nFcx92iEqEJVVFozOrv/cHv6qBwPvG/SR1yYFwENKxM1G4ZMdF+aAYnQTp3FRFxGSdV+F3BWcQuJoTMNkSI004nZJ1P+BfJio8fb7Sex4IRiJy4jt6Gv3IGBRBGkR0KdRz2xViy0qx01tduXd7IpIwWRkftxC3rsFhLSxCSc/flqzZpIhT+Rx8P8lrxdpjeZJgVs1Sur+yy2wAxLSAlVGbGaAo26BiGCh03VTh6uPQUVm94kob9A5zgV+oSnzwMF4QPTef9on7vHy5aC/LTM3kVtBQG+Ma2NhsymsJkXAq3YrCXx64fiTRCtT2z1FsSkiSLdwlt2GfGvHGd98dKUnrxhIqyB28DD8KakNHgfowFxskDBT+PEHJ0Z9NZG93k7BdGzMNMk1WNJrdcc+e9CJBbl3zt8iA3jBE5+BmgczNPwYcaGJc+iiWcLlwizx5YXtGSY/AdkfDtHbiEn3zs5fPwgASWRInv9BHa6iYoEGZs5lFczPHc3Y/qwzy3URKbt8vHv2n+dece7M/14ExigadlL3r/SsJA0o0+l1fxPmpcquS7XIJzIZypPzJzaG08koxnKTmFbMz3F0Eux9uiRrrn/zp5TxQf+V1s7bOJmQAcWOsItS5D2aK3BO0EOOhpaHoYEoVwCag92odQHvGYIj5RyfrBI8m+nmdYy455yZGATGRLDl6VBi+niQ67KyB31C+Awxbtd0ngJjRbAu/hkXdCRv6/gMuNDGSRUPuZ0xlZOpzLPzSXOU4kKAA2pRfPQNWvXeOrCdPbas0TkYVFtScCFu1OyZwdA==","8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==", "aes-256-ecb" ));
-   }
-   public function data(){
-        $CommandObject[] = array(
-            'Invoice' => array(
-                'InvoiceTypeID' => 1,
-                'InvoiceDate' => date('m/d/Y h:i:s a', time()),
-                'BuyerName' => "Nguyễn Văn A Update",
-                'BuyerTaxCode' => "0104746603",
-                'BuyerUnitName' => "Công Ty Luật TNHH ABC",
-                'BuyerAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
-                'BuyerBankAccount' => "",
-                'PayMethodID' => 1,
-                'ReceiveTypeID' => 3,
-                'ReceiverEmail' => "ngoton007@yahoo.com",
-                'ReceiverMobile' => "0902085911",
-                'ReceiverAddress' => "Nhà N2D Khu ĐT Trung Hoà-Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
-                'ReceiverName' => "Nguyễn Văn A",
-                'Note' => "Test eHoaDon",
-                'BillCode' => "",
-                'CurrencyID' => "VND",
-                'ExchangeRate' => 1,
-                'InvoiceStatusID' => 1,
-                'SignedDate' => date('m/d/Y h:i:s a', time()),
-            ),
-            'ListInvoiceDetailsWS' => array(),
-            'PartnerInvoiceID' => 0,
-            'PartnerInvoiceStringID' => '',
-        );
-
-        $items = array(1,2);
-        foreach ($items as $item) {
-            $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
-                'ItemName' => "Chữ ký số Bkav CA ENT BN (bao gồm Thiết bị USB Token) update",
-                'UnitName' => "Gói",
-                'Qty' => 1,
-                'Price' => 600000,
-                'Amount' => 600000,
-                'TaxRateID' => 3,
-                'TaxAmount' => 60000,
-                'IsDiscount' => false,
-                'IsIncrease' => null,
-            );
-        }
-
-        $CommandData = array(
-            'CmdType' => 100,
-            'CommandObject' => $CommandObject
-        );
-
-        $CommandData = json_encode($CommandData);
-        $CommandData = unpack('C*', $CommandData);
-        var_dump($CommandData);
-        //echo $this->Zip($CommandData);
    }
 
 }

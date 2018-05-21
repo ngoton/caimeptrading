@@ -3113,6 +3113,60 @@ Class ordertireController Extends baseController {
         }
     }
 
+    public function getDetailOrder(){
+        $this->view->disableLayout();
+        $this->view->data['lib'] = $this->lib;
+
+        $id = $_GET['order'];
+        $order_tire_model = $this->model->get('ordertireModel');
+        $order_tire = $order_tire_model->getTire($id);
+
+        $customer_model = $this->model->get('customerModel');
+        $customers = $customer_model->getCustomer($order_tire->customer);
+
+        $staff_model = $this->model->get('staffModel');
+        $sale = $staff_model->getStaffByWhere(array('account'=>$order_tire->sale))->staff_name;
+        
+        $order_tire_list_model = $this->model->get('ordertirelistModel');
+        $join = array('table'=>'tire_brand,tire_size,tire_pattern','where'=>'tire_brand = tire_brand_id AND tire_size = tire_size_id AND tire_pattern = tire_pattern_id');
+
+        $data = array(
+            'where' => 'order_tire='.$id,
+        );
+
+        /*if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 8) {
+            $data = array(
+                'where' => 'order_tire IN (SELECT order_tire_id FROM order_tire WHERE order_tire_id ='.$id.' AND sale = '.$_SESSION["userid_logined"].')',
+            );
+        }*/
+
+        $order_tire_lists = $order_tire_list_model->getAllTire($data,$join);
+        $this->view->data['order_tire_lists'] = $order_tire_lists;
+
+        $tire_brand_model = $this->model->get('tirebrandModel');
+        $tire_size_model = $this->model->get('tiresizeModel');
+        $tire_pattern_model = $this->model->get('tirepatternModel');
+        $tire_price_discount_model = $this->model->get('tirepricediscountModel');
+        $price = array();
+        foreach ($order_tire_lists as $order) {
+            $ngay = $order_tire->delivery_date>0?$order_tire->delivery_date:strtotime(date('d-m-Y'));
+            $prices = $tire_price_discount_model->getAllTire(array('where'=>'tire_brand='.$order->tire_brand.' AND tire_size='.$order->tire_size.' AND tire_pattern='.$order->tire_pattern.' AND start_date <= '.$ngay.' AND (end_date IS NULL OR end_date > '.$ngay.')  ORDER BY start_date DESC LIMIT 1'));
+            foreach ($prices as $p) {
+                $price[$order->order_tire_list_id] = $p->tire_price;
+            }
+        }
+
+        
+
+        $this->view->data['price'] = $price;
+        $this->view->data['order'] = $id;
+        $this->view->data['order_tire'] = $order_tire;
+        $this->view->data['customers'] = $customers;
+        $this->view->data['sale'] = $sale;
+
+        $this->view->show('ordertire/detailorder');
+    }
+
     public function listtire($id){
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;

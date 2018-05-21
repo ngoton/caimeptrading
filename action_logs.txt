@@ -7877,3 +7877,147 @@ bxep: 6x14 = 84k-5-4--1484000
 
 11/05/2018 15:18:45|admincmg|overtime_salary|Array|overtime_salary|
 
+16/05/2018 08:25:52|admincmg|edit|488|customer|Vina Trade-671, Tổ 9, Hương Phước, Phước Tân-090 208 5911-ngoton007@yahoo.com-Vina Trade--0300000583---null-0-0---671, Tổ 9, Hương Phước, Phước Tân--Biên Hòa-Biên Hòa-2-VNTRADE--902085911-1-http://goodtyres.local-1--1-1526433952
+
+16/05/2018 08:34:00|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:43:26|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:50:20|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:51:56|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:53:06|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:57:17|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:58:20|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 08:58:59|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 09:13:20|admincmg|add|0000003|invoice_tire|0000003
+
+16/05/2018 09:14:44|admincmg|add|0000003|invoice_tire|0000003
+
+16/05/2018 09:24:50|admincmg|add|0000004|invoice_tire|0000004
+
+16/05/2018 09:31:58|admincmg|add|0000005|invoice_tire|0000005
+
+16/05/2018 09:32:25|admincmg|add|0000006|invoice_tire|0000006
+
+16/05/2018 09:32:38|admincmg|add|0000006|invoice_tire|0000006
+
+16/05/2018 09:42:52|admincmg|add|0000007|invoice_tire|0000007
+
+16/05/2018 09:43:25|admincmg|add|0000005|invoice_tire|0000005
+
+16/05/2018 09:43:46|admincmg|add|0000005|invoice_tire|0000005
+
+16/05/2018 09:44:37|admincmg|add|0000006|invoice_tire|0000006
+
+16/05/2018 09:45:00|admincmg|add|0000007|invoice_tire|0000007
+
+16/05/2018 09:48:22|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 09:49:52|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 10:08:58|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 10:10:09|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 10:24:16|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 10:39:27|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 11:11:41|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 11:15:07|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 11:15:27|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 11:17:15|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 14:20:26|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 14:23:54|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 14:25:42|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:28:04|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:28:32|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:28:51|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:31:35|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:32:03|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:32:19|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:32:33|admincmg|add|0000002|invoice_tire|0000002
+
+16/05/2018 14:46:08|admincmg|add|0000003|invoice_tire|0000003
+
+16/05/2018 14:46:40|admincmg|add|0000003|invoice_tire|0000003
+
+16/05/2018 14:50:10|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 14:52:13|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 14:52:46|admincmg|add|0000001|invoice_tire|0000001
+
+16/05/2018 15:08:58|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 08:32:09|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 08:37:05|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 08:37:54|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 09:14:38|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 09:18:41|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 09:38:33|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 09:40:47|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 09:43:02|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:11:22|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:14:47|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:15:33|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:18:14|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:21:42|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:23:08|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:23:47|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:25:08|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:32:56|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:34:10|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:43:45|admincmg|delete|0000001|invoice_tire|0000001
+
+17/05/2018 10:44:16|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:46:22|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:46:42|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:46:59|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:48:18|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:48:57|admincmg|add|0000001|invoice_tire|0000001
+
+17/05/2018 10:50:25|admincmg|add|0000001|invoice_tire|0000001
+
