@@ -8027,3 +8027,27 @@ bxep: 6x14 = 84k-5-4--1484000
 
 23/05/2018 07:56:01|admincmg|delete|2258|order_tire_list|
 
+23/05/2018 08:15:13|488|editagent|2252|43-111-3-5--|order_tire_list|
+
+23/05/2018 08:16:19|488|editagent|2252|43-111-3-4--|order_tire_list|
+
+23/05/2018 08:26:13|admincmg|edit|discount|1144|order_tire|
+
+23/05/2018 08:26:52|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
+23/05/2018 08:27:57|admincmg|edit|discount|1144|order_tire|
+
+23/05/2018 08:28:02|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
+23/05/2018 08:28:18|admincmg|edit|discount|1144|order_tire|
+
+23/05/2018 08:28:33|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
+23/05/2018 08:30:30|admincmg|edit|discount|1144|order_tire|
+
+23/05/2018 08:30:44|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
+23/05/2018 08:30:56|admincmg|edit|discount|1144|order_tire|
+
+23/05/2018 08:31:04|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
