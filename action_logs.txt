@@ -8021,3 +8021,9 @@ bxep: 6x14 = 84k-5-4--1484000
 
 17/05/2018 10:50:25|admincmg|add|0000001|invoice_tire|0000001
 
+23/05/2018 07:54:32|admincmg|edit|2251|43-106-1-5-6160000-6160000-Chọn|order_tire_list|
+
+23/05/2018 07:55:50|admincmg|add|43-106-6-194-1000000-1000000-Chọn-1144|order_tire_list|
+
+23/05/2018 07:56:01|admincmg|delete|2258|order_tire_list|
+
