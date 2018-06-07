@@ -208,7 +208,7 @@ Class checksalaryController Extends baseController {
                 $total_order_before = 0; //Tổng sản lượng tháng trước
                 $total_order = 0; //Tổng sản lượng tháng này
 
-                $myDate = strtotime(date("d-m-Y", $order_tire->delivery_date) . "-1 month" ) ;
+                $myDate = strtotime(date("d-m-Y", strtotime('01-'.date('m-Y',$order_tire->delivery_date))) . "-1 month" ) ;
 
                 $sum_order = $tiresale_model->queryTire('SELECT SUM(volume) AS tong FROM tire_sale WHERE customer='.$order_tire->customer.' AND tire_sale_date >= '.strtotime('01-'.date('m-Y',$myDate)).' AND tire_sale_date <= '.strtotime(date('t-m-Y',$myDate)).' GROUP BY customer');
                     
@@ -546,7 +546,7 @@ Class checksalaryController Extends baseController {
                 $total_order_before = 0; //Tổng sản lượng tháng trước
                 $total_order = 0; //Tổng sản lượng tháng này
 
-                $myDate = strtotime(date("d-m-Y", $order_tire->delivery_date) . "-1 month" ) ;
+                $myDate = strtotime(date("d-m-Y", strtotime('01-'.date('m-Y',$order_tire->delivery_date))) . "-1 month" ) ;
 
                 $sum_order = $tiresale_model->queryTire('SELECT SUM(volume) AS tong FROM tire_sale WHERE customer='.$order_tire->customer.' AND tire_sale_date >= '.strtotime('01-'.date('m-Y',$myDate)).' AND tire_sale_date <= '.strtotime(date('t-m-Y',$myDate)).' GROUP BY customer');
                     
