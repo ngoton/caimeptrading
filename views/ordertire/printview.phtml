@@ -151,7 +151,7 @@
                     <td class="xl75" colspan="2" height="22" style="height:16.5pt">
                         <span style="font-size:14px;"><u><strong>B/ Bên mua:</strong></u></span></td>
                     <td class="xl76" colspan="5">
-                        <span style="font-size:14px;"><strong><?php echo mb_strtoupper($customers->company_name, "UTF-8") ?></strong></span></td>
+                        <span style="font-size:14px;"><strong><?php echo mb_strtoupper(str_replace("\'", "'", $customers->company_name), "UTF-8") ?></strong></span></td>
                 </tr>
                 <tr height="22" style="height:16.5pt">
                     <td class="xl65" colspan="3" height="22" style="height:16.5pt;mso-ignore:colspan">
@@ -171,7 +171,7 @@
                 </tr>
                 <tr height="22" style="height:16.5pt">
                     <td class="xl77" colspan="7" height="22" style="height:16.5pt;width:527pt" width="700">
-                        <span style="font-size:14px;">- Địa chỉ: <?php echo $customers->customer_address ?></span></td>
+                        <span style="font-size:14px;">- Địa chỉ: <?php echo str_replace("\'", "'", $customers->customer_address) ?></span></td>
                 </tr>
                 <tr height="22" style="height:16.5pt">
                     <td class="xl65" colspan="2" height="22" style="height:16.5pt;mso-ignore:colspan">

@@ -348,9 +348,9 @@ Class vatController Extends baseController {
             $str .= '<tr style="font-weight:bold" class="tr" data="'.$item->order_tire_id.'"><td><input name="check[]" type="checkbox" class="checkbox" value="'.$item->order_tire_id.'" data="'.$item->order_tire_id.'"></td><td class="fix">'.$this->lib->hien_thi_ngay_thang($item->delivery_date).'</td><td class="fix">'.$item->order_number.'</td><td class="fix">'.$item->customer_name.'</td><td class="fix">'.$item->order_tire_number.'</td><td class="fix">'.$this->lib->formatMoney($item->total-$item->vat+$item->discount+$item->reduce).'</td><td class="fix">'.$this->lib->formatMoney($item->vat).'</td><td class="fix">'.$this->lib->formatMoney($item->total).'</td></tr>';
 
             $customer = $item->customer_name;
-            $company = $item->company_name;
+            $company = str_replace("\'", "'", $item->company_name);
             $mst = $item->mst;
-            $dc = $item->customer_address;
+            $dc = str_replace("\'", "'", $item->customer_address);
 
             foreach ($lists as $order) {
                 
@@ -407,7 +407,7 @@ Class vatController Extends baseController {
    }
 
    public function createEHoaDon($items, $CmdType){ 
-        $BkavPartnerGUID = "68D8219C-9AFB-43A1-9A93-7824D5949841";
+        $BkavPartnerGUID = "6A4028E7-FA66-4585-BBF3-795430BC1B4D";
         $BkavPartnerToken = "8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==";
         $Mode = 6;
         
@@ -425,7 +425,7 @@ Class vatController Extends baseController {
    }
 
    public function connectBKAV(){
-        $wsdlAddress = "https://wsdemo.ehoadon.vn/WSPublicEHoaDon.asmx?WSDL";
+        $wsdlAddress = "https://ws.ehoadon.vn/WSPublicEHoaDon.asmx?WSDL";
         
         $options = array(
             "soap_version" => SOAP_1_2,

@@ -5256,21 +5256,23 @@ Class dailyController Extends baseController {
 
                ->setCellValue('A1', 'STT')
 
-               ->setCellValue('B1', 'Code')
+               ->setCellValue('B1', 'Ngày')
 
-               ->setCellValue('C1', 'Nội dung')
+               ->setCellValue('C1', 'Code')
 
-               ->setCellValue('D1', 'Thu')
+               ->setCellValue('D1', 'Nội dung')
 
-               ->setCellValue('E1', 'Chi')
+               ->setCellValue('E1', 'Thu')
 
-               ->setCellValue('F1', 'Dịch vụ')
+               ->setCellValue('F1', 'Chi')
 
-               ->setCellValue('G1', 'Người nhận')
+               ->setCellValue('G1', 'Dịch vụ')
 
-               ->setCellValue('H1', 'Ghi chú')
+               ->setCellValue('H1', 'Người nhận')
 
-               ->setCellValue('I1', 'Tài khoản');
+               ->setCellValue('I1', 'Ghi chú')
+
+               ->setCellValue('J1', 'Tài khoản');
 
                
 
@@ -5291,21 +5293,23 @@ Class dailyController Extends baseController {
 
                             ->setCellValue('A' . $hang, $i++)
 
-                            ->setCellValueExplicit('B' . $hang, $additional->code)
+                            ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($additional->additional_date))
 
-                            ->setCellValue('C' . $hang, $additional->additional_comment)
+                            ->setCellValueExplicit('C' . $hang, $additional->code)
 
-                            ->setCellValue('D' . $hang, ($daily->money_in>0?$additional->money:0))
+                            ->setCellValue('D' . $hang, $additional->additional_comment)
 
-                            ->setCellValue('E' . $hang, 0)
+                            ->setCellValue('E' . $hang, ($daily->money_in>0?$additional->money:0))
 
-                            ->setCellValue('F' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
+                            ->setCellValue('F' . $hang, 0)
 
-                            ->setCellValue('G' . $hang, $daily->owner)
+                            ->setCellValue('G' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
 
-                            ->setCellValue('H' . $hang, $daily->note)
+                            ->setCellValue('H' . $hang, $daily->owner)
 
-                            ->setCellValue('I' . $hang, $daily->account);
+                            ->setCellValue('I' . $hang, $daily->note)
+
+                            ->setCellValue('J' . $hang, $daily->account);
 
                         $hang++;
 
@@ -5313,21 +5317,23 @@ Class dailyController Extends baseController {
 
                             ->setCellValue('A' . $hang, $i++)
 
-                            ->setCellValueExplicit('B' . $hang, $additional->code)
+                            ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($additional->addition_date))
 
-                            ->setCellValue('C' . $hang, $additional->additional_comment)
+                            ->setCellValueExplicit('C' . $hang, $additional->code)
 
-                            ->setCellValue('D' . $hang, 0)
+                            ->setCellValue('D' . $hang, $additional->additional_comment)
 
-                            ->setCellValue('E' . $hang, ($daily->money_out>0?$additional->money:0))
+                            ->setCellValue('E' . $hang, 0)
 
-                            ->setCellValue('F' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
+                            ->setCellValue('F' . $hang, ($daily->money_out>0?$additional->money:0))
 
-                            ->setCellValue('G' . $hang, $daily->owner)
+                            ->setCellValue('G' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
 
-                            ->setCellValue('H' . $hang, $daily->note)
+                            ->setCellValue('H' . $hang, $daily->owner)
 
-                            ->setCellValue('I' . $hang, $daily->account_out);
+                            ->setCellValue('I' . $hang, $daily->note)
+
+                            ->setCellValue('J' . $hang, $daily->account_out);
 
                             $hang++;
                     }
@@ -5336,21 +5342,23 @@ Class dailyController Extends baseController {
 
                             ->setCellValue('A' . $hang, $i++)
 
-                            ->setCellValueExplicit('B' . $hang, $additional->code)
+                            ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($additional->additional_date))
 
-                            ->setCellValue('C' . $hang, $additional->additional_comment)
+                            ->setCellValueExplicit('C' . $hang, $additional->code)
 
-                            ->setCellValue('D' . $hang, ($daily->money_in>0?$additional->money:0))
+                            ->setCellValue('D' . $hang, $additional->additional_comment)
 
-                            ->setCellValue('E' . $hang, ($daily->money_out>0?$additional->money:0))
+                            ->setCellValue('E' . $hang, ($daily->money_in>0?$additional->money:0))
 
-                            ->setCellValue('F' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
+                            ->setCellValue('F' . $hang, ($daily->money_out>0?$additional->money:0))
 
-                            ->setCellValue('G' . $hang, $daily->owner)
+                            ->setCellValue('G' . $hang, ($additional->additional_service==1?'Hành chính':($additional->additional_service==2?'Lốp xe':'Logistics')))
 
-                            ->setCellValue('H' . $hang, $daily->note)
+                            ->setCellValue('H' . $hang, $daily->owner)
 
-                            ->setCellValue('I' . $hang, $daily->account);
+                            ->setCellValue('I' . $hang, $daily->note)
+
+                            ->setCellValue('J' . $hang, $daily->account);
 
                             $hang++;
                     }
@@ -5363,12 +5371,12 @@ Class dailyController Extends baseController {
 
           $objPHPExcel->setActiveSheetIndex($index_worksheet)
 
-                ->setCellValue('C'.$hang, 'Tổng cộng')
+                ->setCellValue('D'.$hang, 'Tổng cộng')
 
 
-               ->setCellValue('D'.$hang, '=SUM(D2:D'.($hang-1).')')
+               ->setCellValue('E'.$hang, '=SUM(E2:E'.($hang-1).')')
 
-               ->setCellValue('E'.$hang, '=SUM(E2:E'.($hang-1).')');
+               ->setCellValue('F'.$hang, '=SUM(F2:F'.($hang-1).')');
 
 
             $highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
@@ -5378,7 +5386,7 @@ Class dailyController Extends baseController {
             $highestRow ++;
 
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:I'.$hang)->applyFromArray(
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J'.$hang)->applyFromArray(
 
                 array(
 
@@ -5398,22 +5406,22 @@ Class dailyController Extends baseController {
 
             );
 
-            $objPHPExcel->getActiveSheet()->getStyle('A'.$hang.':I'.$hang)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$hang.':J'.$hang)->getFont()->setBold(true);
 
 
-            $objPHPExcel->getActiveSheet()->getStyle('D2:E'.$highestRow)->getNumberFormat()->setFormatCode("#,##0_);[Black](#,##0)");
+            $objPHPExcel->getActiveSheet()->getStyle('E2:F'.$highestRow)->getNumberFormat()->setFormatCode("#,##0_);[Black](#,##0)");
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
 
             $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(16);
 
             $objPHPExcel->getActiveSheet()->getDefaultColumnDimension()->setWidth(14);
 
-            $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(35);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(35);
 
 
 

@@ -562,6 +562,20 @@
     $muon[5][10]['12.00R20'] = "";
     $muon[6][10]['12.00R20'] = "";
 
+    $muon[1][11]['11R22.5'] = "";
+    $muon[2][11]['11R22.5'] = "";
+    $muon[3][11]['11R22.5'] = "";
+    $muon[4][11]['11R22.5'] = "";
+    $muon[5][11]['11R22.5'] = "";
+    $muon[6][11]['11R22.5'] = "";
+
+    $muon[1][11]['12R22.5'] = "";
+    $muon[2][11]['12R22.5'] = "";
+    $muon[3][11]['12R22.5'] = "";
+    $muon[4][11]['12R22.5'] = "";
+    $muon[5][11]['12R22.5'] = "";
+    $muon[6][11]['12R22.5'] = "";
+
     ////////
 
     $tongmuon[1] = 424;
@@ -5816,7 +5830,193 @@
                         <?php } ?>
                         <td class="fix" style="font-weight:bold"><?php echo isset($tongnhaphang[8]['13R22.5'])?$tongnhaphang[8]['13R22.5']:"" ?></td>
                   </tr>
-                  
+                  <tr>
+                          <td rowspan="2" class="fix">DK02 (2)</td>
+                        <td rowspan="2" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                        
+                        <td class="fix">11R22.5</td>
+                        <td class="fix">18PR</td>
+                        <?php foreach ($brand_tonkhos as $tonkho) { 
+                          if (isset($tonkhos[$tonkho['id']][11]['11R22.5'])){
+                            $ton = $tonkhos[$tonkho['id']][11]['11R22.5'];
+                            $tongton[11]['11R22.5'] = isset($tongton[11]['11R22.5'])?$tongton[11]['11R22.5']+$ton:$ton;
+                            $tontong[$tonkho['id']] = isset($tontong[$tonkho['id']])?$tontong[$tonkho['id']]+$ton:$ton;
+                          }else{
+                            //$tongton[8]['11R22.5'] = 0;
+                            $ton = "";
+                            $tonkhos[$tonkho['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(104, 98, 196, 0.21);">
+                            <a class="stock" style="text-decoration: underline;" href="<?php echo $this->url('stock/stock/'.$tonkho['id'].'/11/11R22.5/11') ?>"><?php echo $ton ?> </a>
+                             </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(104, 98, 196, 0.21);"><?php echo isset($tongton[11]['11R22.5'])?$tongton[11]['11R22.5']:"" ?></td>
+                        <?php foreach ($brand_orders as $order) { 
+                          if (isset($orders[$order['id']][11]['11R22.5'])){
+                            $ban = $orders[$order['id']][11]['11R22.5'];
+                            $tongban[11]['11R22.5'] = isset($tongban[11]['11R22.5'])?$tongban[11]['11R22.5']+$ban:$ban;
+                            $bantong[$order['id']] = isset($bantong[$order['id']])?$bantong[$order['id']]+$ban:$ban;
+                          }else{
+                            //$tongton[1]['11R22.5'] = 0;
+                            $ban = "";
+                            $orders[$order['id']][8]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(196, 149, 98, 0.21);"><a class="order" style="text-decoration: underline;" href="<?php echo $this->url('stock/listorder/'.$order['id'].'/11/11R22.5/11') ?>"><?php echo $ban ?></a> </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(196, 149, 98, 0.21);"><?php echo isset($tongban[11]['11R22.5'])?$tongban[11]['11R22.5']:"" ?></td>
+                        <?php foreach ($brand_dangves as $dangve) { 
+                          if (isset($dangves[$dangve['id']][11]['11R22.5'])){
+                            $ve = $dangves[$dangve['id']][11]['11R22.5'];
+                            $tongdangve[11]['11R22.5'] = isset($tongdangve[11]['11R22.5'])?$tongdangve[11]['11R22.5']+$ve:$ve;
+                            $vetong[$dangve['id']] = isset($vetong[$dangve['id']])?$vetong[$dangve['id']]+$ve:$ve;
+                          }
+                          else{
+                            //$tongdangve[8]['11R22.5'] = 0;
+                            $ve = "";
+                            $dangves[$dangve['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(196, 98, 133, 0.21);"><a class="going" style="text-decoration: underline;" href="<?php echo $this->url('stock/going/'.$dangve['id'].'/11/11R22.5/11') ?>"><?php echo $ve ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(196, 98, 133, 0.21);"><?php echo isset($tongdangve[11]['11R22.5'])?$tongdangve[11]['11R22.5']:"" ?></td>
+                        <?php foreach ($brand_dangorders as $dangorder) { 
+                          if (isset($dangorders[$dangorder['id']][11]['11R22.5'])){
+                            $order = $dangorders[$dangorder['id']][11]['11R22.5'];
+                            $tongdangorder[11]['11R22.5'] = isset($tongdangorder[11]['11R22.5'])?$tongdangorder[11]['11R22.5']+$order:$order;
+                            $ordertong[$dangorder['id']] = isset($ordertong[$dangorder['id']])?$ordertong[$dangorder['id']]+$order:$order;
+                          }
+                          else{
+                            //$tongdangorder[4]['11R22.5'] = 0;
+                            $order = "";
+                            $dangorders[$dangorder['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(98, 164, 196, 0.21);"><a class="goingorder" style="text-decoration: underline;" href="<?php echo $this->url('stock/goingorder/'.$dangorder['id'].'/11/11R22.5/11') ?>"><?php echo $order ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(98, 164, 196, 0.21);"><?php echo isset($tongdangorder[11]['11R22.5'])?$tongdangorder[11]['11R22.5']:"" ?></td>
+                        <?php foreach ($brand_dathangs as $dathang) { 
+                          if (isset($dathangs[$dathang['id']][11]['11R22.5'])){
+                            $dat = $dathangs[$dathang['id']][11]['11R22.5'];
+                            $tongdathang[11]['11R22.5'] = isset($tongdathang[11]['11R22.5'])?$tongdathang[11]['11R22.5']+$dat:$dat;
+                            $dattong[$dathang['id']] = isset($dattong[$dathang['id']])?$dattong[$dathang['id']]+$dat:$dat;
+                          }
+                          else{
+                            //$tongdathang[8]['11R22.5'] = 0;
+                            $dat = "";
+                            $dathangs[$dathang['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(98, 196, 98, 0.21);"><a class="revenue" style="text-decoration: underline;" href="<?php echo $this->url('stock/desired/'.$dathang['id'].'/11/11R22.5/11') ?>"><?php echo $dat ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[11]['11R22.5'])?$tongdathang[11]['11R22.5']:"" ?></td>
+                        <?php foreach ($brand_nhaphangs as $nhaphang) { 
+                            $t = isset($tonkhos[$nhaphang['id']][11]['11R22.5'])?$tonkhos[$nhaphang['id']][11]['11R22.5']:"";
+                            $b = isset($orders[$nhaphang['id']][11]['11R22.5'])?$orders[$nhaphang['id']][11]['11R22.5']:"";
+                            $v = isset($dangves[$nhaphang['id']][11]['11R22.5'])?$dangves[$nhaphang['id']][11]['11R22.5']:"";
+                            $o = isset($dangorders[$nhaphang['id']][11]['11R22.5'])?$dangorders[$nhaphang['id']][11]['11R22.5']:"";
+                            $d = isset($dathangs[$nhaphang['id']][11]['11R22.5'])?$dathangs[$nhaphang['id']][11]['11R22.5']:"";
+                            //$m = isset($muon[$nhaphang['id']][8]['11R22.5'])?$muon[$nhaphang['id']][8]['11R22.5']:"";
+                            $nhap = intval($d)+intval($b)-intval($t)-intval($v)-intval($o);
+                            $tongnhaphang[11]['11R22.5'] = isset($tongnhaphang[11]['11R22.5'])?$tongnhaphang[11]['11R22.5']+$nhap:$nhap;
+                        ?>
+                          <td class="fix"><?php echo $nhap ?></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongnhaphang[11]['11R22.5'])?$tongnhaphang[11]['11R22.5']:"" ?></td>
+                  </tr>
+                  <tr>
+                        <td class="fix">12R22.5</td>
+                        <td class="fix">18PR</td>
+                        <?php foreach ($brand_tonkhos as $tonkho) { 
+                          if (isset($tonkhos[$tonkho['id']][11]['12R22.5'])){
+                            $ton = $tonkhos[$tonkho['id']][11]['12R22.5'];
+                            $tongton[11]['12R22.5'] = isset($tongton[11]['12R22.5'])?$tongton[11]['12R22.5']+$ton:$ton;
+                            $tontong[$tonkho['id']] = isset($tontong[$tonkho['id']])?$tontong[$tonkho['id']]+$ton:$ton;
+                          }else{
+                            //$tongton[11]['12R22.5'] = 0;
+                            $ton = "";
+                            $tonkhos[$tonkho['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(104, 98, 196, 0.21);">
+                            <a class="stock" style="text-decoration: underline;" href="<?php echo $this->url('stock/stock/'.$tonkho['id'].'/11/12R22.5/11') ?>"><?php echo $ton ?> </a>
+                             </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(104, 98, 196, 0.21);"><?php echo isset($tongton[11]['12R22.5'])?$tongton[11]['12R22.5']:"" ?></td>
+                        <?php foreach ($brand_orders as $order) { 
+                          if (isset($orders[$order['id']][11]['12R22.5'])){
+                            $ban = $orders[$order['id']][11]['12R22.5'];
+                            $tongban[11]['12R22.5'] = isset($tongban[11]['12R22.5'])?$tongban[11]['12R22.5']+$ban:$ban;
+                            $bantong[$order['id']] = isset($bantong[$order['id']])?$bantong[$order['id']]+$ban:$ban;
+                          }else{
+                            //$tongton[1]['12R22.5'] = 0;
+                            $ban = "";
+                            $orders[$order['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(196, 149, 98, 0.21);"><a class="order" style="text-decoration: underline;" href="<?php echo $this->url('stock/listorder/'.$order['id'].'/11/12R22.5/11') ?>"><?php echo $ban ?></a> </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(196, 149, 98, 0.21);"><?php echo isset($tongban[11]['12R22.5'])?$tongban[11]['12R22.5']:"" ?></td>
+                        <?php foreach ($brand_dangves as $dangve) { 
+                          if (isset($dangves[$dangve['id']][11]['12R22.5'])){
+                            $ve = $dangves[$dangve['id']][11]['12R22.5'];
+                            $tongdangve[11]['12R22.5'] = isset($tongdangve[11]['12R22.5'])?$tongdangve[11]['12R22.5']+$ve:$ve;
+                            $vetong[$dangve['id']] = isset($vetong[$dangve['id']])?$vetong[$dangve['id']]+$ve:$ve;
+                          }
+                          else{
+                            //$tongdangve[11]['12R22.5'] = 0;
+                            $ve = "";
+                            $dangves[$dangve['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(196, 98, 133, 0.21);"><a class="going" style="text-decoration: underline;" href="<?php echo $this->url('stock/going/'.$dangve['id'].'/11/12R22.5/11') ?>"><?php echo $ve ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(196, 98, 133, 0.21);"><?php echo isset($tongdangve[11]['12R22.5'])?$tongdangve[11]['12R22.5']:"" ?></td>
+                        <?php foreach ($brand_dangorders as $dangorder) { 
+                          if (isset($dangorders[$dangorder['id']][11]['12R22.5'])){
+                            $order = $dangorders[$dangorder['id']][11]['12R22.5'];
+                            $tongdangorder[11]['12R22.5'] = isset($tongdangorder[11]['12R22.5'])?$tongdangorder[11]['12R22.5']+$order:$order;
+                            $ordertong[$dangorder['id']] = isset($ordertong[$dangorder['id']])?$ordertong[$dangorder['id']]+$order:$order;
+                          }
+                          else{
+                            //$tongdangorder[4]['12R22.5'] = 0;
+                            $order = "";
+                            $dangorders[$dangorder['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(98, 164, 196, 0.21);"><a class="goingorder" style="text-decoration: underline;" href="<?php echo $this->url('stock/goingorder/'.$dangorder['id'].'/11/12R22.5/11') ?>"><?php echo $order ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(98, 164, 196, 0.21);"><?php echo isset($tongdangorder[11]['12R22.5'])?$tongdangorder[11]['12R22.5']:"" ?></td>
+                        <?php foreach ($brand_dathangs as $dathang) { 
+                          if (isset($dathangs[$dathang['id']][11]['12R22.5'])){
+                            $dat = $dathangs[$dathang['id']][11]['12R22.5'];
+                            $tongdathang[11]['12R22.5'] = isset($tongdathang[11]['12R22.5'])?$tongdathang[11]['12R22.5']+$dat:$dat;
+                            $dattong[$dathang['id']] = isset($dattong[$dathang['id']])?$dattong[$dathang['id']]+$dat:$dat;
+                          }
+                          else{
+                            //$tongdathang[11]['12R22.5'] = 0;
+                            $dat = "";
+                            $dathangs[$dathang['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix" style="background: rgba(98, 196, 98, 0.21);"><a class="revenue" style="text-decoration: underline;" href="<?php echo $this->url('stock/desired/'.$dathang['id'].'/11/12R22.5/11') ?>"><?php echo $dat ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[11]['12R22.5'])?$tongdathang[11]['12R22.5']:"" ?></td>
+                        <?php foreach ($brand_nhaphangs as $nhaphang) { 
+                            $t = isset($tonkhos[$nhaphang['id']][11]['12R22.5'])?$tonkhos[$nhaphang['id']][11]['12R22.5']:"";
+                            $b = isset($orders[$nhaphang['id']][11]['12R22.5'])?$orders[$nhaphang['id']][11]['12R22.5']:"";
+                            $v = isset($dangves[$nhaphang['id']][11]['12R22.5'])?$dangves[$nhaphang['id']][11]['12R22.5']:"";
+                            $o = isset($dangorders[$nhaphang['id']][11]['12R22.5'])?$dangorders[$nhaphang['id']][11]['12R22.5']:"";
+                            $d = isset($dathangs[$nhaphang['id']][11]['12R22.5'])?$dathangs[$nhaphang['id']][11]['12R22.5']:"";
+                            //$m = isset($muon[$nhaphang['id']][11]['12R22.5'])?$muon[$nhaphang['id']][11]['12R22.5']:"";
+                            $nhap = intval($d)+intval($b)-intval($t)-intval($v)-intval($o);
+                            $tongnhaphang[11]['12R22.5'] = isset($tongnhaphang[11]['12R22.5'])?$tongnhaphang[11]['12R22.5']+$nhap:$nhap;
+                        ?>
+                          <td class="fix"><?php echo $nhap ?></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongnhaphang[11]['12R22.5'])?$tongnhaphang[11]['12R22.5']:"" ?></td>
+                  </tr>
                   <tr>
                           <td rowspan="7" class="fix">NK01</td>
                         <td rowspan="7" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
@@ -8226,7 +8426,46 @@
                         <td class="fix" style="font-weight:bold"><?php echo isset($tongton2[8]['13R22.5'])?$tongton2[8]['13R22.5']:"" ?></td>
                         
                   </tr>
-                  
+                  <tr>
+                          <td rowspan="2" class="fix">DK02 (2)</td>
+                        <td rowspan="2" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                        <td class="fix">11R22.5</td>
+                        <td class="fix">18PR</td>
+                        <?php foreach ($brand_tonkhos as $tonkho) { 
+                          if (isset($tonkhos[$tonkho['id']][11]['11R22.5'])){
+                            $ton = $tonkhos[$tonkho['id']][11]['11R22.5'];
+                            $tongton2[11]['11R22.5'] = isset($tongton2[11]['11R22.5'])?$tongton2[11]['11R22.5']+$ton:$ton;
+                            $tontong2[$tonkho['id']] = isset($tontong2[$tonkho['id']])?$tontong2[$tonkho['id']]+$ton:$ton;
+                          }else{
+                            //$tongton2[11]['11R22.5'] = 0;
+                            $ton = "";
+                            $tonkhos[$tonkho['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><?php echo $ton ?> <button alt="DK02" tabindex="11" data="<?php echo $tonkho['id'] ?>" name="<?php echo $tonkho['name'] ?>" value="11R22.5" class="editButton">v</button> </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongton2[11]['11R22.5'])?$tongton2[11]['11R22.5']:"" ?></td>
+                        
+                  </tr>
+                  <tr>
+                        <td class="fix">12R22.5</td>
+                        <td class="fix">18PR</td>
+                        <?php foreach ($brand_tonkhos as $tonkho) { 
+                          if (isset($tonkhos[$tonkho['id']][11]['12R22.5'])){
+                            $ton = $tonkhos[$tonkho['id']][11]['12R22.5'];
+                            $tongton2[11]['12R22.5'] = isset($tongton2[11]['12R22.5'])?$tongton2[11]['12R22.5']+$ton:$ton;
+                            $tontong2[$tonkho['id']] = isset($tontong2[$tonkho['id']])?$tontong2[$tonkho['id']]+$ton:$ton;
+                          }else{
+                            //$tongton2[11]['12R22.5'] = 0;
+                            $ton = "";
+                            $tonkhos[$tonkho['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><?php echo $ton ?> <button alt="DK02" tabindex="11" data="<?php echo $tonkho['id'] ?>" name="<?php echo $tonkho['name'] ?>" value="12R22.5" class="editButton">v</button> </td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongton2[11]['12R22.5'])?$tongton2[11]['12R22.5']:"" ?></td>
+                        
+                  </tr>
                   <tr>
                           <td rowspan="6" class="fix">NK01</td>
                         <td rowspan="6" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
@@ -9754,7 +9993,52 @@
                         <td class="fix" style="font-weight:bold"><?php echo isset($tongdangve2[8]['13R22.5'])?$tongdangve2[8]['13R22.5']:"" ?></td>
                         
                   </tr>
-                  
+                  <tr>
+                          <td rowspan="2" class="fix">DK02 (2)</td>
+                        <td rowspan="2" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                        <td class="fix">11R22.5</td>
+                        <td class="fix">18PR</td>
+                        
+                        <?php foreach ($brand_dangves as $dangve) { 
+                          if (isset($dangves[$dangve['id']][11]['11R22.5'])){
+                            $ve = $dangves[$dangve['id']][11]['11R22.5'];
+                            $tongdangve2[11]['11R22.5'] = isset($tongdangve2[11]['11R22.5'])?$tongdangve2[11]['11R22.5']+$ve:$ve;
+                            $vetong2[$dangve['id']] = isset($vetong2[$dangve['id']])?$vetong2[$dangve['id']]+$ve:$ve;
+                          }
+                          else{
+                            //$tongdangve2[11]['11R22.5'] = 0;
+                            $ve = "";
+                            $dangves[$dangve['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><a class="going" style="text-decoration: underline;" href="<?php echo $this->url('stock/going/'.$dangve['id'].'/11/11R22.5/11') ?>"><?php echo $ve ?></a>
+                            <button alt="DK02" tabindex="11" data="<?php echo $dangve['id'] ?>" name="<?php echo $dangve['name'] ?>" value="11R22.5" class="editButton">v</button></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongdangve2[11]['11R22.5'])?$tongdangve2[11]['11R22.5']:"" ?></td>
+                        
+                  </tr>
+                  <tr>
+                        <td class="fix">12R22.5</td>
+                        <td class="fix">18PR</td>
+                        
+                        <?php foreach ($brand_dangves as $dangve) { 
+                          if (isset($dangves[$dangve['id']][11]['12R22.5'])){
+                            $ve = $dangves[$dangve['id']][11]['12R22.5'];
+                            $tongdangve2[11]['12R22.5'] = isset($tongdangve2[11]['12R22.5'])?$tongdangve2[11]['12R22.5']+$ve:$ve;
+                            $vetong2[$dangve['id']] = isset($vetong2[$dangve['id']])?$vetong2[$dangve['id']]+$ve:$ve;
+                          }
+                          else{
+                            //$tongdangve2[11]['12R22.5'] = 0;
+                            $ve = "";
+                            $dangves[$dangve['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><a class="going" style="text-decoration: underline;" href="<?php echo $this->url('stock/going/'.$dangve['id'].'/11/12R22.5/11') ?>"><?php echo $ve ?></a>
+                            <button alt="DK02" tabindex="11" data="<?php echo $dangve['id'] ?>" name="<?php echo $dangve['name'] ?>" value="12R22.5" class="editButton">v</button></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongdangve2[11]['12R22.5'])?$tongdangve2[11]['12R22.5']:"" ?></td>
+                        
+                  </tr>
                   <tr>
                           <td rowspan="7" class="fix">NK01</td>
                         <td rowspan="7" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
@@ -11305,7 +11589,50 @@
                         <td class="fix" style="font-weight:bold"><?php echo isset($tongdathang2[8]['13R22.5'])?$tongdathang2[8]['13R22.5']:"" ?></td>
                         
                   </tr>
-                  
+                  <tr>
+                          <td rowspan="2" class="fix">DK02 (2)</td>
+                        <td rowspan="2" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                        <td class="fix">11R22.5</td>
+                        <td class="fix">18PR</td>
+                        
+                        <?php foreach ($brand_dathangs as $dathang) { 
+                          if (isset($dathangs[$dathang['id']][11]['11R22.5'])){
+                            $dat = $dathangs[$dathang['id']][11]['11R22.5'];
+                            $tongdathang2[11]['11R22.5'] = isset($tongdathang2[11]['11R22.5'])?$tongdathang2[11]['11R22.5']+$dat:$dat;
+                            $dattong2[$dathang['id']] = isset($dattong2[$dathang['id']])?$dattong2[$dathang['id']]+$dat:$dat;
+                          }
+                          else{
+                            //$tongdathang2[11]['11R22.5'] = 0;
+                            $dat = "";
+                            $dathangs[$dathang['id']][11]['11R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><a class="revenue" style="text-decoration: underline;" href="<?php echo $this->url('stock/desired/'.$dathang['id'].'/11/11R22.5/11') ?>"><?php echo $dat ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongdathang2[11]['11R22.5'])?$tongdathang2[11]['11R22.5']:"" ?></td>
+                        
+                  </tr>
+                  <tr>
+                        <td class="fix">12R22.5</td>
+                        <td class="fix">18PR</td>
+                        
+                        <?php foreach ($brand_dathangs as $dathang) { 
+                          if (isset($dathangs[$dathang['id']][11]['12R22.5'])){
+                            $dat = $dathangs[$dathang['id']][11]['12R22.5'];
+                            $tongdathang2[11]['12R22.5'] = isset($tongdathang2[11]['12R22.5'])?$tongdathang2[11]['12R22.5']+$dat:$dat;
+                            $dattong2[$dathang['id']] = isset($dattong2[$dathang['id']])?$dattong2[$dathang['id']]+$dat:$dat;
+                          }
+                          else{
+                            //$tongdathang2[11]['12R22.5'] = 0;
+                            $dat = "";
+                            $dathangs[$dathang['id']][11]['12R22.5'] = "";
+                          }
+                        ?>
+                          <td class="fix"><a class="revenue" style="text-decoration: underline;" href="<?php echo $this->url('stock/desired/'.$dathang['id'].'/11/12R22.5/11') ?>"><?php echo $dat ?></a></td>
+                        <?php } ?>
+                        <td class="fix" style="font-weight:bold"><?php echo isset($tongdathang2[11]['12R22.5'])?$tongdathang2[11]['12R22.5']:"" ?></td>
+                        
+                  </tr>
                   <tr>
                           <td rowspan="7" class="fix">NK01</td>
                         <td rowspan="7" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
