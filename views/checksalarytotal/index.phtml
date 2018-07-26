@@ -255,7 +255,7 @@ elseif ($order_by == 'staff_name')
 
             $luong1 = $chucvu+$thamnien;
             
-            $heso_thoigian = isset($arr_attend[$salary->staff_id])?round($arr_attend[$salary->staff_id]/$tongngaylamviec,2):"";
+            $heso_thoigian = isset($arr_attend[$salary->staff_id])?round($arr_attend[$salary->staff_id]/$tongngaylamviec,3):"";
             $heso_danhgia = isset($position_evaluate[$salary->staff_id])?round((100+$position_evaluate[$salary->staff_id])/100,2):"";
 
             if ($salary->staff_name=="Vũ Thị Xuân The") {

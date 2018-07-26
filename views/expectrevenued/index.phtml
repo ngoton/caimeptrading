@@ -126,7 +126,9 @@ elseif ($order_by == 'vendor')
                </thead>
                <tbody>
                 <?php $tong = 0; $tongcon = 0; $tongtt = 0; ?>
-                <?php foreach ($receivables as $receivable) : ?>
+                <?php foreach ($receivables as $receivable) : 
+                if($receivable->money>0){
+                ?>
                 <?php $tong += $receivable->money; ?>
                 <?php $tongcon += ($receivable->money-$receivable->pay_money); ?>
                 <?php $tongtt += $receivable->pay_money; ?>
@@ -175,7 +177,9 @@ elseif ($order_by == 'vendor')
                         
                     </tr>
                     
-                <?php endforeach; ?>
+                <?php 
+                }
+                endforeach; ?>
                 <?php foreach ($deposits as $cost) : ?>
                 <?php $tong += $cost->money_in;  ?>
                     <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $cost->costs_id ?>" class="edit_tr" >

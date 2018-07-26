@@ -68,6 +68,13 @@ Class ordertireController Extends baseController {
         $join = array('table'=>'order_tire, tire_pattern, tire_brand, tire_size','where'=> 'order_tire=order_tire_id AND tire_brand_id=tire_brand AND tire_size_id=tire_size AND tire_pattern_id=tire_pattern');
         $order_lists = $tire_order_list_model->getAllTire($data,$join);
 
+        $trugiam = $orders->discount+$orders->reduce;
+        if ($trugiam<0) {
+            $trugiam = 0;
+        }
+        $giam = $trugiam/$orders->order_tire_number;
+        $giam = $giam/1.1;
+
         $items = array();
         $congtien=0;
         $tongcong=0;
@@ -83,6 +90,7 @@ Class ordertireController Extends baseController {
             }
             $items['sl'][] = $order_list->tire_number;
             $dg = $order_list->check_price_vat==1?$order_list->tire_price_vat*$order_list->vat_percent*0.1/1.1:$order_list->tire_price*$order_list->vat_percent*0.1;
+            $dg = $dg-$giam;
             $items['dg'][] = round($dg);
             $items['tt'][] = round($dg*$order_list->tire_number);
 
@@ -134,6 +142,13 @@ Class ordertireController Extends baseController {
         $join = array('table'=>'order_tire, tire_pattern, tire_brand, tire_size','where'=> 'order_tire=order_tire_id AND tire_brand_id=tire_brand AND tire_size_id=tire_size AND tire_pattern_id=tire_pattern');
         $order_lists = $tire_order_list_model->getAllTire($data,$join);
 
+        $trugiam = $orders->discount+$orders->reduce;
+        if ($trugiam<0) {
+            $trugiam = 0;
+        }
+        $giam = $trugiam/$orders->order_tire_number;
+        $giam = $giam/1.1;
+
         $items = array();
         $congtien=0;
         $tongcong=0;
@@ -149,6 +164,7 @@ Class ordertireController Extends baseController {
             }
             $items['sl'][] = $order_list->tire_number;
             $dg = $order_list->check_price_vat==1?$order_list->tire_price_vat*$order_list->vat_percent*0.1/1.1:$order_list->tire_price*$order_list->vat_percent*0.1;
+            $dg = $dg-$giam;
             $items['dg'][] = round($dg);
             $items['tt'][] = round($dg*$order_list->tire_number);
 
@@ -363,6 +379,7 @@ Class ordertireController Extends baseController {
 
         $tire_buy_model = $this->model->get('tirebuyModel');
         $tire_sale_model = $this->model->get('tiresaleModel');
+        $tire_going_model = $this->model->get('tiregoingModel');
 
         $order_tire_model = $this->model->get('ordertireModel');
         $order_tire_list_model = $this->model->get('ordertirelistModel');
@@ -378,6 +395,11 @@ Class ordertireController Extends baseController {
             $tire_sales = $tire_sale_model->getAllTire(array('where'=>'tire_brand = '.$tire->tire_brand_code.' AND tire_size = '.$tire->tire_size.' AND tire_pattern = '.$tire->tire_pattern_code));
             foreach ($tire_sales as $tire_sale) {
                 $arr_max[$tire->tire_desired_id] = isset($arr_max[$tire->tire_desired_id])?$arr_max[$tire->tire_desired_id]-$tire_sale->volume:0;
+            }
+
+            $tire_goings = $tire_going_model->getAllTire(array('where'=>'(status IS NULL OR status != 1 ) AND tire_brand = '.$tire->tire_brand_code.' AND tire_size = '.$tire->tire_size.' AND tire_pattern = '.$tire->tire_pattern_code));
+            foreach ($tire_goings as $tire_going) {
+                $arr_max[$tire->tire_desired_id] = isset($arr_max[$tire->tire_desired_id])?$arr_max[$tire->tire_desired_id]+$tire_going->tire_number:$tire_going->tire_number;
             }
 
             $order_tire = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status = 0)'));
@@ -843,13 +865,16 @@ Class ordertireController Extends baseController {
 
                 $tire_price_discount_events = $tire_price_discount_event_model->getAllTire($data_e);
 
+                $tire_prices = $dongia;
+                $giacongkhai = $dongia;
+
                 foreach ($tire_price_discounts as $price) {
-                    if (!isset($price->$column) || $price->$column==0 || $price->$column=="") {
-                        $column = 'tire_'.(str_replace('tire_', '', $column)+10);
-                    }
-                    while (!isset($price->$column) || $price->$column==0 || $price->$column=="") {
-                        $column = 'tire_'.(str_replace('tire_', '', $column)-10);
-                    }
+                    // if (!isset($price->$column) || $price->$column==0 || $price->$column=="") {
+                    //     $column = 'tire_'.(str_replace('tire_', '', $column)+10);
+                    // }
+                    // while (!isset($price->$column) || $price->$column==0 || $price->$column=="") {
+                    //     $column = 'tire_'.(str_replace('tire_', '', $column)-10);
+                    // }
 
                     $tire_prices = $price->$column;
                     $tire_price_origin = ($price->tire_price*0.75); // giá công khai giảm 25% + vc
@@ -1128,7 +1153,9 @@ Class ordertireController Extends baseController {
         $order_tires = $order_tire_model->getAllTire($data,$join);
 
         $tire_import_model = $this->model->get('tireimportModel');
-
+        $invoice_tire_model = $this->model->get('invoicetireModel');
+        
+        $invoice_data = array();
         $costs = array();
         foreach ($order_tires as $tire) {
             $ngay = $tire->order_tire_status==1?$tire->delivery_date:strtotime(date('d-m-Y'));
@@ -1162,10 +1189,17 @@ Class ordertireController Extends baseController {
 
                 $costs[$tire->order_tire_id] = isset($costs[$tire->order_tire_id])?$costs[$tire->order_tire_id]+$l->tire_number*$gia:$l->tire_number*$gia;
             }
+
+            $invoice = $invoice_tire_model->getAllInvoice(array('where'=>'order_tire='.$tire->order_tire_id));
+            foreach ($invoice as $invoices) {
+                $invoice_data[$tire->order_tire_id]['number'] = isset($invoice_data[$tire->order_tire_id]['number'])?$invoice_data[$tire->order_tire_id]['number'].' | '.$invoices->invoice_tire_number:$invoices->invoice_tire_number;
+                $invoice_data[$tire->order_tire_id]['date'] = isset($invoice_data[$tire->order_tire_id]['date'])?$invoice_data[$tire->order_tire_id]['date'].' | '.$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date):$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date);
+            }
         }
         
         $this->view->data['costs'] = $costs;
         $this->view->data['order_tires'] = $order_tires;
+        $this->view->data['invoice_data'] = $invoice_data;
 
         $this->view->data['lastID'] = isset($order_tire_model->getLastTire()->order_tire_id)?$order_tire_model->getLastTire()->order_tire_id:0;
 
@@ -5437,6 +5471,12 @@ Class ordertireController Extends baseController {
         $join = array('table'=>'tire_pattern, tire_brand, tire_size','where'=> 'tire_brand_id=tire_brand AND tire_size_id=tire_size AND tire_pattern_id=tire_pattern');
         $order_types = $tire_order_list_model->getAllTire($data,$join);
 
+        $trugiam = $orders->discount+$orders->reduce;
+        if ($trugiam<0) {
+            $trugiam = 0;
+        }
+        $giam = $trugiam/$orders->order_tire_number;
+        $giam = $giam/1.1;
         
             require("lib/Classes/PHPExcel/IOFactory.php");
             require("lib/Classes/PHPExcel.php");
@@ -5492,18 +5532,19 @@ Class ordertireController Extends baseController {
                 $i=1;
                 $tong = 0;
                 foreach ($order_types as $row) {
-                    
+                    $dg = ($orders->vat_percent>0?($orders->check_price_vat==1?$row->tire_price_vat*$orders->vat_percent*0.1/1.1:$row->tire_price*$orders->vat_percent*0.1):$row->tire_price);
+                    $dg = $dg-$giam;
                     //$objPHPExcel->setActiveSheetIndex(0)->getStyle('B'.$hang)->getNumberFormat()->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
                      $objPHPExcel->setActiveSheetIndex(0)
                         ->setCellValue('A' . $hang, $i++)
                         ->setCellValueExplicit('B' . $hang, 'Lốp xe '.$row->tire_brand_name.' '.$row->tire_size_number.' '.$row->tire_pattern_name)
                         ->setCellValue('F' . $hang, (substr($row->tire_size_number, -2)=='.5'?'Cái':'Bộ'))
                         ->setCellValue('G' . $hang, $row->tire_number)
-                        ->setCellValue('H' . $hang, ($orders->vat_percent>0?($orders->check_price_vat==1?$row->tire_price_vat*$orders->vat_percent*0.1/1.1:$row->tire_price*$orders->vat_percent*0.1):$row->tire_price))
+                        ->setCellValue('H' . $hang, $dg)
                         ->setCellValue('I' . $hang, '=G'.$hang.'*H'.$hang);
                      $hang++;
 
-                     $tong += $row->tire_number*(($orders->vat_percent>0?($orders->check_price_vat==1?$row->tire_price_vat*$orders->vat_percent*0.1/1.1:$row->tire_price*$orders->vat_percent*0.1):$row->tire_price));
+                     $tong += $row->tire_number*$dg;
 
                      
 

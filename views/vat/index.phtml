@@ -1745,7 +1745,7 @@ Từ <input type="text" name="batdau" id="batdau" value="01-<?php echo date('m-Y
   </tbody>
 </table>
 <input type="hidden" name="eHD" id="eHD">
-<h4><button type="button" class="btn" title="Xuất hóa đơn điện tử" id="printEHD"><i class="fa fa-cloud-upload" ></i></button> <button type="button" class="btn" title="In" id="print"><i class="fa fa-print" ></i></button> <button id="refresh" type="button" class="btn"><i class="fa fa-refresh" title="Nhập lại"></i></button></h4>
+<h4><button type="button" class="btn" title="Lấy thông tin công ty" id="getMST"><i class="fa fa-info-circle" ></i></button> <button type="button" class="btn" title="Xuất hóa đơn điện tử" id="printEHD"><i class="fa fa-cloud-upload" ></i></button> <button type="button" class="btn" title="In" id="print"><i class="fa fa-print" ></i></button> <button id="refresh" type="button" class="btn"><i class="fa fa-refresh" title="Nhập lại"></i></button></h4>
 </form>
 <i class="error"><u><b>Lưu ý trước khi in:</b></u> Bằng việc bấm <b>"In"</b> là bạn đã xác nhận các thông tin là đúng.</i>
 <div id="show_item"></div>
@@ -2118,7 +2118,7 @@ $( "#show_item" ).dialog({
 });
 
 $('#refresh').click(function(){
-  $('input[name!="batdau"][name!="ketthuc"][name!="ngay"][name!="thang"][name!="nam"][name!="sohd"][name!="thanhtoan"]').val("");
+  $('input[name!="batdau"][name!="ketthuc"][name!="ngay"][name!="thang"][name!="nam"][name!="sohd"][name!="thanhtoan"][name!="mauso"][name!="kyhieu"]').val("");
   $('.tt').attr('data',"");
   $('.dg').attr('data',"");
   $('.ten:eq(0)').val("Lốp xe bố kẽm:");
@@ -2259,7 +2259,29 @@ var pickerOpts = {
     $("#ketthuc").datepicker(pickerOpts4);
 
 
-
+$('#getMST').click(function(){
+  var mst = $('#mst').val().trim();
+  $.ajax({
+        url: '<?php echo BASE_URL ?>/vat/getMasothue',
+        type: 'GET',
+        data: {mst:mst},
+        success:function(data){
+          //console.log(data);
+          var data = $.parseJSON(data);
+          if (data.mst == mst) {
+            if (data.ten.trim() != $('#tendv').val().trim() || data.diachi.trim() != $('#diachi').val().trim()) {
+              var r = confirm("Thông tin công ty đã thay đổi. Bạn có muốn cập nhật lại không? \n - Tên cũ: "+$('#tendv').val()+"\n - Tên mới: "+data.ten+"\n - Địa chỉ cũ: "+$('#diachi').val()+"\n - Địa chỉ mới: "+data.diachi);
+              if (r == true){
+                $('#tendv').val(data.ten);
+                $('#diachi').val(data.diachi);
+              }
+            }
+            
+          }
+          
+        }
+      });
+});
 </script>
   
     </body>

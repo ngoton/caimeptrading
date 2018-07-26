@@ -85,6 +85,18 @@ Class dailyController Extends baseController {
         $this->view->data['account_parents'] = $account_parents;
         $this->view->data['account_data'] = $account_data;
 
+        $account_balance_model = $this->model->get('accountbalanceModel');
+        $join = array('table'=>'account','where'=>'account=account_id');
+        $data = array(
+            'where'=>'account_number = "311_bidv" AND account_balance_date < '.strtotime($ngayketthuc),
+        );
+        $account_balance_befores = $account_balance_model->getAllAccount($data,$join);
+        $no_bidv = 0;
+        foreach ($account_balance_befores as $account) {
+            $no_bidv += $account->money;
+        }
+        $this->view->data['no_bidv'] = $no_bidv;
+
         $payment_request_model = $this->model->get('paymentrequestModel');
 
         $payment_requests = $payment_request_model->getAllPayment();
@@ -1416,7 +1428,7 @@ Class dailyController Extends baseController {
                     $str .= '<td class="width-3">'.$i.'</td>';
                     
                     $str .= '<td class="width-10"><input disabled data="'.$additional->payable.'" value="'.$additional->payment_request_detail_code.'" type="text" name="additional_code[]" class="additional_code keep-val" autocomplete="off"><ul class="customer_list_id"></ul></td>';
-                    $str .= '<td class="width-10"><input disabled value="'.$this->lib->formatMoney($additional->payment_request_detail_money).'" type="text" name="additional_money[]" class="additional_money numbers text-right" required="required" autocomplete="off" data-max="'.$additional->payment_request_detail_money.'"></td>';
+                    $str .= '<td class="width-10"><input disabled value="'.$this->lib->formatMoney($additional->payment_request_detail_money).'" type="text" name="additional_money[]" class="additional_money numbers text-right" required="required" autocomplete="off" data-max="'.$additional->payment_request_detail_money.'" money-usd="'.$additional->payment_request_detail_money_usd.'"></td>';
                     $str .= '<td><input value="'.$additional->payment_request_detail_comment.'" type="text" name="additional_comment[]" class="additional_comment keep-val" required="required" autocomplete="off"></td>';
                     $str .= '<td class="width-10">';
                     $str .= '<select name="additional_debit[]" class="additional_debit dropchosen" required="required">';
@@ -1663,7 +1675,7 @@ Class dailyController Extends baseController {
                     $str .= '<td class="width-3">'.$i.'</td>';
                     
                     $str .= '<td class="width-10"><input '.($additional->additional_payable>0?"disabled":null).' data="'.$additional->additional_payable.'" value="'.$additional->code.'" type="text" name="additional_code[]" class="additional_code keep-val" autocomplete="off"><ul class="customer_list_id"></ul></td>';
-                    $str .= '<td class="width-10"><input data-max="'.$additional->data_max.'" data="'.$additional->additional_id.'" value="'.$this->lib->formatMoney($additional->money).'" type="text" name="additional_money[]" class="additional_money numbers text-right" required="required" autocomplete="off"></td>';
+                    $str .= '<td class="width-10"><input data-max="'.$additional->data_max.'" money-usd="'.$additional->money_usd.'" data="'.$additional->additional_id.'" value="'.$this->lib->formatMoney($additional->money).'" type="text" name="additional_money[]" class="additional_money numbers text-right" required="required" autocomplete="off"></td>';
                     $str .= '<td><input value="'.$additional->additional_comment.'" type="text" name="additional_comment[]" class="additional_comment keep-val" required="required" autocomplete="off"></td>';
                     $str .= '<td class="width-10">';
                     $str .= '<select name="additional_debit[]" class="additional_debit dropchosen" required="required">';
@@ -2021,6 +2033,7 @@ Class dailyController Extends baseController {
                         'daily_check_cost' => trim($_POST['daily_check_cost']),
                         'internal_transfer' => trim($_POST['internal_transfer']),
                         'account_out' => trim($_POST['account_out']),
+                        'daily_rate' => trim(str_replace(',','',$_POST['daily_rate'])),
                         );
             if (trim($_POST['payment_request_number'])!="") {
                 if ($_POST['payment_request']>0) {
@@ -3747,6 +3760,7 @@ Class dailyController Extends baseController {
                     'additional_approve' => $data['owner_approve'],
                     'additional_payable' => trim($v['additional_payable']),
                     'data_max' => str_replace(',','',$v['additional_data_max']),
+                    'money_usd' => str_replace(',','',$v['additional_money_usd']),
                     'additional_service' => $v['additional_service'],
                     'daily' => $id_daily_last,
                 );

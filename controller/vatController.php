@@ -183,6 +183,8 @@ Class vatController Extends baseController {
                 $guid = $res[0]->InvoiceGUID;
             }
         }
+
+        
         
         foreach ($items['order'] as $value) {
             if($value>0){
@@ -277,6 +279,13 @@ Class vatController Extends baseController {
         $this->view->data['tienthue'] = str_replace(',', '', $params['tienthue'][0]);
         $this->view->data['tongcong'] = str_replace(',', '', $params['tongcong'][0]);
 
+        $customer_model = $this->model->get('customerModel');
+
+        $customers = $customer_model->getCustomerByWhere(array('customer_mst'=>$params['mst'][0]));
+        if ($customers->company_name != $params['tendv'][0] || $customers->customer_address != $params['diachi'][0]) {
+            $customer_model->updateCustomer(array('company_name'=>$params['tendv'][0],'customer_address'=>$params['diachi'][0]),array('customer_id'=>$customers->customer_id));
+        }
+
 
         date_default_timezone_set("Asia/Ho_Chi_Minh"); 
         $filename = "action_logs.txt";
@@ -292,6 +301,11 @@ Class vatController Extends baseController {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
 
+        $order_tire_list_model = $this->model->get('ordertirelistModel');
+
+        $invoice_tire_model = $this->model->get('invoicetireModel');
+        $invoice_tire_detail_model = $this->model->get('invoicetiredetailModel');
+
         $query  = explode('&', $_SERVER['QUERY_STRING']);
         $params = array();
 
@@ -303,7 +317,111 @@ Class vatController Extends baseController {
         
         $items = $params;
 
+        $guid = null;
+        if ($items['eHD'][0] == 1) {
+            $invoices = $invoice_tire_model->getAllInvoice(array('where'=>'invoice_tire_number = "'.$items['sohd'][0].'" AND invoice_tire_form = "'.$items['mauso'][0].'" AND invoice_tire_symbol = "'.$items['kyhieu'][0].'"'));
+
+            if (!$invoices) {
+                $CmdType = 111; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
+                $eHD = $this->createEHoaDon($params, $CmdType);
+            }
+            else{
+                $CmdType = 200; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
+                $eHD = $this->createEHoaDon($params, $CmdType);
+
+                foreach ($invoices as $invoice) {
+                    $invoice_tire_model->deleteInvoice($invoice->invoice_tire_id);
+                }
+                $invoices = $invoice_tire_detail_model->getAllInvoice(array('where'=>'invoice_tire_detail_number = "'.$items['sohd'][0].'" AND invoice_tire_detail_form = "'.$items['mauso'][0].'" AND invoice_tire_detail_symbol = "'.$items['kyhieu'][0].'"'));
+                foreach ($invoices as $invoice) {
+                    $invoice_tire_detail_model->deleteInvoice($invoice->invoice_tire_detail_id);
+                }
+            }
+
+            $res = json_decode($eHD->Object);
+            if (isset($res[0]->InvoiceGUID)) {
+                $guid = $res[0]->InvoiceGUID;
+            }
+        }
         
+
+        foreach ($items['order'] as $value) {
+            if($value>0){
+                $data_invoice = array(
+                    'order_tire'=>$value,
+                    'invoice_tire_number'=>$items['sohd'][0],
+                    'invoice_tire_date'=> strtotime($items['ngay'][0].'-'.$items['thang'][0].'-20'.$items['nam'][0]),
+                    'invoice_tire_create_user'=>$_SESSION['userid_logined'],
+                    'invoice_tire_guid'=>$guid,
+                    'invoice_tire_form'=>$items['mauso'][0],
+                    'invoice_tire_symbol'=>$items['kyhieu'][0],
+                );
+                $invoices = $invoice_tire_model->getInvoiceByWhere(array('order_tire'=>$data_invoice['order_tire'],'invoice_tire_number'=>$data_invoice['invoice_tire_number']));
+                if (!$invoices) {
+                    $invoice_tire_model->createInvoice($data_invoice);
+                }
+                else{
+                    $invoice_tire_model->updateInvoice($data_invoice,array('invoice_tire_id'=>$invoices->invoice_tire_id));
+                }
+            }
+        }
+
+        
+        $j=0;
+        foreach ($items['orderlist'] as $value) {
+            if($value>0){
+
+                if(!isset($conlai[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]])){
+                    $conlai[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] = $items['sl'][$j];
+                    $dongia[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] = str_replace(',', '', $items['dg'][$j]);
+                    $giavat[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] = round(str_replace(',', '', $items['dg'][$j])*0.1);
+
+                    $dongia_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] = $items['price_hide'][$j];
+                    $tt_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] = $items['total_hide'][$j];
+                }
+                $sl = $conlai[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]];
+
+                $o_list = $order_tire_list_model->getTire($value);
+                if ($sl>$o_list->tire_number) {
+                    $conlai[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]] -= $o_list->tire_number;
+                    $sl = $o_list->tire_number;
+                }
+
+                $data_invoice = array(
+                    'order_tire_list'=>$value,
+                    'invoice_tire_detail_number'=>$items['sohd'][0],
+                    'invoice_tire_detail_date'=> strtotime($items['ngay'][0].'-'.$items['thang'][0].'-20'.$items['nam'][0]),
+                    'invoice_tire_detail_brand'=>$items['brand'][$j],
+                    'invoice_tire_detail_size'=>$items['size'][$j],
+                    'invoice_tire_detail_pattern'=>$items['pattern'][$j],
+                    'invoice_tire_detail_volume'=>$sl,
+                    'invoice_tire_detail_price'=>$dongia[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
+                    'invoice_tire_detail_create_user'=>$_SESSION['userid_logined'],
+                    'invoice_tire_detail_vat'=>$giavat[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
+                    'order_tire'=>$items['order'][$j],
+                    'person_hide'=>$items['tennguoimua'][0],
+                    'company_hide'=>$items['tendv'][0],
+                    'mst_hide'=>$items['mst'][0],
+                    'address_hide'=>$items['diachi'][0],
+                    'price_hide'=>$dongia_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
+                    'total_hide'=>$tt_an[$items['brand'][$j]][$items['size'][$j]][$items['pattern'][$j]],
+                    'invoice_tire_detail_form'=>$items['mauso'][0],
+                    'invoice_tire_detail_symbol'=>$items['kyhieu'][0],
+                );
+
+                $invoices = $invoice_tire_detail_model->getInvoiceByWhere(array('order_tire'=>$data_invoice['order_tire'],'order_tire_list'=>$data_invoice['order_tire_list'],'invoice_tire_detail_number'=>$data_invoice['invoice_tire_detail_number']));
+                if (!$invoices) {
+                    $invoice_tire_detail_model->createInvoice($data_invoice);
+                }
+                else{
+                    $invoice_tire_detail_model->updateInvoice($data_invoice,array('invoice_tire_detail_id'=>$invoices->invoice_tire_detail_id));
+                }
+
+                
+            }
+
+            $j++;
+        }
 
         $this->view->data['items'] = $items;
         $this->view->data['nguoimh'] = $params['tennguoimua'][0];
@@ -352,6 +470,13 @@ Class vatController Extends baseController {
             $mst = $item->mst;
             $dc = str_replace("\'", "'", $item->customer_address);
 
+            $trugiam = $item->discount+$item->reduce;
+            if ($trugiam<0) {
+                $trugiam = 0;
+            }
+            $giam = $trugiam/$item->order_tire_number;
+            $giam = $giam/1.1;
+
             foreach ($lists as $order) {
                 
 
@@ -367,6 +492,7 @@ Class vatController Extends baseController {
                     $dvt = substr($order->tire_size_number, -2)=='.5'?'Cái':'Bộ';
                     $sl = $order->tire_number-$sum_vat;
                     $dg = $item->check_price_vat==1?$order->tire_price_vat*$item->vat_percent*0.1/1.1:$order->tire_price*$item->vat_percent*0.1;
+                    $dg = $dg-$giam;
                     $tt = round($dg*$sl);
                     $congtien = $dg*$sl;
                     $dg1 = $dg;
@@ -423,6 +549,45 @@ Class vatController Extends baseController {
 
         return json_decode(base64_decode($response->ExecCommandResult));
    }
+   public function getMasothue(){ 
+        $BkavPartnerGUID = "6A4028E7-FA66-4585-BBF3-795430BC1B4D";
+        $BkavPartnerToken = "8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==";
+        
+        $mst = $_GET['mst'];
+        
+        $EncryptedCommandData = $this->getInfo(904, $mst);
+        
+        $params = array(
+            'partnerGUID' => $BkavPartnerGUID,
+            'CommandData' => $EncryptedCommandData
+        );
+
+        $webServiceClient = $this->connectBKAV();
+        $response = $webServiceClient->__soapCall('ExecCommand', array('parameters' => $params));
+
+        $eHD =  json_decode(base64_decode($response->ExecCommandResult));
+
+        $result = array(
+            'mst'=>null,
+            'ten'=>null,
+            'diachi'=>null,
+            'trangthai'=>null
+        );
+
+        $res = $eHD->Object;
+
+        if (isset($res->MaSoThue)) {
+            $result = array(
+                'mst'=>trim($res->MaSoThue),
+                'ten'=>trim(mb_strtoupper($res->TenChinhThuc, "UTF-8")),
+                'diachi'=>trim($res->DiaChiGiaoDichChinh),
+                'trangthai'=>$res->TrangThaiHoatDong
+            );
+        }
+        
+
+        echo json_encode($result);
+   }
 
    public function connectBKAV(){
         $wsdlAddress = "https://ws.ehoadon.vn/WSPublicEHoaDon.asmx?WSDL";
@@ -437,6 +602,22 @@ Class vatController Extends baseController {
         $webServiceClient = new SoapClient($wsdlAddress, $options);
 
         return $webServiceClient;
+   }
+   public function getInfo($CmdType, $Object){
+        $CommandData = array(
+            'CmdType' => $CmdType,
+            'CommandObject' => $Object
+        );
+
+        $CommandData = json_encode($CommandData);
+        //$CommandData = unpack("C*",$CommandData); // Convert to byte array
+        //$token = explode(':', $BkavPartnerToken);
+
+        //$result = $this->Encryption($this->Zip($CommandData), $token[0], $token[1], "AES-256-CBC");
+
+        $result = base64_encode($CommandData);
+
+        return $result;
    }
    public function RemoteCommand($BkavPartnerToken, $Mode = 6, $CmdType, $items = array()){
         $order_tire_model = $this->model->get('ordertireModel');

@@ -150,6 +150,9 @@ elseif ($order_by == 'order_tire_number')
         <th class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','approve','<?php echo $url_order ?>')">Duyệt <?php if ($order_by == 'approve'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th> 
+        <th class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','approve','<?php echo $url_order ?>')">HĐ <?php if ($order_by == 'approve'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th> 
     </tr>
     
    </thead>
@@ -193,6 +196,7 @@ elseif ($order_by == 'order_tire_number')
              
             
             <td class="fix" id="approve_<?php echo $order_tire->order_tire_id; ?>"><?php echo isset($users['name'][$order_tire->approve])?$users['name'][$order_tire->approve]:(($_SESSION['role_logined']==1 || $_SESSION['role_logined']==9)?'<button data="'.$order_tire->order_tire_id.'" class="approve">Duyệt</button>':null); ?></td> 
+            <td class="fix" id="invoice_tire_number_<?php echo $order_tire->order_tire_id; ?>"><?php echo isset($invoice_data[$order_tire->order_tire_id]['number'])?$invoice_data[$order_tire->order_tire_id]['number']:null; ?></td> 
         </tr>
     <?php endforeach; ?>
     <?php foreach ($sales as $tire_sale) : 
@@ -221,6 +225,7 @@ elseif ($order_by == 'order_tire_number')
              
             
             <td class="fix" id="approve_<?php echo $tire_sale->tire_sale_id; ?>"></td> 
+            <td class="fix"></td>
         </tr>
     <?php endforeach; ?>
     <tr style=" color:rgb(211, 11, 57); text-align: center; font-weight:bold;">

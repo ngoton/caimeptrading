@@ -211,7 +211,7 @@ Class checksalarytotalController Extends baseController {
             
             $phut = (7*60)+33;
             $phuttre = ($ngay[0]*60)+$ngay[1];
-            $tre = $phuttre>$phut?round((($phuttre-$phut)*2/60)/8,2):0;
+            $tre = $phuttre>$phut?(($phuttre-$phut+3)*2/60)/8:0;
 
             $arr_attend[$attendance->staff] = isset($arr_attend[$attendance->staff])?$arr_attend[$attendance->staff]+$sotieng-$tre:$sotieng-$tre;
         }
