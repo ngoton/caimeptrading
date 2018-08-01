@@ -752,6 +752,38 @@ Class adminController Extends baseController {
         }
 
     }
+    public function checkorderexpired(){
+        $order_tire_model = $this->model->get('ordertireModel');
+        $order_tire_list_model = $this->model->get('ordertirelistModel');
+        $tire_buy_model = $this->model->get('tirebuyModel');
+        $tire_sale_model = $this->model->get('tiresaleModel');
+        $today = date('d-m-Y');
+        $before = date('d-m-Y', strtotime($today. ' - 15 days'));
+
+        $orders = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status=0) AND id_order_agent > 0 AND order_tire_date <= '.strtotime($before)));
+        $arr = array();
+        foreach ($orders as $order) {
+            $ton = 0;
+            $order_lists = $order_tire_list_model->getAllTire(array('where'=>'order_tire='.$order->order_tire_id));
+            foreach ($order_lists as $order_list) {
+                $tire_buys = $tire_buy_model->getAllTire(array('where'=>'tire_buy_brand = '.$order_list->tire_brand.' AND tire_buy_size = '.$order_list->tire_size.' AND tire_buy_pattern = '.$order_list->tire_pattern));
+                foreach ($tire_buys as $tire) {
+                    $ton += $tire->tire_buy_volume;
+                }
+
+                $tire_sales = $tire_sale_model->getAllTire(array('where'=>'tire_brand = '.$order_list->tire_brand.' AND tire_size = '.$order_list->tire_size.' AND tire_pattern = '.$order_list->tire_pattern));
+                foreach ($tire_sales as $tire) {
+                    $ton -= $tire->volume;
+                }
+
+            }
+            if ($ton>0) {
+                $arr[] = $order->id_order_agent;
+            }
+            
+        }
+        echo json_encode($arr);
+    }
 
 
 

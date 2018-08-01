@@ -344,6 +344,7 @@ Class userController Extends baseController {
 
     }
     public function info($id){
+        $this->view->setLayout('admin');
         if (!isset($_SESSION['userid_logined'])) {
             return $this->view->redirect('user/login');
         }

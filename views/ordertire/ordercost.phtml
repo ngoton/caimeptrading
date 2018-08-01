@@ -1,12 +1,28 @@
 
+<?php 
+$lock = 0;
+$check_date = $order_tire->order_tire_status==1?(strtotime(date('t-m-Y',$order_tire->delivery_date))+691200):(strtotime(date('t-m-Y'))+691200); 
+$today = strtotime(date('d-m-Y'));
+if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 3  && $_SESSION['role_logined'] != 2  && $_SESSION['role_logined'] != 8) { 
+  if ($today > $check_date) {
+    $lock = 1;
+  }
+}
+if ($order_tire->sale_lock != 1) {
+  $lock=0;
+}
+?>
 <div>
-  <div class="add-box"><a class="add_button" onClick="add_click();">Thêm</a></div>
+    <div <?php echo $lock==1?'style="display:none"':null ?> class="add-box"><a class="add_button" onClick="add_click();">Thêm</a></div>
 </div>
 
-<?php $l=1 ; $tong=0; ?>
+<?php $l=1 ; $tong=0; $dachi=0; ?>
 <table class="table_data" id="or">
 <thead>
     <tr>
+      <th class="fix">
+            <a class="sort">STT</a>
+        </th>
         <th class="fix">
             <a class="sort">Chi phí</a>
         </th>
@@ -35,39 +51,57 @@
    </thead>
    <tbody>
     <?php foreach ($order_tire_costs as $order_tire_cost) : 
-        $tong += $order_tire_cost->tire_number;
+        $tong += $order_tire_cost->order_tire_cost;
+        $dachi += isset($pay_data[$order_tire_cost->order_tire_cost_id]['money'])?$pay_data[$order_tire_cost->order_tire_cost_id]['money']:0;
     ?>
-        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $order_tire_cost->order_tire_cost_id ?>" class="edit_tr" data="<?php echo $order_tire->sale_lock ?>" >
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $order_tire_cost->order_tire_cost_id ?>" class="edit_tr" data="<?php echo $lock ?>" alt="<?php echo $order_tire->sale_lock ?>" >
             <td class="fix"><?php echo $l++; ?></td>
-            <td class="fix" data="<?php echo $order_tire_cost->tire_brand; ?>"  id="tire_brand_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->tire_brand_name; ?></td>
-            <td class="fix" data="<?php echo $order_tire_cost->tire_size; ?>" id="tire_size_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->tire_size_number; ?></td>
-            <td class="fix" data="<?php echo $order_tire_cost->tire_pattern; ?>" id="tire_pattern_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->tire_pattern_name; ?></td>
-            <td class="fix"  id="tire_number_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->tire_number; ?></td>
-            <td class="fix"  id="tire_price_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire->check_price_vat==1?$lib->formatMoney($order_tire_cost->tire_price_vat):$lib->formatMoney($order_tire_cost->tire_price); ?></td>
-            <td class="fix" data="<?php echo isset($price[$order_tire_cost->order_tire_cost_id])?$price[$order_tire_cost->order_tire_cost_id]:null ?>"  id="price_<?php echo $order_tire_cost->order_tire_cost_id; ?>">
-              <?php echo isset($price[$order_tire_cost->order_tire_cost_id])?round((($order_tire_cost->tire_price_vat>0?$order_tire_cost->tire_price_vat:$order_tire_cost->tire_price)*100)/$price[$order_tire_cost->order_tire_cost_id],1)."%":null; ?>
+            <td class="fix" data="<?php echo $order_tire_cost->order_tire_cost_type; ?>"  id="order_tire_cost_type_<?php echo $order_tire_cost->order_tire_cost_id; ?>">
+              <?php
+              switch ($order_tire_cost->order_tire_cost_type) {
+                case '1':
+                  echo 'Trucking';
+                  break;
+                case '2':
+                  echo 'Barging';
+                  break;
+                case '3':
+                  echo 'Feeder';
+                  break;
+                case '4':
+                  echo 'Thu hộ';
+                  break;
+                case '5':
+                  echo 'Hoa hồng';
+                  break;
+                case '6':
+                  echo 'TTHQ';
+                  break;
+                default:
+                  echo 'Khác';
+                  break;
+              }
+              ?>
             </td>
-            <td class="fix"  id="vat_<?php echo $order_tire_cost->order_tire_cost_id; ?>">
-              <?php echo $order_tire->vat_percent>0?$order_tire->vat_percent.'%':null; ?>
-            </td>
-            <td class="fix"  id="vat_<?php echo $order_tire_cost->order_tire_cost_id; ?>">
-              <input disabled="disabled" type="checkbox" name="check_price_vat_<?php echo $order_tire_cost->order_tire_cost_id; ?>" id="check_price_vat_<?php echo $order_tire_cost->order_tire_cost_id; ?>" <?php echo $order_tire->check_price_vat==1?'checked="checked"':null ?> >
-            </td>
+            <td class="fix" data="<?php echo $order_tire_cost->vendor; ?>" id="vendor_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->shipment_vendor_name; ?></td>
+            <td class="fix"  id="comment_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $order_tire_cost->comment; ?></td>
+            <td class="fix"  id="order_tire_cost_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $lib->formatMoney($order_tire_cost->order_tire_cost); ?></td>
+            <td class="fix"  id="order_tire_pay_money_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo isset($pay_data[$order_tire_cost->order_tire_cost_id]['money'])?$lib->formatMoney($pay_data[$order_tire_cost->order_tire_cost_id]['money']):null; ?></td>
+            <td class="fix"  id="order_tire_cost_paydate_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo isset($pay_data[$order_tire_cost->order_tire_cost_id]['date'])?$lib->hien_thi_ngay_thang($pay_data[$order_tire_cost->order_tire_cost_id]['date']):null; ?></td>
+            <td class="fix"  id="order_tire_cost_create_user_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo $pay_data[$order_tire_cost->order_tire_cost_id]['user']; ?></td>
+            <td style="display: none" id="order_tire_cost_date_<?php echo $order_tire_cost->order_tire_cost_id; ?>"><?php echo date('d-m-Y',$order_tire_cost->order_tire_cost_date) ?></td>
             <td>
-                <input type="hidden" id="tire_price_vat_<?php echo $order_tire_cost->order_tire_cost_id; ?>" value="<?php echo $order_tire_cost->tire_price ?>">
-                <?php if($order_tire->sale_lock!=1){ ?>
+                <?php if(!isset($pay_data[$order_tire_cost->order_tire_cost_id]['money']) || $_SESSION['role_logined']==1){ ?>
                 <button class="del_list" data="<?php echo $order_tire_cost->order_tire_cost_id ?>" style="display:block">Xóa</button>
                 <?php } ?>
-            </td>
-            <td class="fix" style="display:none" data="<?php echo $order_tire_cost->tire_date>0?$order_tire_cost->tire_date:null; ?>" id="tire_date_<?php echo $order_tire_cost->order_tire_cost_id; ?>">
-              <?php echo $order_tire_cost->tire_date>0?date('m/Y',$order_tire_cost->tire_date):null; ?>
             </td>
         </tr>
     <?php endforeach; ?>
     <tr style="text-align:center; font-weight: bold; color: red;">
         <td class="fix" colspan="4" >Tổng cộng</td>
         <td class="fix"><?php echo $lib->formatMoney($tong); ?></td>
-        <td class="fix" colspan="5" ></td>
+        <td class="fix"><?php echo $lib->formatMoney($dachi); ?></td>
+        <td class="fix" colspan="2" ></td>
     </tr>
    </tbody>
 </table>
@@ -77,7 +111,7 @@
 <div class="add-field">
         <fieldset class="groupbox">
             <legend>
-                <span><h3>Thông tin đặt hàng </h3></span>
+                <span><h3>Chi phí </h3></span>
             </legend>
             <div class="login_body">
                   <form id="add_customer" method="post" action="">
@@ -85,63 +119,57 @@
                         <tr>
                             <td>
                               <span class="add-on"><i class="icon-company" ></i></span>
-                              <span>Thương hiệu: </span>
+                              <span>Loại chi phí: </span>
                             </td>
-                            <td><input type="text" id="tire_brand" class="tire_brand" name="tire_brand" value="" disabled required="required" autocomplete="off" />
-                              <ul class="brand_list_id"></ul>
+                            <td>
+                              <select style="width: 120px" class="order_tire_cost_type" name="order_tire_cost_type" id="order_tire_cost_type" disabled>
+                                <option value="1">Trucking</option>
+                                <option value="2">Barging</option>
+                                <option value="3">Feeder</option>
+                                <option value="4">Thu hộ</option>
+                                <option value="5">Hoa hồng</option>
+                                <option value="6">TTHQ</option>
+                                <option value="7">Khác</option>
+                              </select>
                             </td>
                           </tr>
                           <tr>
                             <td>
                               <span class="add-on"><i class="icon-resize-full" ></i></span>
-                              <span>Kích cỡ: </span>
+                              <span>Vendor: </span>
                             </td>
-                            <td><input type="text" id="tire_size" class="tire_size" name="tire_size" value="" disabled required="required" autocomplete="off" />
-                              <ul class="size_list_id"></ul>
+                            <td><input type="text" id="vendor" class="vendor" name="vendor" value="" disabled required="required" autocomplete="off" />
+                              <ul class="customer_list_id"></ul>
                             </td>
                           </tr>
                           <tr>
                             <td>
                               <span class="add-on"><i class="icon-barcode" ></i></span>
-                              <span>Mã gai: </span>
+                              <span>Nội dung: </span>
                             </td>
-                            <td><input type="text" id="tire_pattern" class="tire_pattern" name="tire_pattern" value="" disabled required="required" autocomplete="off" />
-                              <ul class="tire_list_id"></ul>
+                            <td><input type="text" id="comment" class="comment" name="comment" value="" disabled required="required" autocomplete="off" />
                             </td>
                           </tr>
                           <tr>
                             <td>
                               <span class="add-on"><i class="icon-th-list" ></i></span>
-                              <span>Số lượng: </span>
+                              <span>Số tiền: </span>
                             </td>
-                            <td><input type="text" id="tire_number" name="tire_number" value="" class="number" disabled required="required" /></td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span class="add-on"><i class="icon-th-list" ></i></span>
-                              <span>Giá: </span>
-                            </td>
-                            <td><input type="text" id="tire_price" name="tire_price" value="" class="numbers" disabled required="required" /></td>
+                            <td><input type="text" id="order_tire_cost" name="order_tire_cost" value="" class="numbers" disabled required="required" /></td>
                           </tr>
                           <tr>
                             <td>
                               <span class="add-on"><i class="icon-clock-o" ></i></span>
-                              <span>Ngày sản xuất: </span>
+                              <span>Ngày: </span>
                             </td>
-                            <td><select disabled style="width:100px" id="tire_date" name="tire_date"><option>Chọn</option></select></td>
+                            <td><input type="text" id="order_tire_cost_date" name="order_tire_cost_date" value="" class="ngay" disabled required="required" /></td>
                           </tr>
-                        
                         <tr>
                             <td>
-                              <input type="hidden" readonly id="tire_price_vat" name="tire_price_vat" required="required" value="0" >
-                              <input type="hidden" readonly id="max_number" name="max_number" required="required" value="0" >
                               <input type="hidden" readonly id="yes" name="yes" required="required" >
                               <input type="hidden" readonly id="order" name="order" required="required" value="<?php echo $order ?>" >
-                              <input type="hidden" readonly id="check_price_vat" name="check_price_vat" required="required" value="<?php echo $order_tire->check_price_vat ?>" >
                             </td>
                         </tr>
-                        
-                        
                          <tr>
                             <td><input type="submit" name="submit" id="submit_list" value="Hoàn tất" disabled tabindex="1"></td>
                             <td ><input type="reset" name="reset" id="reset_list" value="Nhập lại" disabled tabindex="2"></td>
@@ -158,69 +186,43 @@ $('html').click(function(e) {
     if(e.target == '[object HTMLDivElement]' || e.target == '[object HTMLBodyElement]') {
         $('.add-field').slideUp(500);    
     }
-   $('.brand_list_id').slideUp(200);
-    $('.size_list_id').slideUp(200);
-    $('.tire_list_id').slideUp(200); 
+    $('.customer_list_id').slideUp(200);
 });
     $('.edit_tr').click(function(e){
             if(!$('.checkbox').is(':checked') && e.target == '[object HTMLButtonElement]'){
                 $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
             }
-            var tire_brand_name = $(this).find("#tire_brand_"+$(this).attr('id')).text();
-            var tire_brand = $(this).find("#tire_brand_"+$(this).attr('id')).attr('data');
-            var tire_size_name = $(this).find("#tire_size_"+$(this).attr('id')).text();
-            var tire_size = $(this).find("#tire_size_"+$(this).attr('id')).attr('data');
-            var tire_pattern_name = $(this).find("#tire_pattern_"+$(this).attr('id')).text();
-            var tire_pattern = $(this).find("#tire_pattern_"+$(this).attr('id')).attr('data');
-            var tire_number = $(this).find("#tire_number_"+$(this).attr('id')).text();
-            var tire_price = $(this).find("#tire_price_"+$(this).attr('id')).text();
-            var tire_date = $(this).find("#tire_date_"+$(this).attr('id')).text();
-            var date_manufacture = $(this).find("#tire_date_"+$(this).attr('id')).attr('data');
+            var order_tire_cost_type_name = $(this).find("#order_tire_cost_type_"+$(this).attr('id')).text();
+            var order_tire_cost_type = $(this).find("#order_tire_cost_type_"+$(this).attr('id')).attr('data');
+            var vendor_name = $(this).find("#vendor_"+$(this).attr('id')).text();
+            var vendor = $(this).find("#vendor_"+$(this).attr('id')).attr('data');
+            var comment = $(this).find("#comment_"+$(this).attr('id')).text();
+            var order_tire_cost = $(this).find("#order_tire_cost_"+$(this).attr('id')).text();
+            var order_tire_cost_date = $(this).find("#order_tire_cost_date_"+$(this).attr('id')).text();
             
             //alert(customer_code);
             $('#yes').val($(this).attr('id'));
             
             
             
-            $('#tire_brand').val(tire_brand_name);
-            $('#tire_brand').attr('data',tire_brand);
-            $('#tire_size').val(tire_size_name);
-            $('#tire_size').attr('data',tire_size);
-            $('#tire_pattern').val(tire_pattern_name);
-            $('#tire_pattern').attr('data',tire_pattern);
-            $('#tire_number').val(tire_number);
-            $('#tire_price').val(tire_price);
+            $('#order_tire_cost_type option[value='+order_tire_cost_type+']').attr('selected','selected');
+            $('#vendor').val(vendor_name);
+            $('#vendor').attr('data',vendor);
+            $('#comment').val(comment);
+            $('#order_tire_cost').val(order_tire_cost);
+            $('#order_tire_cost_date').val(order_tire_cost_date);
 
-            if (date_manufacture > 0) {
-              $('#tire_date').html('<option>Chọn</option><option selected value="'+date_manufacture+'">'+tire_date+'</option>');
-            }
-
-            if ($(this).attr('data')!=1) {
-              $('#tire_brand').attr('disabled',false);
-              $('#tire_size').attr('disabled',false);
-              $('#tire_pattern').attr('disabled',false);
-              $('#tire_number').attr('disabled',false);
-              $('#tire_price').attr('disabled',false);
+            if ($(this).attr('data')!=1 || $(this).attr('alt')!=1  || 1=="<?php echo $_SESSION['role_logined'] ?>") {
+              $('#order_tire_cost_type').attr('disabled',false);
+              $('#vendor').attr('disabled',false);
+              $('#comment').attr('disabled',false);
+              $('#order_tire_cost_date').attr('disabled',false);
+              $('#order_tire_cost').attr('disabled',false);
               $('#submit_list').attr('disabled',false);
               $('#reset_list').attr('disabled',false);
               $('#tire_date').attr('disabled',false);
             }
 
-            $('#tire_price_vat').val($("#tire_price_vat_"+$(this).attr('id')).val());
-
-          var customer = "";
-        
-          $.ajax({
-                url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-                type: 'POST',
-                data: {brand:tire_brand, size:tire_size, pattern:tire_pattern, customer:customer},
-                success:function(data){
-                    var data = jQuery.parseJSON(data);
-                    var ton = parseInt(tire_number)+parseInt(data.max)+parseInt(data.going);
-                    $('#max_number').val(ton);
-                    
-                }
-            });
 
     });
 
@@ -229,60 +231,25 @@ function add_click(){
   $('.add-field').slideDown(500);
   $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);  
 
-  $('#tire_brand').val("");
-  $('#tire_brand').attr('data',"");
-  $('#tire_size').val("");
-  $('#tire_size').attr('data',"");
-  $('#tire_pattern').val("");
-  $('#tire_pattern').attr('data',"");
-  $('#tire_number').val("");
-  $('#tire_price').val("");
-  $('#tire_date').html("<option>Chọn</option>");
+  $('#vendor').val("");
+  $('#vendor').attr('data',"");
+  $('#comment').val("");
+  $('#order_tire_cost_date').val("<?php echo date('d-m-Y') ?>");
+  $('#order_tire_cost').val("");
 
-  var lock = "<?php echo $order_tire->sale_lock ?>";
-  if (lock!=1) {
-    $('#tire_brand').attr('disabled',false);
-    $('#tire_size').attr('disabled',false);
-    $('#tire_pattern').attr('disabled',false);
-    $('#tire_number').attr('disabled',false);
-    $('#tire_price').attr('disabled',false);
+  
+    $('#order_tire_cost_type').attr('disabled',false);
+    $('#vendor').attr('disabled',false);
+    $('#comment').attr('disabled',false);
+    $('#order_tire_cost_date').attr('disabled',false);
+    $('#order_tire_cost').attr('disabled',false);
     $('#submit_list').attr('disabled',false);
     $('#reset_list').attr('disabled',false);
     $('#tire_date').attr('disabled',false);
-  }
-
-  $('#tire_price_vat').val("");
+  
 
 
 }
-
-$('#tire_number').keyup(function(){
-  var val = parseInt($(this).val());
-  var max = parseInt($('#max_number').val());
-
-  if (val > max) {
-      alert('Vượt quá số lượng tồn!');
-      $(this).val(max);
-  }
-});
-
-$('#tire_price').keyup(function(){
-  var val = parseInt($(this).val().replace(/[^0-9\.-]+/g,""));
-  var check = $('#check_price_vat').val();
-
-  if (check != 1) {
-      $("#tire_price_vat").val(val);
-  }
-  else{
-    var vat_percent = <?php echo $order_tire->vat_percent; ?>;
-
-    vat_percent = parseInt(vat_percent);
-    var v = Math.round((val*vat_percent*0.1)/1.1*0.1);
-
-    var n = val-v;
-    $("#tire_price_vat").val(n);
-  }
-});
 
 </script>
 <script type="text/javascript">
@@ -297,15 +264,12 @@ $(document).ready(function(){
                 },
                 submitHandler: function(form) {
                 
-                    var tire_brand = $('#tire_brand').attr('data');
-                    var tire_size = $('#tire_size').attr('data');
-                    var tire_pattern = $('#tire_pattern').attr('data');
-                    var tire_number = $('#tire_number').attr('value');
-                    var tire_price = $('#tire_price').attr('value');
+                    var order_tire_cost_type = $('#order_tire_cost_type').attr('value');
+                    var vendor = $('#vendor').attr('data');
+                    var comment = $('#comment').attr('value');
+                    var order_tire_cost_date = $('#order_tire_cost_date').attr('value');
+                    var order_tire_cost = $('#order_tire_cost').attr('value');
                     var order = $('#order').attr('value');
-                    var tire_price_vat = $('#tire_price_vat').attr('value');
-                    var check_price_vat = $('#check_price_vat').attr('value');
-                    var tire_date = $('#tire_date').attr('value');
 
                     var yes = $('#yes').attr('value');
                     
@@ -313,17 +277,14 @@ $(document).ready(function(){
                  
                     $.ajax({
                         type: "POST", // phương thức gởi đi
-                        url: "<?php echo BASE_URL ?>/ordertire/editorder", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        url: "<?php echo BASE_URL ?>/ordertire/editordercost", // nơi mà dữ liệu sẽ chuyển đến khi submit
                         data: {
-                            tire_brand: tire_brand,
-                            tire_size: tire_size,
-                            tire_pattern: tire_pattern,
-                            tire_number: tire_number,
-                            tire_price: tire_price,
+                            order_tire_cost_type: order_tire_cost_type,
+                            vendor: vendor,
+                            comment: comment,
+                            order_tire_cost_date: order_tire_cost_date,
+                            order_tire_cost: order_tire_cost,
                             order: order,
-                            tire_price_vat: tire_price_vat,
-                            check_price_vat: check_price_vat,
-                            tire_date: tire_date,
                             yes: yes,
                             }, // giá trị post
                         success: function(answer){ // if everything goes well
@@ -334,8 +295,7 @@ $(document).ready(function(){
                             $('#error').fadeOut(10000);
 
                             if (yes != "") {
-                                $('#tire_number_'+yes).text(tire_number);
-                                $('#tire_price_'+yes).text(tire_price);
+                                $('#order_tire_cost_'+yes).text(order_tire_cost);
                             }
                             else{
                             }
@@ -389,6 +349,72 @@ $(document).ready(function(){
       });
     });
     
+  $('.vendor').keyup(function(){
+    var rowIndex = 0;
+
+    var keyword = $(this).val();
+    $.ajax({
+        url: '<?php echo BASE_URL ?>/ordertire/getvendor',
+        type: 'POST',
+        data: {keyword:keyword, offset:rowIndex},
+        success:function(data){
+            $('.customer_list_id:eq('+rowIndex+')').slideDown(200);
+            $('.customer_list_id:eq('+rowIndex+')').html(data);
+        }
+    });
+    if ($('.vendor:eq('+rowIndex+')').val() == "" || $('.vendor:eq('+rowIndex+')').attr('data') == "") {
+        
+        $('.vendor:eq('+rowIndex+')').attr('data',"");
+    }
+
+    
+});
+
+$('.vendor').on('keydown', function() {
+    var rowIndex = 0;
+
+    var key = event.keyCode || event.charCode;
+
+    if( key == 8 || key == 46 ){
+        $('.vendor:eq('+rowIndex+')').attr('data',"");
+    }
+        
+  });
+function set_item_other(item,value,vitri) {
+    // change input value
+    $('.vendor:eq('+vitri+')').val(item);
+    $('.vendor:eq('+vitri+')').attr("data",value);
+    // hide proposition list
+    $('.customer_list_id').hide();
+    $('.vendor:eq('+vitri+')').focus();
+
+    var check_type = 0;
+    var check_vendor = 0;
+    var val = value;
+    var type_val = $('.order_tire_cost_type:eq('+vitri+')').val();
+        $('.vendor').each(function() { 
+            if (val == $(this).attr('data')) {
+                check_vendor ++;
+
+                var row2 = $(this).parent().parent().parent().parent().parent().parent();
+                var rowIndex2 = row2[0].rowIndex;
+                var type_val2 = $('.order_tire_cost_type:eq('+rowIndex2+')').val();
+                if (type_val == type_val2) {
+                    check_type ++;
+                }
+            }
+        });
+
+
+        if (check_type >= 2 && check_vendor >= 2) {
+            alert('Vui lòng chọn loại phí khác cho vendor này!');
+            $(".order_tire_cost_type:last").val($(".order_tire_cost_type:last option:first").val());
+            //$(".vendor:last").val($(".vendor:last option:first").val());
+            $('.vendor:last').attr('data','');
+            $('.vendor:last').val("");
+            
+        };
+}
 
 });
 function get_number(id){
@@ -396,261 +422,25 @@ function get_number(id){
 }
 
 
-$('#tire_brand').change(function(){
-    var brand = $(this).attr('data');
-    var size = $('#tire_size').attr('data');
-    var pattern = $('#tire_pattern').attr('data');
-
-    var customer = "";
-
-    if (brand != "" && size != "" && pattern != "") {
-        $.ajax({
-            url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-            type: 'POST',
-            data: {brand:brand, size:size, pattern:pattern, customer:customer},
-            success:function(data){
-                var data = jQuery.parseJSON(data);
-                var ton = parseInt(data.max)+parseInt(data.going);
-                $('#max_number').val(ton);
-                $('#tire_date').html("<option>Chọn</option>"+data.date);
-            }
-        });
-    }    
-});
-$('#tire_size').change(function(){
-    var size = $(this).attr('data');
-    var brand = $('#tire_brand').attr('data');
-    var pattern = $('#tire_pattern').attr('data');
-
-    var customer = "";
-
-    if (brand != "" && size != "" && pattern != "") {
-        $.ajax({
-            url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-            type: 'POST',
-            data: {brand:brand, size:size, pattern:pattern, customer:customer},
-            success:function(data){
-                var data = jQuery.parseJSON(data);
-                var ton = parseInt(data.max)+parseInt(data.going);
-                $('#max_number').val(ton);
-                $('#tire_date').html("<option>Chọn</option>"+data.date);
-            }
-        });
-    }    
-});
-$('#tire_pattern').change(function(){
-    var pattern = $(this).attr('data');
-    var size = $('#tire_size').attr('data');
-    var brand = $('#tire_brand').attr('data');
-
-    var customer = "";
-
-    if (brand != "" && size != "" && pattern != "") {
-
-        $.ajax({
-            url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-            type: 'POST',
-            data: {brand:brand, size:size, pattern:pattern, customer:customer},
-            success:function(data){
-
-                var data = jQuery.parseJSON(data);
-                var ton = parseInt(data.max)+parseInt(data.going);
-                $('#max_number').val(ton);
-                $('#tire_date').html("<option>Chọn</option>"+data.date);
-            }
-        });
-    }    
-});
-
-$('.tire_brand').keyup(function(){
-                var rowIndex = 1;
-
-                var keyword = $(this).val();
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/customertire/getbrand',
-                    type: 'POST',
-                    data: {keyword:keyword, offset:rowIndex},
-                    success:function(data){
-                        $('.brand_list_id').slideDown(200);
-                        $('.brand_list_id').html(data);
-                    }
-                });
-                if ($('.tire_brand').val() == "" || $('.tire_brand').attr('data') == "") {
-                    
-                    $('.tire_brand').attr('data',"");
-                }
-
-                
-            });
-
-        $('.tire_brand').on('keydown', function() {
-                var rowIndex = 1;
-
-                var key = event.keyCode || event.charCode;
-
-                if( key == 8 || key == 46 ){
-                    $('.tire_brand').attr('data',"");
-                }
-                    
-              });  
-
-        $('.tire_size').keyup(function(){
-                var rowIndex = 1;
-
-                var keyword = $(this).val();
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/customertire/getsize',
-                    type: 'POST',
-                    data: {keyword:keyword, offset:rowIndex},
-                    success:function(data){
-                        $('.size_list_id').slideDown(200);
-                        $('.size_list_id').html(data);
-                    }
-                });
-                if ($('.tire_size').val() == "" || $('.tire_size').attr('data') == "") {
-                    
-                    $('.tire_size').attr('data',"");
-                }
-
-                
-            });
-
-        $('.tire_size').on('keydown', function() {
-                var rowIndex = 1;
-
-                var key = event.keyCode || event.charCode;
-
-                if( key == 8 || key == 46 ){
-                    $('.tire_size').attr('data',"");
-                }
-                    
-              });  
-
-        $('.tire_pattern').keyup(function(){
-          var rowIndex = 1;
-
-          var keyword = $(this).val();
-          $.ajax({
-              url: '<?php echo BASE_URL ?>/customertire/getpattern',
-              type: 'POST',
-              data: {keyword:keyword, offset:rowIndex},
-              success:function(data){
-                  $('.tire_list_id').slideDown(200);
-                  $('.tire_list_id').html(data);
-              }
-          });
-          if ($('.tire_pattern').val() == "" || $('.tire_pattern').attr('data') == "") {
-              
-              $('.tire_pattern').attr('data',"");
-          }
-
-          
-      });
-
-        $('.tire_pattern').on('keydown', function() {
-                var rowIndex = 1;
-
-                var key = event.keyCode || event.charCode;
-
-                if( key == 8 || key == 46 ){
-                    $('.tire_pattern').attr('data',"");
-                }
-                    
-              });  
-
-        function set_item_brand(item,value,vitri) {
-            // change input value
-            $('.tire_brand').val(item);
-            $('.tire_brand').attr("data",value);
-            // hide proposition list
-            $('.brand_list_id').hide();
-            $('.tire_brand').focus();
-
-            var pattern = $("#tire_pattern").attr('data');
-            var size = $('#tire_size').attr('data');
-            var brand = $('#tire_brand').attr('data');
-
-            var customer = "";
-
-            if (brand != "" && size != "" && pattern != "") {
-
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-                    type: 'POST',
-                    data: {brand:brand, size:size, pattern:pattern, customer:customer},
-                    success:function(data){
-
-                        var data = jQuery.parseJSON(data);
-                        var ton = parseInt(data.max)+parseInt(data.going);
-                        $('#max_number').val(ton);
-                        $('#tire_date').html("<option>Chọn</option>"+data.date);
-                    }
-                });
-            }
-
-        }
-        function set_item_size(item,value,vitri) {
-            // change input value
-            $('.tire_size').val(item);
-            $('.tire_size').attr("data",value);
-            // hide proposition list
-            $('.size_list_id').hide();
-            $('.tire_size').focus();
-
-            var pattern = $("#tire_pattern").attr('data');
-            var size = $('#tire_size').attr('data');
-            var brand = $('#tire_brand').attr('data');
-
-            var customer = "";
-
-            if (brand != "" && size != "" && pattern != "") {
-
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-                    type: 'POST',
-                    data: {brand:brand, size:size, pattern:pattern, customer:customer},
-                    success:function(data){
-
-                        var data = jQuery.parseJSON(data);
-                        var ton = parseInt(data.max)+parseInt(data.going);
-                        $('#max_number').val(ton);
-                        $('#tire_date').html("<option>Chọn</option>"+data.date);
-                    }
-                });
-            }
-
-        }
-        function set_item_tire(item,value,vitri) {
-            // change input value
-            $('.tire_pattern').val(item);
-            $('.tire_pattern').attr("data",value);
-            // hide proposition list
-            $('.tire_list_id').hide();
-            $('.tire_pattern').focus();
-
-            var pattern = $("#tire_pattern").attr('data');
-            var size = $('#tire_size').attr('data');
-            var brand = $('#tire_brand').attr('data');
-
-            var customer = "";
-
-            if (brand != "" && size != "" && pattern != "") {
-
-                $.ajax({
-                    url: '<?php echo BASE_URL ?>/ordertire/getoldprice',
-                    type: 'POST',
-                    data: {brand:brand, size:size, pattern:pattern, customer:customer},
-                    success:function(data){
-
-                        var data = jQuery.parseJSON(data);
-                        var ton = parseInt(data.max)+parseInt(data.going);
-                        $('#max_number').val(ton);
-                        $('#tire_date').html("<option>Chọn</option>"+data.date);
-                    }
-                });
-            }
-
-        }
+var pickerOpay2 = {
+      closeText: "Đóng",
+      currentText: "Hiện tại",
+      nextText: "Tiếp",
+      prevText: "Quay lại",
+      monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+      dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+      dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+      dateFormat: 'dd-mm-yy',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-100:+0",
+      firstDay: 1,
+      isRTL: false,
+      showButtonPanel: true
+  }; 
+  $(".ngay").datepicker(pickerOpay2);
 </script>
 </div>
 
@@ -660,7 +450,7 @@ $('.del_list').click(function(){
     var r = confirm("Bạn có chắc chắn muốn xóa không?");
       if (r == true){
         $('#loading').html("<img src='public/images/loading.gif'/>").fadeIn(500);
-        $.post("<?php echo BASE_URL ?>/ordertire/deleteorder", {data: id},
+        $.post("<?php echo BASE_URL ?>/ordertire/deleteordercost", {data: id},
            function(data){
             //alert(data);
             if (data.trim() != 'Bạn không có quyền thực hiện thao tác này') {
@@ -673,20 +463,5 @@ $('.del_list').click(function(){
       }
 });
 
-$(".return").click(function(){
-        $("#winpopup").dialog({
-            draggable:true,
-            modal: true,
-            autoOpen: false,
-            height:500,
-            width:"90%",
-            resizable: true,
-            title:'Công nợ',
-            
-        });
-        $("#winpopup").load($(this).attr('href'));
-        $("#winpopup").dialog("open");
-         
-        return false;
-    });
+
 </script>

@@ -3710,20 +3710,10 @@ Class importtireorderController Extends baseController {
                         'import_tire_list' => $id_list,
                         );
 
-                        $going = $tire_going_order_model->getTireByWhere(array('import_tire_list' => $id_list));
-                        if (!$going) {
-                            $tire_going_order_model->createTire($tire_going_data);
-                            if ($import_orders->import_tire_order_status>1) {
-                                $tire_going_model->createTire($tire_going);
-                            }
-                            
-                        }
-                        else{
-                            $tire_going_order_model->updateTire($tire_going_data,array('import_tire_list' => $id_list));
-                            $tire_going_model->updateTire($tire_going,array('import_tire_list' => $id_list));
-                        }
                         
-                        
+                        $tire_going_order_model->updateTire($tire_going_data,array('import_tire_list' => $id_list));
+                        $tire_going_model->updateTire($tire_going,array('import_tire_list' => $id_list));
+ 
                     }
                     else{
                         $import_tire_list_model->createImport($data_list);

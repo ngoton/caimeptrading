@@ -1,5 +1,5 @@
 <?php
-Class checksalaryController Extends baseController {
+Class checksalary2Controller Extends baseController {
     
     public function index() {
         
@@ -130,9 +130,9 @@ Class checksalaryController Extends baseController {
         }
 
 
-        if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 8 && $_SESSION['role_logined'] != 2) {
+        /*if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 8 && $_SESSION['role_logined'] != 2) {
             $data['where'] = $data['where'].' AND sale = '.$_SESSION['userid_logined'];
-        }
+        }*/
 
         if ($keyword != '') {
             $search = '( order_number LIKE "%'.$keyword.'%" 
@@ -492,9 +492,9 @@ Class checksalaryController Extends baseController {
         }
 
 
-        if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 8 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 2) {
+        /*if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 8 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 2) {
             $data['where'] = $data['where'].' AND sale = '.$_SESSION['userid_logined'];
-        }
+        }*/
 
         if ($keyword != '') {
             $search = '( order_number LIKE "%'.$keyword.'%" 
@@ -798,83 +798,7 @@ Class checksalaryController Extends baseController {
 
         $this->view->data['lastID'] = isset($order_tire_model->getLastTire()->order_tire_id)?$order_tire_model->getLastTire()->order_tire_id:0;
 
-        $this->view->show('checksalary/index');
-    }
-    public function check(){
-        $this->view->setLayout('admin');
-        if (!isset($_SESSION['userid_logined'])) {
-            return $this->view->redirect('user/login');
-        }
-        if (isset($_POST['data'])) {
-
-            $percent = trim(str_replace('%', '', $_POST['percent']));
-            $doanhso = trim(str_replace(',', '', $_POST['doanhso']));
-            $vuotgia = trim(str_replace(',', '', $_POST['vuotgia']));
-            $khmoi = trim($_POST['khmoi']);
-            $khcu = trim($_POST['khcu']);
-            $kpi = trim(str_replace(',', '', $_POST['kpi']));
-            $thangluong = str_replace("/","-",trim($_POST['thangluong']));
-            $staff = trim($_POST['staff']);
-            $debit = trim($_POST['debit']);
-
-            $kh = $khmoi!=""?1:($khcu!=""?0:null);
-
-            $thangluong = "01-".$thangluong;
-
-            $order_tire_model = $this->model->get('ordertireModel');
-            $check_sale_salary_model = $this->model->get('checksalesalaryModel');
-            $order_tire = $order_tire_model->getTire($_POST['data']);
-
-            if (isset($_POST['update'])) {
-                $data_check = array(
-                    'staff' => $staff,
-                    'order_tire' => $_POST['data'],
-                    'bonus_percent' => $percent,
-                    'bonus' => $doanhso,
-                    'bonus_over' => $vuotgia,
-                    'new_customer' => $kh,
-                    'bonus_kpi' => $kpi,
-                    'debit' => $debit,
-                    'salary_date' => strtotime($thangluong),
-                );
-                $check_sale_salary_model->updateSalary($data_check,array('order_tire'=>$_POST['data']));
-            }
-            else{
-                if ($order_tire->check_salary==1) {
-                    $data = array(
-                        'check_salary' => 0,
-                        'check_salary_date' => null,
-                    );
-
-                    $check_sale_salary_model->querySalary('DELETE FROM check_sale_salary WHERE order_tire = '.$_POST['data']);
-                }
-                else{
-                    $data = array(
-                        'check_salary' => 1,
-                        'check_salary_date' => strtotime($thangluong),
-                    );
-
-                    $data_check = array(
-                        'staff' => $staff,
-                        'order_tire' => $_POST['data'],
-                        'bonus_percent' => $percent,
-                        'bonus' => $doanhso,
-                        'bonus_over' => $vuotgia,
-                        'new_customer' => $kh,
-                        'bonus_kpi' => $kpi,
-                        'debit' => $debit,
-                        'salary_date' => strtotime($thangluong),
-                    );
-                    $check_sale_salary_model->createSalary($data_check);
-                }
-              
-                $order_tire_model->updateTire($data,array('order_tire_id' => $_POST['data']));
-            }
-            
-
-            return true;
-                    
-        }
+        $this->view->show('checksalary2/index');
     }
     
 

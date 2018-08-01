@@ -8055,3 +8055,23 @@ bxep: 6x14 = 84k-5-4--1484000
 
 13/06/2018 14:47:33|admincmg|add|2|payment_request|TT02-TT-1528840800-TT-TT-64066807-2923.31--2-1
 
+30/07/2018 13:30:16|admincmg|add|2276|order_tire_cost_|
+
+30/07/2018 13:30:32|admincmg|delete||order_tire_cost_|
+
+30/07/2018 13:33:29|admincmg|add|2276|order_tire_cost_|
+
+30/07/2018 13:33:48|admincmg|add|2276|order_tire_cost_|
+
+30/07/2018 14:04:24|admincmg|delete|2276|order_tire_cost_|
+
+30/07/2018 14:04:41|admincmg|add|2277|order_tire_cost_|
+
+30/07/2018 14:04:59|admincmg|add|2277|order_tire_cost_|
+
+30/07/2018 14:05:24|admincmg|add|2278|order_tire_cost_|
+
+30/07/2018 15:27:25|admincmg|delete|2277|order_tire_cost_|
+
+30/07/2018 15:27:28|admincmg|delete|2278|order_tire_cost_|
+

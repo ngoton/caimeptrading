@@ -229,6 +229,21 @@ Class inventoryagentController Extends baseController {
         /*************/
         $this->view->show('inventoryagent/index');
     }
+    public function order(){
+        $this->view->disableLayout();
+        $this->view->data['lib'] = $this->lib;
+        $tire_order_list_model = $this->model->get('ordertirelistModel');
+        $join = array('table'=>'tire_pattern,tire_brand,tire_size,order_tire,user,customer','where'=>'order_tire.customer=customer_id AND order_tire.sale = user_id AND tire_pattern = tire_pattern_id AND tire_brand = tire_brand_id AND tire_size = tire_size_id AND order_tire = order_tire_id AND (order_tire_status IS NULL OR order_tire_status = 0)');
+
+        $data = array(
+            'where' => 'tire_brand='.$this->registry->router->param_id.' AND tire_size='.$this->registry->router->page.' AND tire_pattern='.$this->registry->router->order_by,
+        );
+
+        $orders = $tire_order_list_model->getAllTire($data,$join);
+        $this->view->data['tire_orders'] = $orders;
+
+        $this->view->show('inventoryagent/order');
+    }
 
     public function brand(){
         $tire_order_model = $this->model->get('tireorderModel');
