@@ -401,7 +401,7 @@ Class importtireorderController Extends baseController {
                 }
             }
 
-            $giatrinhap = $import_orders->import_tire_order_sum+$import_orders->import_tire_order_tax+$import_orders->import_tire_order_logistics+$import_orders->import_tire_order_stevedore+$import_orders->import_tire_order_bank_cost+$import_orders->import_tire_order_other_cost;
+            $giatrinhap = $import_orders->import_tire_order_sum+$import_orders->import_tire_order_tax+$import_orders->import_tire_order_tax_add+$import_orders->import_tire_order_logistics+$import_orders->import_tire_order_stevedore+$import_orders->import_tire_order_bank_cost+$import_orders->import_tire_order_other_cost;
 
             if ($import_orders->import_tire_order_status==3) {
                 $id_order = $_POST['data'];
@@ -1158,6 +1158,7 @@ Class importtireorderController Extends baseController {
                 'import_tire_order_stevedore_small' => str_replace(',', '', $_POST['import_tire_order_stevedore_small']),
                 'import_tire_order_stevedore_large' => str_replace(',', '', $_POST['import_tire_order_stevedore_large']),
                 'import_tire_order_cont_total' => trim($_POST['import_tire_order_cont_total']),
+                'import_tire_order_tax_add' => str_replace(',', '', $_POST['import_tire_order_tax_add']),
             );
             
             if ($data['import_tire_order_seller'] == "" || $data['import_tire_order_seller'] == 0) {
@@ -1847,7 +1848,7 @@ Class importtireorderController Extends baseController {
                         'vendor' => $thue,
                         'type' => 1,
                         'cost' => null,
-                        'cost_vat' => $data['import_tire_order_tax'],
+                        'cost_vat' => $data['import_tire_order_tax']+$data['import_tire_order_tax_add'],
                         'expect_date' => $data['import_tire_order_date'],
                         'source' => 1,
                         'invoice_cost' => null,
@@ -2577,7 +2578,7 @@ Class importtireorderController Extends baseController {
                     $dauthang = $data['import_tire_order_expect_date'];
 
 
-                    $giatrinhap = $import_orders->import_tire_order_sum+$import_orders->import_tire_order_tax+$import_orders->import_tire_order_logistics+$import_orders->import_tire_order_stevedore+$import_orders->import_tire_order_bank_cost+$import_orders->import_tire_order_other_cost;
+                    $giatrinhap = $import_orders->import_tire_order_sum+$import_orders->import_tire_order_tax+$import_orders->import_tire_order_tax_add+$import_orders->import_tire_order_logistics+$import_orders->import_tire_order_stevedore+$import_orders->import_tire_order_bank_cost+$import_orders->import_tire_order_other_cost;
 
                     $add = $additional_model->getAdditionalByWhere(array('import_tire_order'=>$_POST['yes']));
                     if ($add) {
@@ -3064,7 +3065,7 @@ Class importtireorderController Extends baseController {
                         'vendor' => $thue,
                         'type' => 1,
                         'cost' => null,
-                        'cost_vat' => $data['import_tire_order_tax'],
+                        'cost_vat' => $data['import_tire_order_tax']+$data['import_tire_order_tax_add'],
                         'expect_date' => $data['import_tire_order_date'],
                         'source' => 1,
                         'invoice_cost' => null,
@@ -3752,12 +3753,7 @@ Class importtireorderController Extends baseController {
                         $arr_item .= ','.$id_list;
                     }
 
-                    $item_olds = $import_tire_list_model->queryImport('SELECT * FROM import_tire_list WHERE import_tire_order='.$id_order.' AND import_tire_list_id NOT IN ('.$arr_item.')');
-                    foreach ($item_olds as $item_old) {
-                        $import_tire_list_model->queryImport('DELETE FROM import_tire_list WHERE import_tire_list_id='.$item_old->import_tire_list_id);
-                        $tire_going_order_model->queryTire('DELETE FROM tire_going_order WHERE import_tire_list='.$item_old->import_tire_list_id);
-                        $tire_going_model->queryTire('DELETE FROM tire_going WHERE import_tire_list='.$item_old->import_tire_list_id);
-                    }
+                    
 
                     $prices = $import_tire_price_model->getAllImport(array('where'=>'tire_brand="'.$data_list['tire_brand'].'" AND tire_size="'.$data_list['tire_size'].'" AND tire_pattern="'.$data_list['tire_pattern'].'" AND start_time <= '.$data['import_tire_order_date'],'order_by'=>'start_time DESC','limit'=>1));
 
@@ -3792,6 +3788,13 @@ Class importtireorderController Extends baseController {
                 }
 
                 
+            }
+
+            $item_olds = $import_tire_list_model->queryImport('SELECT * FROM import_tire_list WHERE import_tire_order='.$id_order.' AND import_tire_list_id NOT IN ('.$arr_item.')');
+            foreach ($item_olds as $item_old) {
+                $import_tire_list_model->queryImport('DELETE FROM import_tire_list WHERE import_tire_list_id='.$item_old->import_tire_list_id);
+                $tire_going_order_model->queryTire('DELETE FROM tire_going_order WHERE import_tire_list='.$item_old->import_tire_list_id);
+                $tire_going_model->queryTire('DELETE FROM tire_going WHERE import_tire_list='.$item_old->import_tire_list_id);
             }
 
             if ($_POST['yes'] != "") {
@@ -4572,7 +4575,7 @@ Class importtireorderController Extends baseController {
                     <th class="width-7 numbers editable" id="tonglogs">'.$this->lib->formatMoney($orders->import_tire_order_logistics).'</th>
                     <th class="width-5 numbers editable" id="tongbocxep">'.$this->lib->formatMoney($orders->import_tire_order_stevedore).'</th>
                     <th class="width-7 numbers editable" id="tongphikhac">'.$this->lib->formatMoney($orders->import_tire_order_bank_cost+$orders->import_tire_order_other_cost).'</th>
-                    <th class="width-10 numbers editable" id="tongcong">'.$this->lib->formatMoney($orders->import_tire_order_sum+$orders->import_tire_order_tax+$orders->import_tire_order_logistics+$orders->import_tire_order_stevedore+$orders->import_tire_order_bank_cost+$orders->import_tire_order_other_cost).'</th>
+                    <th class="width-10 numbers editable" id="tongcong">'.$this->lib->formatMoney($orders->import_tire_order_sum+$orders->import_tire_order_tax+$orders->import_tire_order_tax_add+$orders->import_tire_order_logistics+$orders->import_tire_order_stevedore+$orders->import_tire_order_bank_cost+$orders->import_tire_order_other_cost).'</th>
                     <th class="width-7"></th>
                     <th style="width:5px"></th>';
             

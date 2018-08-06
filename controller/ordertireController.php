@@ -3745,6 +3745,58 @@ Class ordertireController Extends baseController {
 
                 
             }
+
+            $order_tire = $order_tire_model->getTire($_POST['order']);
+
+            if ($order_tire->id_order_agent>0) {
+                $tire_pattern_model = $this->model->get('tirepatternModel');
+                $tire_brand_model = $this->model->get('tirebrandModel');
+                $tire_size_model = $this->model->get('tiresizeModel');
+                $customer_model = $this->model->get('customerModel');
+
+                $order_lists = $order_tire_list_model->getAllTire(array('where'=>'order_tire='.$order_tire->order_tire_id));
+                $order_agent = array();
+                $i=0;
+                foreach ($order_lists as $order_list) {
+                    $order_agent[$i]['tire_brand'] = $tire_brand_model->getTire($order_list->tire_brand)->tire_brand_name;
+                    $order_agent[$i]['tire_size'] = $tire_size_model->getTire($order_list->tire_size)->tire_size_number;
+                    $order_agent[$i]['tire_pattern'] = $tire_pattern_model->getTire($order_list->tire_pattern)->tire_pattern_name;
+                    $order_agent[$i]['tire_number'] = $order_list->tire_number;
+                    $order_agent[$i]['tire_price'] = $order_list->tire_price_vat;
+
+                    $i++;
+                }
+
+                $customers = $customer_model->getCustomer($order_tire->customer);
+                // where are we posting to?
+                $url = $customers->customer_agent_link.'/ordertire/editagentorder';
+
+                // what post fields?
+                $fields = array(
+                   'id_order_tire' => $order_tire->id_order_agent,
+                   'order_tire' => $order_agent,
+                   'total_number'=>$order_tire->order_tire_number,
+                   'total'=>$order_tire->total,
+                   'order_number'=>$order_tire->order_number,
+                );
+                // build the urlencoded data
+                $postvars = http_build_query($fields);
+
+                // open connection
+                $ch = curl_init();
+
+                // set the url, number of POST vars, POST data
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, count($fields));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                // execute post
+                $result = curl_exec($ch);
+
+                // close connection
+                curl_close($ch);
+            }
             
 
         }
@@ -4387,6 +4439,7 @@ Class ordertireController Extends baseController {
                     $fields = array(
                        'id_order_tire' => $order_tire->id_order_agent,
                        'delivery_date' => $data['delivery_date'],
+                       'order_number' => $order_tire->order_number,
                     );
                     // build the urlencoded data
                     $postvars = http_build_query($fields);

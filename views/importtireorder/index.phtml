@@ -215,6 +215,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <td class="fix" style="display: none;" id="import_tire_order_stevedore_large_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_stevedore_large); ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_rate_diff_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_rate_diff); ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_cont_total_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_cont_total; ?></td>
+            <td class="fix" style="display: none;" id="import_tire_order_tax_add_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_tax_add); ?></td>
             <?php if(!isset($disable_control)){ ?>
             <td class="fix text-right">
               
@@ -524,9 +525,12 @@ $this->helper('slidePaginator');
                       </div>
                     </div>
                     <div class="box-body col-md-12 nopadding">
-                      <div class="form-group col-xs-6 "></div>
                       <div class="form-group col-xs-6 ">
-                        <label for="name="import_tire_order_other_cost_comment"">Ghi chú </label>
+                        <label for="import_tire_order_tax_add">Thuế VAT chịu thêm </label>
+                        <input style="width:100%" type="text" class="numbers" id="import_tire_order_tax_add"  name="import_tire_order_tax_add" >
+                      </div>
+                      <div class="form-group col-xs-6 ">
+                        <label for="import_tire_order_other_cost_comment">Ghi chú </label>
                         <textarea name="import_tire_order_other_cost_comment" id="import_tire_order_other_cost_comment"></textarea>
                       </div>
                     </div>
@@ -901,7 +905,13 @@ $('.edit_invoice').click(function(e){
               var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
               var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
               var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-              var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+              var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+              var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+              var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+              var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+              var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
               $('.tire_price_total:eq('+rowIndex+')').val(tong);
               tongcong += tong;
 
@@ -942,7 +952,13 @@ $('.edit_invoice').click(function(e){
               var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
               var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
               var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-              var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+              var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+              var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+              var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+              var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+              var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
               $('.tire_price_total:eq('+rowIndex+')').val(tong);
               tongcong += tong;
 
@@ -1078,10 +1094,11 @@ $('.edit_invoice').click(function(e){
                       var tonglogs = parseFloat($("#tonglogs").text().replace(/\,/g,'') || 0);
                       var tongbocxep = parseFloat($("#tongbocxep").text().replace(/\,/g,'') || 0);
                       var tongphikhac = parseFloat($("#tongphikhac").text().replace(/\,/g,'') || 0);
+                      var tongthuethem = parseFloat($("#import_tire_order_tax_add").val().replace(/\,/g,'') || 0);
 
                       var tongthue = tongthuenk+tongthuevat;
 
-                      var tongcong = tongtienhang+tongthue+tonglogs+tongbocxep+tongphikhac;
+                      var tongcong = tongtienhang+tongthue+tonglogs+tongbocxep+tongphikhac+tongthuethem;
 
                       $("#tongthue").text(tongthue);
                       $("#tongcong").text(tongcong);
@@ -1105,10 +1122,11 @@ $('.edit_invoice').click(function(e){
                   var tonglogs = parseFloat($("#tonglogs").text().replace(/\,/g,'') || 0);
                   var tongbocxep = parseFloat($("#tongbocxep").text().replace(/\,/g,'') || 0);
                   var tongphikhac = parseFloat($("#tongphikhac").text().replace(/\,/g,'') || 0);
+                  var tongthuethem = parseFloat($("#import_tire_order_tax_add").val().replace(/\,/g,'') || 0);
 
                   var tongthue = tongthuenk+tongthuevat;
 
-                  var tongcong = tongtienhang+tongthue+tonglogs+tongbocxep+tongphikhac;
+                  var tongcong = tongtienhang+tongthue+tonglogs+tongbocxep+tongphikhac+tongthuethem;
 
                   $("#tongthue").text(tongthue);
                   $("#tongcong").text(tongcong);
@@ -1252,7 +1270,13 @@ function add_click(){
                   var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
                   var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
                   var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-                  var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+                  var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+                  var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+                  var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+                  var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+                  var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
                   $('.tire_price_total:eq('+rowIndex+')').val(tong);
                   tongcong += tong;
 
@@ -1293,7 +1317,13 @@ function add_click(){
                   var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
                   var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
                   var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-                  var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+                  var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+                  var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+                  var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+                  var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+                  var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
                   $('.tire_price_total:eq('+rowIndex+')').val(tong);
                   tongcong += tong;
 
@@ -1490,6 +1520,8 @@ $(document).ready(function(){
 
         var import_tire_order_cont_total = $('#import_tire_order_cont_total').val();
 
+        var import_tire_order_tax_add = $('#import_tire_order_tax_add').val();
+
 
         var import_tire_order_sum = $('#tongtienhang').text();
         var import_tire_order_tax = $('#tongthue').text();
@@ -1641,6 +1673,7 @@ $(document).ready(function(){
             import_tire_order_stevedore_small: import_tire_order_stevedore_small,
             import_tire_order_stevedore_large: import_tire_order_stevedore_large,
             import_tire_order_cont_total: import_tire_order_cont_total,
+            import_tire_order_tax_add: import_tire_order_tax_add,
             import_list: import_list,
           },
           success:function(answer){
@@ -1755,6 +1788,9 @@ $('#import_tire_order_bank_rate').keyup(function(){
 $('#import_tire_order_tax_rate').keyup(function(){
   updateprice();
 });
+$('#import_tire_order_tax_add').keyup(function(){
+  updateprice();
+});
 $('.tire_number').keyup(function(){
   var tongsl = 0;
   var tonggia = 0;
@@ -1819,7 +1855,13 @@ $('.tire_tax_import').keyup(function(){
     var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
     var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
     var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-    var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+    var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+    var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+    var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+    var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+    var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
     $('.tire_price_total:eq('+rowIndex+')').val(tong);
     tongcong += tong;
 
@@ -1860,7 +1902,13 @@ $('.tire_tax_vat').keyup(function(){
     var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
     var tongbx = parseFloat(get_number('.tire_stevedore:eq('+rowIndex+')')) || 0;
     var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-    var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac;
+
+    var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+    var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+    var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+    var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+    var tong = sumtienmua+nk+vat+tonglogs+tongbx+chiphikhac+thuethem;
     $('.tire_price_total:eq('+rowIndex+')').val(tong);
     tongcong += tong;
 
@@ -2178,7 +2226,10 @@ function updateprice(cont_change){
     $('.tire_other_cost:eq('+rowIndex+')').val(othercost);
     $('.tire_cost:eq('+rowIndex+')').val(chiphikhac);
 
-    var tong = sumtienmua+tax_import+tax_vat+tonglogs+stevedore+chiphikhac;
+    var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+    var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+    var tong = sumtienmua+tax_import+tax_vat+tonglogs+stevedore+chiphikhac+thuethem;
     $('.tire_price_total:eq('+rowIndex+')').val(tong);
     tongcong += tong;
 
@@ -2221,7 +2272,7 @@ function get_number(id){
 $( ".add-field" ).dialog({
     autoOpen: false,
     modal: true,
-    width: "90%",
+    width: "98%",
     title: "Mua hàng nhập khẩu nhập kho",
     hide: 'fold',
     show: 'blind',
@@ -2327,7 +2378,13 @@ $("#import_order").dialog({
                                 var sumtienmua = parseFloat(get_number('.tire_price_sum:eq('+rowIndex+')')) || 0;
                                 var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
                                 var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-                                var tong = sumtienmua+nk+vat+tonglogs+chiphikhac;
+
+                                var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+                                var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+                                var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+                                var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+                                var tong = sumtienmua+nk+vat+tonglogs+chiphikhac+thuethem;
                                 $('.tire_price_total:eq('+rowIndex+')').val(tong);
                                 tongcong += tong;
 
@@ -2367,7 +2424,13 @@ $("#import_order").dialog({
                                 var sumtienmua = parseFloat(get_number('.tire_price_sum:eq('+rowIndex+')')) || 0;
                                 var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
                                 var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-                                var tong = sumtienmua+nk+vat+tonglogs+chiphikhac;
+
+                                var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+                                var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+                                var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+                                var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+                                var tong = sumtienmua+nk+vat+tonglogs+chiphikhac+thuethem;
                                 $('.tire_price_total:eq('+rowIndex+')').val(tong);
                                 tongcong += tong;
 
@@ -2877,7 +2940,13 @@ function addRow(id){
       var sumtienmua = parseFloat(get_number('.tire_price_sum:eq('+rowIndex+')')) || 0;
       var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
       var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-      var tong = sumtienmua+nk+vat+tonglogs+chiphikhac;
+
+      var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+      var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+      var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+      var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+      var tong = sumtienmua+nk+vat+tonglogs+chiphikhac+thuethem;
       $('.tire_price_total:eq('+rowIndex+')').val(tong);
       tongcong += tong;
 
@@ -2917,7 +2986,13 @@ function addRow(id){
       var sumtienmua = parseFloat(get_number('.tire_price_sum:eq('+rowIndex+')')) || 0;
       var tonglogs = parseFloat(get_number('.tire_logistics:eq('+rowIndex+')')) || 0;
       var chiphikhac = parseFloat(get_number('.tire_cost:eq('+rowIndex+')')) || 0;
-      var tong = sumtienmua+nk+vat+tonglogs+chiphikhac;
+
+      var tongphantram = parseFloat($('#tongphantram').text())/100 || 0;
+      var stuff = parseFloat(get_number('.tire_stuff:eq('+rowIndex+')')) || 0;
+      var thuevatthem = parseFloat(get_number('#import_tire_order_tax_add')) || 0;
+      var thuethem = roundDecimal((thuevatthem/(stuff*tongphantram))*tire_number,0);
+
+      var tong = sumtienmua+nk+vat+tonglogs+chiphikhac+thuethem;
       $('.tire_price_total:eq('+rowIndex+')').val(tong);
       tongcong += tong;
 

@@ -140,7 +140,7 @@ Class vatController Extends baseController {
     public function printpage() {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
-
+        $customer_model = $this->model->get('customerModel');
         $order_tire_list_model = $this->model->get('ordertirelistModel');
 
         $invoice_tire_model = $this->model->get('invoicetireModel');
@@ -163,11 +163,11 @@ Class vatController Extends baseController {
 
             if (!$invoices) {
                 $CmdType = 111; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
-                $eHD = $this->createEHoaDon($params, $CmdType);
+                $eHD = $this->createEHoaDon($params, $CmdType, $customer_model);
             }
             else{
                 $CmdType = 200; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
-                $eHD = $this->createEHoaDon($params, $CmdType);
+                $eHD = $this->createEHoaDon($params, $CmdType, $customer_model);
 
                 foreach ($invoices as $invoice) {
                     $invoice_tire_model->deleteInvoice($invoice->invoice_tire_id);
@@ -279,7 +279,7 @@ Class vatController Extends baseController {
         $this->view->data['tienthue'] = str_replace(',', '', $params['tienthue'][0]);
         $this->view->data['tongcong'] = str_replace(',', '', $params['tongcong'][0]);
 
-        $customer_model = $this->model->get('customerModel');
+        
 
         $customers = $customer_model->getCustomerByWhere(array('customer_mst'=>$params['mst'][0]));
         if ($customers->company_name != $params['tendv'][0] || $customers->customer_address != $params['diachi'][0]) {
@@ -300,7 +300,7 @@ Class vatController Extends baseController {
     public function printview() {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
-
+        $customer_model = $this->model->get('customerModel');
         $order_tire_list_model = $this->model->get('ordertirelistModel');
 
         $invoice_tire_model = $this->model->get('invoicetireModel');
@@ -323,11 +323,11 @@ Class vatController Extends baseController {
 
             if (!$invoices) {
                 $CmdType = 111; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
-                $eHD = $this->createEHoaDon($params, $CmdType);
+                $eHD = $this->createEHoaDon($params, $CmdType, $customer_model);
             }
             else{
                 $CmdType = 200; //Tạo HĐ, Client tự cấp InvoiceForm, InvoiceSerial, InvoiceNo (tạo HĐ mới, có sẵn Số HĐ)
-                $eHD = $this->createEHoaDon($params, $CmdType);
+                $eHD = $this->createEHoaDon($params, $CmdType, $customer_model);
 
                 foreach ($invoices as $invoice) {
                     $invoice_tire_model->deleteInvoice($invoice->invoice_tire_id);
@@ -532,12 +532,12 @@ Class vatController Extends baseController {
         }
    }
 
-   public function createEHoaDon($items, $CmdType){ 
+   public function createEHoaDon($items, $CmdType, $customer_model){ 
         $BkavPartnerGUID = "6A4028E7-FA66-4585-BBF3-795430BC1B4D";
         $BkavPartnerToken = "8VfXSP8h2GYZsOujKAxxXOjrwrplclW8U+GglMrw6mU=:slmm5fyrdZDQASy7hjQ33g==";
         $Mode = 6;
         
-        $EncryptedCommandData = $this->RemoteCommand($BkavPartnerToken, $Mode, $CmdType, $items);
+        $EncryptedCommandData = $this->RemoteCommand($BkavPartnerToken, $Mode, $CmdType, $items, $customer_model);
         
         $params = array(
             'partnerGUID' => $BkavPartnerGUID,
@@ -619,9 +619,9 @@ Class vatController Extends baseController {
 
         return $result;
    }
-   public function RemoteCommand($BkavPartnerToken, $Mode = 6, $CmdType, $items = array()){
+   public function RemoteCommand($BkavPartnerToken, $Mode = 6, $CmdType, $items = array(), $customer_model){
         $order_tire_model = $this->model->get('ordertireModel');
-        $customer_model = $this->model->get('customerModel');
+        $customer_model = $customer_model;
         $tire_brand_model = $this->model->get('tirebrandModel');
         $tire_size_model = $this->model->get('tiresizeModel');
         $tire_pattern_model = $this->model->get('tirepatternModel');
