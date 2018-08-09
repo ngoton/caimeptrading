@@ -18,7 +18,33 @@
     $tongcongve2 = 0;
     $tongcongmuon = 0;
 
-    
+$count1 = 1;
+$count2 = 1;
+$count3 = 1;
+$count4 = 1;
+$count5 = 1;
+$count6 = 1;
+$count7 = 1;
+$count8 = 1;
+$count9 = 1;
+$count10 = 1;
+$count11 = 1;
+
+for ($p=1; $p < 12; $p++) { 
+  ${"hide".$p} = (isset($pattern_data[$p]) && ($pattern_data[$p]!=0))?null:'style="display:none"';
+}
+
+foreach ($tire_sizes as $tire_size) {
+  for ($p=1; $p < 12; $p++) { 
+    ${"hidesize".$p.str_replace("/","",str_replace(".", "", $tire_size->tire_size_number))} = 'style="display:none"';
+
+    if (isset($size_data[$p][$tire_size->tire_size_number]) && ($size_data[$p][$tire_size->tire_size_number]!=0)) {
+      ${"hidesize".$p.str_replace("/","",str_replace(".", "", $tire_size->tire_size_number))} = null;
+    }
+     
+  }
+}
+
 ?>
 
 <div id="loading"></div>
@@ -38,7 +64,6 @@
         <li ><a href="#tab3">Hàng đang về</a></li>
         <li ><a href="#tab7">Hàng order</a></li>
         <li ><a href="#tab4">Hàng chờ</a></li>
-        <li ><a href="#tab5">Đặt hàng</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab active" id="tab1" >
@@ -84,9 +109,9 @@
                   </tr>
               </thead>
               <tbody>
-                  <tr>
-                        <td rowspan="9" class="fix">DC01</td>
-                        <td rowspan="9" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC01.jpg"></td>
+                  <tr <?php echo $hide1 ?> >
+                        <td rowspan="<?php echo $count1 ?>" class="fix count1">DC01</td>
+                        <td rowspan="<?php echo $count1 ?>" class="fix count1"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC01.jpg"></td>
                         <td class="fix">6.50R16</td>
                         <td class="fix">12PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -169,7 +194,7 @@
 
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize1700R16; if($hidesize1700R16==null) $count1++; ?> >
                         <td class="fix">7.00R16</td>
                         <td class="fix">14PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -249,7 +274,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['7.00R16'])?$tongdathang[1]['7.00R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize1750R16; if($hidesize1750R16==null) $count1++; ?> >
                         <td class="fix">7.50R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -330,7 +355,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['7.50R16'])?$tongdathang[1]['7.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize1825R16; if($hidesize1825R16==null) $count1++; ?> >
                         <td class="fix">8.25R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -410,7 +435,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['8.25R16'])?$tongdathang[1]['8.25R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize1825R20; if($hidesize1825R20==null) $count1++; ?> >
                         <td class="fix">8.25R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -490,7 +515,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['8.25R20'])?$tongdathang[1]['8.25R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize1900R20; if($hidesize1900R20==null) $count1++; ?> >
                         <td class="fix">9.00R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -570,7 +595,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['9.00R20'])?$tongdathang[1]['9.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize11000R20; if($hidesize11000R20==null) $count1++; ?> >
                         <td class="fix">10.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -650,7 +675,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['10.00R20'])?$tongdathang[1]['10.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize11100R20; if($hidesize11100R20==null) $count1++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -730,7 +755,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['11.00R20'])?$tongdathang[1]['11.00R20']:"" ?></td>
                        
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide1 ?> <?php echo $hidesize11200R20; if($hidesize11200R20==null) $count1++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -810,9 +835,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[1]['12.00R20'])?$tongdathang[1]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                        <td rowspan="9" class="fix">DC02</td>
-                        <td rowspan="9" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC02.jpg"></td>
+                  <tr <?php echo $hide2 ?> >
+                        <td rowspan="<?php echo $count2 ?>" class="fix count2">DC02</td>
+                        <td rowspan="<?php echo $count2 ?>" class="fix count2"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC02.jpg"></td>
                         <td class="fix">6.50R16</td>
                         <td class="fix">12PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -892,7 +917,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['6.50R16'])?$tongdathang[2]['6.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize2700R16; if($hidesize2700R16==null) $count2++; ?> >
                         <td class="fix">7.00R16</td>
                         <td class="fix">14PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -972,7 +997,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['7.00R16'])?$tongdathang[2]['7.00R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize2750R16; if($hidesize2750R16==null) $count2++; ?> >
                         <td class="fix">7.50R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1052,7 +1077,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['7.50R16'])?$tongdathang[2]['7.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize2825R16; if($hidesize2825R16==null) $count2++; ?> >
                         <td class="fix">8.25R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1132,7 +1157,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['8.25R16'])?$tongdathang[2]['8.25R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize2825R20; if($hidesize2825R20==null) $count2++; ?> >
                         <td class="fix">8.25R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1212,7 +1237,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['8.25R20'])?$tongdathang[2]['8.25R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize2900R20; if($hidesize2900R20==null) $count2++; ?> >
                         <td class="fix">9.00R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1292,7 +1317,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['9.00R20'])?$tongdathang[2]['9.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize21000R20; if($hidesize21000R20==null) $count2++; ?> >
                         <td class="fix">10.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1372,7 +1397,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['10.00R20'])?$tongdathang[2]['10.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize21100R20; if($hidesize21100R20==null) $count2++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1452,7 +1477,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['11.00R20'])?$tongdathang[2]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide2 ?> <?php echo $hidesize21200R20; if($hidesize21200R20==null) $count2++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1532,9 +1557,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[2]['12.00R20'])?$tongdathang[2]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                        <td rowspan="9" class="fix">DC03</td>
-                        <td rowspan="9" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC03.jpg"></td>
+                  <tr <?php echo $hide3 ?> >
+                        <td rowspan="<?php echo $count3 ?>" class="fix count3">DC03</td>
+                        <td rowspan="<?php echo $count3 ?>" class="fix count3"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DC03.jpg"></td>
                         <td class="fix">6.50R16</td>
                         <td class="fix">12PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1614,7 +1639,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['6.50R16'])?$tongdathang[3]['6.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize3700R16; if($hidesize3700R16==null) $count3++; ?> >
                         <td class="fix">7.00R16</td>
                         <td class="fix">14PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1694,7 +1719,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['7.00R16'])?$tongdathang[3]['7.00R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize3750R16; if($hidesize3750R16==null) $count3++; ?> >
                         <td class="fix">7.50R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1774,7 +1799,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['7.50R16'])?$tongdathang[3]['7.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize3825R16; if($hidesize3825R16==null) $count3++; ?> >
                         <td class="fix">8.25R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1854,7 +1879,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['8.25R16'])?$tongdathang[3]['8.25R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize3825R20; if($hidesize3825R20==null) $count3++; ?> >
                         <td class="fix">8.25R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -1934,7 +1959,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['8.25R20'])?$tongdathang[3]['8.25R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize3900R20; if($hidesize3900R20==null) $count3++; ?> >
                         <td class="fix">9.00R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2014,7 +2039,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['9.00R20'])?$tongdathang[3]['9.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize31000R20; if($hidesize31000R20==null) $count3++; ?> >
                         <td class="fix">10.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2094,7 +2119,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['10.00R20'])?$tongdathang[3]['10.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize31100R20; if($hidesize31100R20==null) $count3++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2174,7 +2199,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[3]['11.00R20'])?$tongdathang[3]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide3 ?> <?php echo $hidesize31200R20; if($hidesize31200R20==null) $count3++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2255,9 +2280,9 @@
                         
                   </tr>
 
-                  <tr>
-                        <td rowspan="8" class="fix">NC01</td>
-                        <td rowspan="8" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NC01.jpg"></td>
+                  <tr <?php echo $hide4 ?> >
+                        <td rowspan="<?php echo $count4 ?>" class="fix count4">NC01</td>
+                        <td rowspan="<?php echo $count4 ?>" class="fix count4"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NC01.jpg"></td>
                         <td class="fix">7.00R16</td>
                         <td class="fix">14PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2337,7 +2362,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['7.00R16'])?$tongdathang[4]['7.00R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize4750R16; if($hidesize4750R16==null) $count4++; ?> >
                         <td class="fix">7.50R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2417,7 +2442,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['7.50R16'])?$tongdathang[4]['7.50R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize4825R16; if($hidesize4825R16==null) $count4++; ?> >
                         <td class="fix">8.25R16</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2497,7 +2522,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['8.25R16'])?$tongdathang[4]['8.25R16']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize4825R20; if($hidesize4825R20==null) $count4++; ?> >
                         <td class="fix">8.25R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2577,7 +2602,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['8.25R20'])?$tongdathang[4]['8.25R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize4900R20; if($hidesize4900R20==null) $count4++; ?> >
                         <td class="fix">9.00R20</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2657,7 +2682,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['9.00R20'])?$tongdathang[4]['9.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize41000R20; if($hidesize41000R20==null) $count4++; ?> >
                         <td class="fix">10.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2737,7 +2762,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['10.00R20'])?$tongdathang[4]['10.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize41100R20; if($hidesize41100R20==null) $count4++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2817,7 +2842,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[4]['11.00R20'])?$tongdathang[4]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide4 ?> <?php echo $hidesize41200R20; if($hidesize41200R20==null) $count4++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2898,9 +2923,9 @@
                         
                   </tr>
 
-                  <tr>
-                          <td rowspan="4" class="fix">BC01</td>
-                        <td rowspan="4" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/BC01.jpg"></td>
+                  <tr <?php echo $hide5 ?> >
+                          <td rowspan="<?php echo $count5 ?>" class="fix count5">BC01</td>
+                        <td rowspan="<?php echo $count5 ?>" class="fix count5"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/BC01.jpg"></td>
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -2980,7 +3005,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[5]['11.00R20'])?$tongdathang[5]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide5 ?> <?php echo $hidesize51200R20; if($hidesize51200R20==null) $count5++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3060,7 +3085,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[5]['12.00R20'])?$tongdathang[5]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide5 ?> <?php echo $hidesize51200R24; if($hidesize51200R24==null) $count5++; ?> >
                         <td class="fix">12.00R24</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3140,7 +3165,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[5]['12.00R24'])?$tongdathang[5]['12.00R24']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide5 ?> <?php echo $hidesize512R225; if($hidesize512R225==null) $count5++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3221,9 +3246,9 @@
                         
                   </tr>
 
-                  <tr>
-                          <td rowspan="4" class="fix">BC02</td>
-                        <td rowspan="4" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/BC02.jpg"></td>
+                  <tr <?php echo $hide6 ?> >
+                          <td rowspan="<?php echo $count6 ?>" class="fix count6">BC02</td>
+                        <td rowspan="<?php echo $count6 ?>" class="fix count6"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/BC02.jpg"></td>
                         <td class="fix">8.25R16</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3303,7 +3328,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[6]['8.25R16'])?$tongdathang[6]['8.25R16']:"" ?></td>
                         
                 </tr>
-                <tr>
+                <tr <?php echo $hide6 ?> <?php echo $hidesize6900R20; if($hidesize6900R20==null) $count6++; ?> >
                     <td class="fix">9.00R20</td>
                     <td class="fix">18PR</td>
                     <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3383,7 +3408,7 @@
                     <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[6]['9.00R20'])?$tongdathang[6]['9.00R20']:"" ?></td>
                     
                   </tr>
-                <tr>
+                <tr <?php echo $hide6 ?> <?php echo $hidesize61100R20; if($hidesize61100R20==null) $count6++; ?> >
                     <td class="fix">11.00R20</td>
                     <td class="fix">18PR</td>
                     <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3463,7 +3488,7 @@
                     <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[6]['11.00R20'])?$tongdathang[6]['11.00R20']:"" ?></td>
                    
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide6 ?> <?php echo $hidesize61200R20; if($hidesize61200R20==null) $count6++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3543,9 +3568,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[6]['12.00R20'])?$tongdathang[6]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                          <td rowspan="5" class="fix">DK01</td>
-                        <td rowspan="5" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK01.jpg"></td>
+                  <tr <?php echo $hide7 ?> >
+                          <td rowspan="<?php echo $count7 ?>" class="fix count7">DK01</td>
+                        <td rowspan="<?php echo $count7 ?>" class="fix count7"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK01.jpg"></td>
                         <td class="fix">295/75R22.5</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3625,7 +3650,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[7]['295/75R22.5'])?$tongdathang[7]['295/75R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide7 ?> <?php echo $hidesize731580R225; if($hidesize731580R225==null) $count7++; ?> >
                         <td class="fix">315/80R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3705,7 +3730,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[7]['315/80R22.5'])?$tongdathang[7]['315/80R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide7 ?> <?php echo $hidesize738565R225; if($hidesize738565R225==null) $count7++; ?> >
                         <td class="fix">385/65R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3785,7 +3810,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[7]['385/65R22.5'])?$tongdathang[7]['385/65R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide7 ?> <?php echo $hidesize711R225; if($hidesize711R225==null) $count7++; ?> >
                         <td class="fix">11R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3865,7 +3890,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[7]['11R22.5'])?$tongdathang[7]['11R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide7 ?> <?php echo $hidesize712R225; if($hidesize712R225==null) $count7++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -3945,9 +3970,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[7]['12R22.5'])?$tongdathang[7]['12R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                          <td rowspan="8" class="fix">DK02</td>
-                        <td rowspan="8" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                  <tr <?php echo $hide8 ?> >
+                          <td rowspan="<?php echo $count8 ?>" class="fix count8">DK02</td>
+                        <td rowspan="<?php echo $count8 ?>" class="fix count8"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
                         <td class="fix">295/75R22.5</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4027,7 +4052,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['295/75R22.5'])?$tongdathang[8]['295/75R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize829580R225; if($hidesize829580R225==null) $count8++; ?> >
                     <td class="fix">295/80R22.5</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4107,7 +4132,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['295/80R22.5'])?$tongdathang[8]['295/80R22.5']:"" ?></td>
                        
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize831580R225; if($hidesize831580R225==null) $count8++; ?> >
                         <td class="fix">315/80R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4187,7 +4212,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['315/80R22.5'])?$tongdathang[8]['315/80R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize838565R225; if($hidesize838565R225==null) $count8++; ?> >
                         <td class="fix">385/65R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4267,7 +4292,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['385/65R22.5'])?$tongdathang[8]['385/65R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize828575R245; if($hidesize828575R245==null) $count8++; ?> >
                         <td class="fix">285/75R24.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4347,7 +4372,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['285/75R24.5'])?$tongdathang[8]['285/75R24.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize811R225; if($hidesize811R225==null) $count8++; ?> >
                         <td class="fix">11R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4427,7 +4452,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['11R22.5'])?$tongdathang[8]['11R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize812R225; if($hidesize812R225==null) $count8++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4507,7 +4532,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['12R22.5'])?$tongdathang[8]['12R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide8 ?> <?php echo $hidesize813R225; if($hidesize813R225==null) $count8++; ?> >
                         <td class="fix">13R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4587,9 +4612,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[8]['13R22.5'])?$tongdathang[8]['13R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                          <td rowspan="2" class="fix">DK02 (2)</td>
-                        <td rowspan="2" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
+                  <tr <?php echo $hide11 ?> >
+                          <td rowspan="<?php echo $count11 ?>" class="fix count11">DK02 (2)</td>
+                        <td rowspan="<?php echo $count11 ?>" class="fix count11"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/DK02.jpg"></td>
                         
                         <td class="fix">11R22.5</td>
                         <td class="fix">18PR</td>
@@ -4670,7 +4695,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[11]['11R22.5'])?$tongdathang[11]['11R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide11 ?> <?php echo $hidesize1112R225; if($hidesize1112R225==null) $count11++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4750,9 +4775,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[11]['12R22.5'])?$tongdathang[11]['12R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                          <td rowspan="7" class="fix">NK01</td>
-                        <td rowspan="7" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
+                  <tr <?php echo $hide9 ?> >
+                          <td rowspan="<?php echo $count9 ?>" class="fix count9">NK01</td>
+                        <td rowspan="<?php echo $count9 ?>" class="fix count9"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK01.jpg"></td>
                         <td class="fix">295/75R22.5</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4832,7 +4857,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['295/75R22.5'])?$tongdathang[9]['295/75R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize931580R225; if($hidesize931580R225==null) $count9++; ?> >
                         <td class="fix">315/80R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4912,7 +4937,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['315/80R22.5'])?$tongdathang[9]['315/80R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize938565R225; if($hidesize938565R225==null) $count9++; ?> >
                         <td class="fix">385/65R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -4993,7 +5018,7 @@
                         
                   </tr>
                   
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize91100R20; if($hidesize91100R20==null) $count9++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5073,7 +5098,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['11.00R20'])?$tongdathang[9]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize91200R20; if($hidesize91200R20==null) $count9++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5153,7 +5178,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['12.00R20'])?$tongdathang[9]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize911R225; if($hidesize911R225==null) $count9++; ?> >
                         <td class="fix">11R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5233,7 +5258,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['11R22.5'])?$tongdathang[9]['11R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide9 ?> <?php echo $hidesize912R225; if($hidesize912R225==null) $count9++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5313,9 +5338,9 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[9]['12R22.5'])?$tongdathang[9]['12R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
-                      <td rowspan="7" class="fix">NK02</td>
-                        <td rowspan="7" class="fix"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK02.jpg"></td>
+                  <tr <?php echo $hide10 ?> >
+                      <td rowspan="<?php echo $count10 ?>" class="fix count10">NK02</td>
+                        <td rowspan="<?php echo $count10 ?>" class="fix count10"><img width="70" height="70" src="<?php echo BASE_URL ?>/public/images/upload/NK02.jpg"></td>
                         <td class="fix">295/75R22.5</td>
                         <td class="fix">16PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5395,7 +5420,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[10]['295/75R22.5'])?$tongdathang[10]['295/75R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize1031580R225; if($hidesize1031580R225==null) $count10++; ?> >
                         <td class="fix">315/80R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5475,7 +5500,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[10]['315/80R22.5'])?$tongdathang[10]['315/80R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize1038565R225; if($hidesize1038565R225==null) $count10++; ?> >
                         <td class="fix">385/65R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5556,7 +5581,7 @@
                         
                   </tr>
                   
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize101100R20; if($hidesize101100R20==null) $count10++; ?> >
                         <td class="fix">11.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5636,7 +5661,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[10]['11.00R20'])?$tongdathang[10]['11.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize101200R20; if($hidesize101200R20==null) $count10++; ?> >
                         <td class="fix">12.00R20</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5716,7 +5741,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[10]['12.00R20'])?$tongdathang[10]['12.00R20']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize1011R225; if($hidesize1011R225==null) $count10++; ?> >
                         <td class="fix">11R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -5796,7 +5821,7 @@
                         <td class="fix" style="font-weight:bold; background: rgba(98, 196, 98, 0.21);"><?php echo isset($tongdathang[10]['11R22.5'])?$tongdathang[10]['11R22.5']:"" ?></td>
                         
                   </tr>
-                  <tr>
+                  <tr <?php echo $hide10 ?> <?php echo $hidesize1012R225; if($hidesize1012R225==null) $count10++; ?> >
                         <td class="fix">12R22.5</td>
                         <td class="fix">18PR</td>
                         <?php foreach ($brand_tonkhos as $tonkho) { 
@@ -10525,156 +10550,7 @@
                   
           </table>
         </div>
-        <div class="tab" id="tab5" >
-          <div class="add-box">
-              <a class="add_button" id="btnExport5" >Export Excel</a>
-          </div>
-          <table id="tblExport5" class="table_data">
-              <thead>
-                  <tr>
-                      <th class="fix">STT</th>
-                      <th class="fix">Ngày</th>
-                      <th class="fix">Khách hàng</th>
-                      <th class="fix">Số lượng</th>
-                      <th class="fix">Tổng cộng</th>
-                      <th class="fix">Sale</th>
-                      <th class="fix"></th>
-                  </tr>
-              </thead>
-              <tbody>
-                <?php $t=1;
-                foreach ($tire_order_sales as $tire_order_sale) { ?>
-                    <tr id="tr_order_<?php echo $tire_order_sale->tire_order_sale_id ?>">
-                        <td class="fix"><?php echo $t++; ?></td>
-                        <td class="fix"><?php echo $lib->hien_thi_ngay_thang($tire_order_sale->tire_order_sale_date); ?></td>
-                        <td class="fix"><?php echo $tire_order_sale->customer_name; ?></td>
-                        <td class="fix"><?php echo $tire_order_sale->tire_order_sale_number; ?></td>
-                        <td class="fix"><?php echo $lib->formatMoney($tire_order_sale->tire_order_sale_number*$tire_order_sale->tire_order_sale_price); ?></td>
-                        <td class="fix"><?php echo $tire_order_sale->username; ?></td>
-                        <td>
-                            <?php if($_SESSION['role_logined'] == 1 || $_SESSION['userid_logined'] == $tire_order_sale->tire_order_sale){ ?>
-                            <button class="del_order" data="<?php echo $tire_order_sale->tire_order_sale_id ?>" style="display:block">Xóa</button>
-                            <?php } ?>
-                        </td>
-                  </tr>
-               <?php } ?>
-                </tbody>
-            </table>
-            <div>
-                <fieldset class="groupbox">
-                    <legend>
-                        <span><h3>Đặt hàng </h3></span>
-                    </legend>
-                    <form id="order_tire" name="order_tire">
-                        <table>
-                            <tr>
-                                <td>Khách hàng </td>
-                                <td><input type="text"  id="tire_order_sale_customer" name="tire_order_sale_customer" tabindex="1"  autocomplete="off" required="required" placeholder="Nhập tên hoặc * để chọn" > <a style="font-size: 24px; font-weight: bold; color:red" title="Thêm mới" target="_blank" href="<?php echo $this->url('customer') ?>"> + </a>
-                                    <ul id="customer_list_id"></ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Mã số thuế</td>
-                                <td><input type="text" id="mst" name="mst" tabindex="2"></td>
-                            </tr>
-                            <tr>
-                                <td>Ngày giao hàng</td>
-                                <td><input style="width:80px" class="ngay" type="text" id="tire_order_sale_date"  name="tire_order_sale_date" tabindex="3"  required="required" ></td>
-                            </tr>
-                            <tr>
-                                <td>Số lượng</td>
-                                <td><input disabled type="text" id="tire_order_sale_number" name="tire_order_sale_number" tabindex="4" value="0"></td>
-                                
-                            </tr>
-                            <tr>
-                                <td>Thành tiền</td>
-                                <td><input disabled type="text" id="tire_order_sale_price" name="tire_order_sale_price" tabindex="5" value="0"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="submit" name="submit" value="Hoàn tất" tabindex="6"></td>
-                                <td ><input type="reset" name="reset" value="Nhập lại" tabindex="7"></td>
-                            </tr>
-                        </table>
-                        <div class="order">
-                            <table class="table_data table">
-                              <thead>
-                                  <tr>
-                                       
-                                      <th class="fix"  style="width:50px">STT</th>
-                                      <th class="fix">Hình ảnh</th>
-                                      <th class="fix">Thương hiệu</th>
-                                      <th class="fix">Size</th>
-                                      <th class="fix">Mã gai</th>
-                                      <th class="fix">Số lượng</th>
-                                      <th class="fix" style="width:120px" >Đơn giá</th>
-                                      <th class="fix" style="width:120px" >Thành tiền</th>
-                                      <th class="fix"  style="width:50px">VAT</th> 
-                                      <th class="fix"  style="width:30px"></th> 
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                <?php $t=1; $soluong=0; $daban=0; ?>
-                                <?php foreach ($tire_buys as $tire_buy) : ?>
-    
-                                <?php 
-                                    $soluong += $tire_buy->soluong;
-                                    $daban += (isset($sell[$tire_buy->tire_buy_id]['number'])?$sell[$tire_buy->tire_buy_id]['number']:0);
-
-                                    $ton = $tire_buy->soluong - (isset($sell[$tire_buy->tire_buy_id]['number'])?$sell[$tire_buy->tire_buy_id]['number']:0);
-
-                                    if($ton > 0){
-                                ?>
-                                    
-                                    <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $tire_buy->tire_buy_id ?>" class="edit_tr">
-                                        
-                                        <td class="fix"  style="width:50px"><?php echo $t++; ?></td>
-                                        <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/<?php echo $link_picture[$tire_buy->tire_buy_id]['image']; ?>" width="30" height="30" /></td>
-                                        <td class="fix tire_brand" data="<?php echo $tire_buy->tire_buy_brand; ?>" id="tire_buy_brand_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_brand_name; ?></td>
-                                        <td class="fix tire_size" data="<?php echo $tire_buy->tire_buy_size; ?>" id="tire_buy_size_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_size_number; ?></td>
-                                        <td class="fix tire_pattern" data="<?php echo $tire_buy->tire_buy_pattern; ?>" id="tire_buy_pattern_<?php echo $tire_buy->tire_buy_id; ?>"><?php echo $tire_buy->tire_pattern_name; ?></td>
-                                        
-                                        <td class="fix editable" id="conlai_<?php echo $tire_buy->tire_buy_id; ?>">
-                                            <input style="width:50px" data="<?php echo $tire_buy->tire_buy_id; ?>" type="text" class="number editable tire_number" id="editable_<?php echo $tire_buy->tire_buy_id; ?>" value="<?php echo $ton ?>">
-                                        </td>
-                                        <td style="width:120px" class="fix editable2" id="dongia_<?php echo $tire_buy->tire_buy_id; ?>">
-                                            <input style="width:80px" data="<?php echo $tire_buy->tire_buy_id; ?>" type="text" class="numbers editable2 tire_price" id="editable2_<?php echo $tire_buy->tire_buy_id; ?>" value="<?php echo $ton ?>">
-                                        </td>
-                                        <td style="width:120px" class="fix" id="thanhtien_<?php echo $tire_buy->tire_buy_id; ?>">
-                                            <input disabled style="width:80px" data="<?php echo $tire_buy->tire_buy_id; ?>" type="text" class="numbers editable3" id="editable3_<?php echo $tire_buy->tire_buy_id; ?>" value="<?php echo $ton*$ton ?>">
-                                        </td>
-                                        <td class="fix" style="width:50px">
-                                            <input type="radio" class="tire_vat" name="tire_vat_<?php echo $tire_buy->tire_buy_id; ?>" value="1" >
-                                        </td>
-                                        <td class="fix" style="width:30px">
-                                            <input name="check[]" type="checkbox" class="checkbox tire_check" id="editable4_<?php echo $tire_buy->tire_buy_id; ?>" value="<?php echo $tire_buy->tire_buy_id ?>">
-                                        </td>
-                                    </tr>
-
-                                <?php } ?>
-                                <?php endforeach; ?>
-                                </tbody>
-                                <tfoot>
-                                <tr style="text-align:center; font-weight: bold; color: red;">
-                                    
-                                    <td class="fix"  style="width:50px"></td>
-                                    <td class="fix"></td>
-                                    <td class="fix"></td>
-                                    <td class="fix"></td>
-                                    <td class="fix">Tổng cộng</td>
-                                    <td class="fix"><?php echo $soluong-$daban; ?></td>
-                                    <td class="fix" style="width:120px" ></td>
-                                    <td class="fix" style="width:120px" ></td>
-                                    <td class="fix"  style="width:50px"></td>
-                                    <td class="fix"  style="width:30px"></td>
-                                </tr>
-                                </tfoot>
-                                
-                            </table>
-                        </div>
-                    </form>
-                </fieldset>
-            </div>
-        </div>
+        
       </div>
     </div>
 </div>
@@ -11083,7 +10959,7 @@ $(".going").click(function(){
             draggable:true,
             modal: true,
             autoOpen: false,
-            width:'300',
+            width:'500',
             resizable: false,
             title:'Hàng đang về',
             
@@ -11098,7 +10974,7 @@ $(".goingorder").click(function(){
             draggable:true,
             modal: true,
             autoOpen: false,
-            width:'300',
+            width:'500',
             resizable: false,
             title:'Hàng order',
             
@@ -11302,6 +11178,18 @@ $('.delete_order_all').click(function(){
            }); 
       }
 });
+
+$('.count1').attr('rowspan','<?php echo $count1 ?>');
+$('.count2').attr('rowspan','<?php echo $count2 ?>');
+$('.count3').attr('rowspan','<?php echo $count3 ?>');
+$('.count4').attr('rowspan','<?php echo $count4 ?>');
+$('.count5').attr('rowspan','<?php echo $count5 ?>');
+$('.count6').attr('rowspan','<?php echo $count6 ?>');
+$('.count7').attr('rowspan','<?php echo $count7 ?>');
+$('.count8').attr('rowspan','<?php echo $count8 ?>');
+$('.count9').attr('rowspan','<?php echo $count9 ?>');
+$('.count10').attr('rowspan','<?php echo $count10 ?>');
+$('.count11').attr('rowspan','<?php echo $count11 ?>');
 </script>
 
 <style type="text/css">

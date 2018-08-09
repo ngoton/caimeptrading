@@ -704,6 +704,9 @@ Class tiredebitController Extends baseController {
             }
         }
 
+        $invoice_tire_model = $this->model->get('invoicetireModel');
+        
+        $invoice_data = array();
         foreach ($orders as $order) {
             $data = array(
                 'where' => 'receivable = '.$order->receivable_id.' AND receive_date < '.strtotime(date('d-m-Y', strtotime($ketthuc. ' + 1 days'))),
@@ -713,9 +716,16 @@ Class tiredebitController Extends baseController {
             foreach ($receives as $receive) {
                 $receivable_data[$order->receivable_id]['pay_money'] = isset($receivable_data[$order->receivable_id]['pay_money'])?$receivable_data[$order->receivable_id]['pay_money']+$receive->money:$receive->money;
             }
+
+            $invoice = $invoice_tire_model->getAllInvoice(array('where'=>'order_tire='.$order->order_tire_id));
+            foreach ($invoice as $invoices) {
+                $invoice_data[$order->order_tire_id]['number'] = isset($invoice_data[$order->order_tire_id]['number'])?$invoice_data[$order->order_tire_id]['number'].' | '.$invoices->invoice_tire_number:$invoices->invoice_tire_number;
+                $invoice_data[$order->order_tire_id]['date'] = isset($invoice_data[$order->order_tire_id]['date'])?$invoice_data[$order->order_tire_id]['date'].' | '.$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date):$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date);
+            }
         }
 
         $this->view->data['receivable_data'] = $receivable_data;
+        $this->view->data['invoice_data'] = $invoice_data;
 
         $deposit_model = $this->model->get('deposittireModel');
         $join = array('table'=>'daily, customer','where'=>'daily = daily_id AND deposit_tire.customer = customer_id');
@@ -804,6 +814,17 @@ Class tiredebitController Extends baseController {
 
 
         $orders = $order_tire_model->getAllTire($data,$join);
+
+        $invoice_tire_model = $this->model->get('invoicetireModel');
+        
+        $invoice_data = array();
+        foreach ($orders as $order) {
+            $invoice = $invoice_tire_model->getAllInvoice(array('where'=>'order_tire='.$order->order_tire_id));
+            foreach ($invoice as $invoices) {
+                $invoice_data[$order->order_tire_id]['number'] = isset($invoice_data[$order->order_tire_id]['number'])?$invoice_data[$order->order_tire_id]['number'].' | '.$invoices->invoice_tire_number:"'".$invoices->invoice_tire_number;
+                $invoice_data[$order->order_tire_id]['date'] = isset($invoice_data[$order->order_tire_id]['date'])?$invoice_data[$order->order_tire_id]['date'].' | '.$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date):$this->lib->hien_thi_ngay_thang($invoices->invoice_tire_date);
+            }
+        }
 
         
 
@@ -896,7 +917,9 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
 
-                                    ->setCellValue('C' . $hang, $row->order_number);
+                                    ->setCellValue('C' . $hang, $row->order_number)
+
+                                    ->setCellValue('L' . $hang, $invoice_data[$row->order_tire_id]['number']);
 
 
                                 foreach ($order_lists as $order_list) {
@@ -952,7 +975,9 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
 
-                                    ->setCellValue('C' . $hang, $row->order_number);
+                                    ->setCellValue('C' . $hang, $row->order_number)
+
+                                    ->setCellValue('L' . $hang, $invoice_data[$row->order_tire_id]['number']);
 
 
                                 foreach ($order_lists as $order_list) {
@@ -1010,7 +1035,9 @@ Class tiredebitController Extends baseController {
 
                                 ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
 
-                                ->setCellValue('C' . $hang, $row->order_number);
+                                ->setCellValue('C' . $hang, $row->order_number)
+
+                                ->setCellValue('L' . $hang, $invoice_data[$row->order_tire_id]['number']);
 
 
                             foreach ($order_lists as $order_list) {

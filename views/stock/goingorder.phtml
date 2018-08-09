@@ -20,44 +20,32 @@
             </td>
             <td><input type="text" id="pattern" name="pattern" disabled required="required" value="<?php echo $tire_pattern ?>" /></td>
           </tr>
-          <?php
-          foreach ($tire_goings as $tire_going) {
-          ?>
-            <tr style="font-weight:bold">
-              <td>
-                <span class="add-on"><i class="icon-info-sign" ></i></span>
-                <span>Code:  </span>
-              </td>
-              <td><?php echo $tire_going->import_tire_order_code." - ".$lib->hien_thi_ngay_thang($tire_going->import_tire_order_date) ?></td>
-            </tr>
+        </table>
+        <table class="table_data">
+          <thead>
             <tr>
-              <td>
-                <span class="add-on"><i class="icon-th-list" ></i></span>
-                <span>Brand:  </span>
-              </td>
-              <td><?php echo $tire_going->tire_brand_name ?></td>
+              <th class="fix">Ngày</th>
+              <th class="fix">Code</th>
+              <th class="fix">Brand</th>
+              <th class="fix">Size</th>
+              <th class="fix">Pattern</th>
+              <th class="fix">SL</th>
             </tr>
+          </thead>
+          <tbody>
+            <?php
+            foreach ($tire_goings as $tire_going) {
+            ?>
             <tr>
-              <td>
-                <span class="add-on"><i class="icon-th-list" ></i></span>
-                <span>Size:  </span>
-              </td>
-              <td><?php echo $tire_going->tire_size_number ?></td>
+              <td class="fix"><?php echo $lib->hien_thi_ngay_thang($tire_going->import_tire_order_date) ?></td>
+              <td class="fix"><?php echo $tire_going->import_tire_order_code ?></td>
+              <td class="fix"><?php echo $tire_going->tire_brand_name ?></td>
+              <td class="fix"><?php echo $tire_going->tire_size_number ?></td>
+              <td class="fix"><?php echo $tire_going->tire_pattern_name ?></td>
+              <td class="fix"><?php echo $tire_going->tire_number ?></td>
             </tr>
-            <tr>
-              <td>
-                <span class="add-on"><i class="icon-th-list" ></i></span>
-                <span>Pattern:  </span>
-              </td>
-              <td><?php echo $tire_going->tire_pattern_name ?></td>
-            </tr>
-            <tr>
-              <td>
-                <span class="add-on"><i class="icon-th-list" ></i></span>
-                <span>Số lượng:  </span>
-              </td>
-              <td><?php echo $tire_going->tire_number ?></td>
-            </tr>
-          <?php } ?>
+            <?php } ?>
+          </tbody>
+          
         </table>
         <div id="error" class="error"></div>

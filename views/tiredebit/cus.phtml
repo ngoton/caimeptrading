@@ -48,7 +48,9 @@
         <th class="fix">
             <a class="sort" >Ngày giao </a>
         </th> 
-
+        <th  class="fix">
+            <a class="sort" >HĐ </a>
+        </th>
         <th  class="fix">
             <a class="sort" >Hạn TT </a>
         </th>
@@ -92,6 +94,7 @@
             <td class="fix" id="sale_<?php echo $order_tire->order_tire_id; ?>"><?php echo $order_tire->username; ?></td> 
              
             <td class="fix"  id="delivery_date_<?php echo $order_tire->order_tire_id; ?>"><?php echo $order_tire->delivery_date>0?$lib->hien_thi_ngay_thang($order_tire->delivery_date):"Chưa giao"; ?></td>
+            <td class="fix" id="invoice_tire_number_<?php echo $order_tire->order_tire_id; ?>"><?php echo isset($invoice_data[$order_tire->order_tire_id]['number'])?$invoice_data[$order_tire->order_tire_id]['number']:null; ?></td> 
             <td class="fix"  id="due_date_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->hien_thi_ngay_thang($order_tire->due_date); ?></td>
         </tr>
         <?php } ?>
@@ -129,6 +132,7 @@
             <td class="fix" id="sale_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['sale'])?$receivable_data[$order_tire->receivable_id]['sale']:null ?></td> 
              
             <td class="fix"  id="delivery_date_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->hien_thi_ngay_thang($order_tire->expect_date); ?></td>
+            <td class="fix"></td>
             <td class="fix"  id="due_date_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->hien_thi_ngay_thang($order_tire->expect_date); ?></td>
         </tr>
         <?php } ?>
@@ -142,6 +146,7 @@
             <td class="fix"><?php echo $lib->formatMoney($tongkhtra) ?></td>
             <td class="fix"><?php echo $lib->formatMoney($tongdatra) ?></td>
             <td class="fix"><?php echo $lib->formatMoney($tongcon) ?></td>
+            <td class="fix"></td>
             <td class="fix"></td>
             <td class="fix"></td>
             <td class="fix"></td>
