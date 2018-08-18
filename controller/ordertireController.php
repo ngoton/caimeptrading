@@ -758,6 +758,9 @@ Class ordertireController Extends baseController {
             foreach ($sum_order as $sum) {
                 $total_order = $sum->tong;
             }
+            if ($total_order == 0) {
+                $total_order = $tire->order_tire_number;
+            }
 
             $last_month[$tire->order_tire_id] = $total_order_before;
             $this_month[$tire->order_tire_id] = $total_order;
@@ -848,8 +851,12 @@ Class ordertireController Extends baseController {
                 }
                 $tire_price_origin = $dongia;
 
+                $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
+                $ngaysau = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' + 1 days')));
+
+                
                 $data_q = array(
-                    'where' => 'tire_brand ='.$sale->tire_brand.' AND tire_size ='.$sale->tire_size.' AND tire_pattern ='.$sale->tire_pattern.' AND start_date <= '.$ngay.' AND (end_date IS NULL OR end_date >= '.$ngay.')',
+                    'where' => 'tire_brand ='.$sale->tire_brand.' AND tire_size ='.$sale->tire_size.' AND tire_pattern ='.$sale->tire_pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
                     'order_by' => 'start_date',
                     'order' => 'DESC',
                     'limit' => 1,
@@ -857,7 +864,7 @@ Class ordertireController Extends baseController {
                 $tire_price_discounts = $tire_price_discount_model->getAllTire($data_q);
 
                 $data_e = array(
-                    'where' => 'tire_brand ='.$sale->tire_brand.' AND tire_size ='.$sale->tire_size.' AND tire_pattern ='.$sale->tire_pattern.' AND start_date <= '.$ngay.' AND (end_date IS NULL OR end_date >= '.$ngay.')',
+                    'where' => 'tire_brand ='.$sale->tire_brand.' AND tire_size ='.$sale->tire_size.' AND tire_pattern ='.$sale->tire_pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
                     'order_by' => 'start_date',
                     'order' => 'DESC',
                     'limit' => 1,
@@ -3241,8 +3248,12 @@ Class ordertireController Extends baseController {
         $price = array();
         foreach ($order_tire_lists as $order) {
             $ngay = $order_tire->delivery_date>0?$order_tire->delivery_date:$order_tire->order_tire_date;
+
+            $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
+            $ngaysau = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' + 1 days')));
+
             $data_q = array(
-                'where' => 'tire_brand ='.$order->tire_brand.' AND tire_size ='.$order->tire_size.' AND tire_pattern ='.$order->tire_pattern.' AND start_date <= '.$ngay.' AND (end_date IS NULL OR end_date >= '.$ngay.')',
+                'where' => 'tire_brand ='.$order->tire_brand.' AND tire_size ='.$order->tire_size.' AND tire_pattern ='.$order->tire_pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
                 'order_by' => 'start_date',
                 'order' => 'DESC',
                 'limit' => 1,
@@ -3250,7 +3261,7 @@ Class ordertireController Extends baseController {
             $tire_price_discounts = $tire_price_discount_model->getAllTire($data_q);
 
             $data_e = array(
-                'where' => 'tire_brand ='.$order->tire_brand.' AND tire_size ='.$order->tire_size.' AND tire_pattern ='.$order->tire_pattern.' AND start_date <= '.$ngay.' AND (end_date IS NULL OR end_date >= '.$ngay.')',
+                'where' => 'tire_brand ='.$order->tire_brand.' AND tire_size ='.$order->tire_size.' AND tire_pattern ='.$order->tire_pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
                 'order_by' => 'start_date',
                 'order' => 'DESC',
                 'limit' => 1,

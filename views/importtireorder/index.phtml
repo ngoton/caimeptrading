@@ -97,6 +97,18 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
 
 </div>
 
+<div class="add-box thongtin" style="text-align:center;width:20%">
+  <table class="table_data">
+    <tr>
+      <th>SL cont nhập</th>
+      <th>Tỷ lệ</th>
+    </tr>
+    <tr>
+      <td><?php echo $lib->formatMoney($total_cont) ?></td>
+      <td><?php echo $lib->formatMoney($total_cont*100/120,2) ?>%</td>
+    </tr>
+  </table>
+</div>
 
 <table class="table_data" id="tblExport">
 <thead>

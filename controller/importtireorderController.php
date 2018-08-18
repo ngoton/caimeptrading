@@ -109,6 +109,14 @@ Class importtireorderController Extends baseController {
 
         
         $this->view->data['import_tire_orders'] = $import_tire_orders;
+
+        $total_cont = 1;
+        foreach ($import_tire_orders as $order) {
+            if ($order->import_tire_order_status == 3 && $order->import_tire_order_total >= 200) {
+                $total_cont += $order->import_tire_order_cont_total;
+            }
+        }
+        $this->view->data['total_cont'] = $total_cont;
        
         $this->view->data['lastID'] = isset($import_tire_order_model->getLastImport()->import_tire_order_code)?$import_tire_order_model->getLastImport()->import_tire_order_code:0;
 
