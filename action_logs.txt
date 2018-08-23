@@ -8075,3 +8075,5 @@ bxep: 6x14 = 84k-5-4--1484000
 
 30/07/2018 15:27:28|admincmg|delete|2278|order_tire_cost_|
 
+22/08/2018 10:47:58|admincmg|curricular|Array|curricular|
+
