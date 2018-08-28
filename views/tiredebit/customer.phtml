@@ -42,7 +42,9 @@
             <th  class="fix">
                 <a class="sort" >Trừ giảm </a>
             </th>
-            
+            <th  class="fix">
+                <a class="sort" >BH </a>
+            </th>
             <th class="fix">
                 <a class="sort" >KH phải trả </a>
             </th>
@@ -70,15 +72,16 @@
         
        </thead>
        <tbody>
-        <?php $tongthu=0; $tongsl=0; $tongthue=0; $tongtru=0; $tongkhtra=0; $tongdatra=0; $tongcon=0; ?>
+        <?php $tongthu=0; $tongsl=0; $tongthue=0; $tongtru=0; $tongkhtra=0; $tongdatra=0; $tongcon=0; $tongbh=0; ?>
         <?php foreach ($orders as $order_tire) : 
         $pay_money = isset($receivable_data[$order_tire->receivable_id]['pay_money'])?$receivable_data[$order_tire->receivable_id]['pay_money']:0;
         if ($trangthai == 1) {
             if($order_tire->total-$pay_money != 0){
-                $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce;
+                $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty;
                 $tongsl += $order_tire->order_tire_number;
                 $tongthue += $order_tire->vat;
                 $tongtru += $order_tire->discount+$order_tire->reduce;
+                $tongbh += $order_tire->warranty;
                 $tongkhtra += $order_tire->total;
                 
                 $tongdatra += $pay_money;
@@ -95,13 +98,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
-                <td class="fix" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce); ?></td> 
-                <td class="fix"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
-                <td class="fix"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
-                <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty); ?></td> 
+                <td class="fix text-right"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
+                <td class="fix text-right"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
+                <td class="fix text-right"  id="warranty_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->warranty); ?></td>
+                <td style="font-weight:bold" class="fix text-right"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->order_tire_id; ?>"><?php echo $order_tire->username; ?></td> 
                  
@@ -114,10 +118,11 @@
         }
         else if($trangthai == 2){
             if($order_tire->total-$pay_money == 0){
-                $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce;
+                $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty;
                 $tongsl += $order_tire->order_tire_number;
                 $tongthue += $order_tire->vat;
                 $tongtru += $order_tire->discount+$order_tire->reduce;
+                $tongbh += $order_tire->warranty;
                 $tongkhtra += $order_tire->total;
                 
                 $tongdatra += $pay_money;
@@ -134,13 +139,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
-                <td class="fix" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce); ?></td> 
-                <td class="fix"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
-                <td class="fix"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
-                <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty); ?></td> 
+                <td class="fix text-right"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
+                <td class="fix text-right"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
+                <td class="fix text-right"  id="warranty_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->warranty); ?></td>
+                <td style="font-weight:bold" class="fix text-right"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->order_tire_id; ?>"><?php echo $order_tire->username; ?></td> 
                  
@@ -152,10 +158,11 @@
             }
         }
         else{
-            $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce;
+            $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty;
             $tongsl += $order_tire->order_tire_number;
             $tongthue += $order_tire->vat;
             $tongtru += $order_tire->discount+$order_tire->reduce;
+            $tongbh += $order_tire->warranty;
             $tongkhtra += $order_tire->total;
             
             $tongdatra += $pay_money;
@@ -172,13 +179,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>"><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
-                <td class="fix" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce); ?></td> 
-                <td class="fix"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
-                <td class="fix"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
-                <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="order_list" href="<?php echo $this->url('ordertire/listtire/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $order_tire->order_tire_number; ?></a></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty); ?></td> 
+                <td class="fix text-right"  id="vat_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></td>
+                <td class="fix text-right"  id="discount_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></td>
+                <td class="fix text-right"  id="warranty_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->warranty); ?></td>
+                <td style="font-weight:bold" class="fix text-right"  id="total_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->order_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->order_tire_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->total-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->order_tire_id; ?>"><?php echo $order_tire->username; ?></td> 
                  
@@ -214,13 +222,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->receivable_id; ?>"><?php echo $order_tire->customer_name; ?></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
-                <td class="fix" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
                 <td class="fix"  id="vat_<?php echo $order_tire->receivable_id; ?>"></td>
                 <td class="fix"  id="discount_<?php echo $order_tire->receivable_id; ?>"></td>
+                <td class="fix"  id="warranty_<?php echo $order_tire->receivable_id; ?>"></td>
                 <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['sale'])?$receivable_data[$order_tire->receivable_id]['sale']:null ?></td> 
                  
@@ -251,13 +260,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->receivable_id; ?>"><?php echo $order_tire->customer_name; ?></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
-                <td class="fix" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
                 <td class="fix"  id="vat_<?php echo $order_tire->receivable_id; ?>"></td>
                 <td class="fix"  id="discount_<?php echo $order_tire->receivable_id; ?>"></td>
-                <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
+                <td class="fix"  id="warranty_<?php echo $order_tire->receivable_id; ?>"></td>
+                <td style="font-weight:bold" class="fix text-right"  id="total_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['sale'])?$receivable_data[$order_tire->receivable_id]['sale']:null ?></td> 
                  
@@ -287,13 +297,14 @@
                 </td>
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->receivable_id; ?>"><?php echo $order_tire->customer_name; ?></td>
-                <td class="fix"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
-                <td class="fix" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
+                <td class="fix text-right"  id="order_tire_number_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['number'])?$receivable_data[$order_tire->receivable_id]['number']:null ?></td>
+                <td class="fix text-right" id="thu_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td> 
                 <td class="fix"  id="vat_<?php echo $order_tire->receivable_id; ?>"></td>
                 <td class="fix"  id="discount_<?php echo $order_tire->receivable_id; ?>"></td>
-                <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
+                <td class="fix"  id="warranty_<?php echo $order_tire->receivable_id; ?>"></td>
+                <td style="font-weight:bold" class="fix text-right"  id="total_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->receivable_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/pay/'.$order_tire->receivable_id.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->receivable_id; ?>"><?php echo $lib->formatMoney($order_tire->money-$pay_money); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->receivable_id; ?>"><?php echo isset($receivable_data[$order_tire->receivable_id]['sale'])?$receivable_data[$order_tire->receivable_id]['sale']:null ?></td> 
                  
@@ -310,13 +321,14 @@
         <?php endforeach; ?>
         <tr style=" color:rgb(211, 11, 57); text-align: center; font-weight:bold;">
                 <td class="fix" colspan="4">Tổng cộng</td>
-                <td class="fix"><?php echo $lib->formatMoney($tongsl) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongthu) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongthue) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongtru) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongkhtra) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongdatra) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongcon) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongsl) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongthu) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongthue) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongtru) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongbh) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongkhtra) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongdatra) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongcon) ?></td>
                 <td class="fix"></td>
                 <td class="fix"></td>
                 <td class="fix"></td>
@@ -354,7 +366,9 @@
                 <th  class="fix">
                     <a class="sort" ></a>
                 </th>
-                
+                <th  class="fix">
+                    <a class="sort" ></a>
+                </th>
                 <th class="fix">
                     <a class="sort" ></a>
                 </th>
@@ -394,12 +408,13 @@
                 
                 <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $order_tire->customer_name; ?></td>
                 <td class="fix"  id="order_tire_number_<?php echo $order_tire->deposit_tire_id; ?>"></td>
-                <td class="fix" id="thu_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_in); ?></td> 
-                <td class="fix" id="chi_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_out); ?></td> 
+                <td class="fix text-right" id="thu_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_in); ?></td> 
+                <td class="fix text-right" id="chi_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_out); ?></td> 
                 <td class="fix"  id="discount_<?php echo $order_tire->deposit_tire_id; ?>"></td>
+                <td class="fix"  id="warranty_<?php echo $order_tire->deposit_tire_id; ?>"></td>
                 <td style="font-weight:bold" class="fix"  id="total_<?php echo $order_tire->deposit_tire_id; ?>"></td>
-                <td class="fix"  id="pay_money_<?php echo $order_tire->deposit_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/paydeposit/'.$order_tire->daily.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
-                <td class="fix error"  id="con_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_in-$pay_money-$order_tire->money_out); ?></td>
+                <td class="fix text-right"  id="pay_money_<?php echo $order_tire->deposit_tire_id; ?>"><a style="font-weight:bold;text-decoration:underline" class="pay_money" href="<?php echo $this->url('tiredebit/paydeposit/'.$order_tire->daily.'/'.$order_tire->customer.'/customer/'.strtotime($ketthuc)); ?>"><?php echo $lib->formatMoney($pay_money); ?></a></td>
+                <td class="fix error text-right"  id="con_<?php echo $order_tire->deposit_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->money_in-$pay_money-$order_tire->money_out); ?></td>
                 
                 <td class="fix" id="sale_<?php echo $order_tire->deposit_tire_id; ?>"></td> 
                  
@@ -409,11 +424,11 @@
         <tr style=" color:rgb(211, 11, 57); text-align: center; font-weight:bold;">
                 <td class="fix" colspan="5">Tổng cộng</td>
                 <td class="fix"></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongthu) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongchi) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongthu) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongchi) ?></td>
                 <td class="fix" colspan="2"></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongcantru) ?></td>
-                <td class="fix"><?php echo $lib->formatMoney($tongcon) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongcantru) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongcon) ?></td>
                 <td class="fix"></td>
                 <td class="fix"></td>
             </tr>
@@ -452,7 +467,9 @@
                 <th  class="fix">
                     <a class="sort" ></a>
                 </th>
-                
+                <th  class="fix">
+                    <a class="sort" ></a>
+                </th>
                 <th class="fix">
                     <a class="sort" ></a>
                 </th>
@@ -488,10 +505,11 @@
                 
                 <td class="fix" data="<?php echo $pay->customer; ?>"  id="customer_<?php echo $pay->pay_id; ?>"><?php echo $pay->customer_name; ?></td>
                 <td class="fix"  id="pay_number_<?php echo $pay->pay_id; ?>"></td>
-                <td class="fix" id="chi_<?php echo $pay->pay_id; ?>"><?php echo $lib->formatMoney($pay->money); ?></td> 
+                <td class="fix text-right" id="chi_<?php echo $pay->pay_id; ?>"><?php echo $lib->formatMoney($pay->money); ?></td> 
                 <td class="fix" id="thu_<?php echo $pay->pay_id; ?>"></td> 
                 
                 <td class="fix"  id="discount_<?php echo $pay->pay_id; ?>"></td>
+                <td class="fix"  id="warranty_<?php echo $pay->pay_id; ?>"></td>
                 <td style="font-weight:bold" class="fix"  id="total_<?php echo $pay->pay_id; ?>"></td>
                 <td class="fix"  id="pay_money_<?php echo $pay->pay_id; ?>"></td>
                 <td class="fix error"  id="con_<?php echo $pay->pay_id; ?>"></td>
@@ -505,7 +523,8 @@
                 <td class="fix" colspan="5">Tổng cộng</td>
                 <td class="fix"></td>
                 
-                <td class="fix"><?php echo $lib->formatMoney($tongchi) ?></td>
+                <td class="fix text-right"><?php echo $lib->formatMoney($tongchi) ?></td>
+                <td class="fix"></td>
                 <td class="fix"></td>
                 <td class="fix"></td>
                 <td class="fix"></td>

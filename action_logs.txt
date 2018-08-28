@@ -8077,3 +8077,27 @@ bxep: 6x14 = 84k-5-4--1484000
 
 22/08/2018 10:47:58|admincmg|curricular|Array|curricular|
 
+28/08/2018 13:19:32|admincmg|add|1814|order_tire|2-1535407200-13-1-313-1-1----------0-0-0--100000-10-454545-1-50000--1534888800-4850000-1-0-1
+
+28/08/2018 13:19:47|admincmg|edit|approve|1814|order_tire|
+
+28/08/2018 13:55:40|admincmg|lock|1814|ordertire|0
+
+28/08/2018 13:58:11|admincmg|edit|warranty||order_tire|
+
+28/08/2018 13:58:49|admincmg|edit|warranty||order_tire|
+
+28/08/2018 13:58:55|admincmg|edit|warranty||order_tire|
+
+28/08/2018 13:59:01|admincmg|edit|warranty||order_tire|
+
+28/08/2018 14:00:03|admincmg|edit|code|1814|order_tire|
+
+28/08/2018 14:00:10|admincmg|edit|exstock|1814|order_tire|
+
+28/08/2018 14:00:23|admincmg|lock|1814|ordertire|0
+
+28/08/2018 14:00:29|admincmg|edit|warranty||order_tire|
+
+28/08/2018 14:00:44|admincmg|edit|warranty||order_tire|
+

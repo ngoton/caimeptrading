@@ -289,7 +289,25 @@
                         </strong></span></td>
                 </tr>
                 <?php } ?>
-                <?php if (($orders->check_price_vat!=1 && $orders->vat>0) || ($orders->discount+$orders->reduce != 0)) { ?>
+                <?php if ($orders->warranty != 0) {
+                    $tong -= ($orders->warranty);
+                ?>
+                <tr height="22" style="height:16.5pt">
+                    <td class="xl68" colspan="3" height="22" style="border: 1px solid;height: 16.5pt; text-align: center;">
+                        <span style="font-size:14px;"><strong>Bảo hành</strong></span></td>
+                    <td class="xl68" style="border: 1px solid; border-left: none; text-align: center;">
+                        <span style="font-size:14px;"><strong></strong></span></td>
+                    <td class="xl70" style="border: 1px solid; border-left: none; text-align: center;">
+                        <span style="font-size:14px;"><strong><br>
+                        </strong></span></td>
+                    <td class="xl70" style="border: 1px solid; border-left: none; text-align: right; padding-right: 5px">
+                        <span style="font-size:14px;"><strong><?php echo $lib->formatMoney($orders->warranty) ?></strong></span></td>
+                    <td class="xl70" style="border: 1px solid; border-left: none; text-align: center;">
+                        <span style="font-size:14px;"><strong><br>
+                        </strong></span></td>
+                </tr>
+                <?php } ?>
+                <?php if (($orders->check_price_vat!=1 && $orders->vat>0) || ($orders->discount+$orders->reduce != 0) || ($orders->warranty != 0)) { ?>
                 <tr height="22" style="height:16.5pt">
                     <td class="xl68" colspan="3" height="22" style="border: 1px solid;height: 16.5pt; text-align: center;">
                         <span style="font-size:14px;"><strong>Tổng cộng</strong></span></td>

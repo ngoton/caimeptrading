@@ -131,7 +131,9 @@ elseif ($order_by == 'order_tire_number')
         <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','discount','<?php echo $url_order ?>')">Trừ giảm <?php if ($order_by == 'discount'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
-        
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','warranty','<?php echo $url_order ?>')">BH <?php if ($order_by == 'warranty'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
         <th class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','total','<?php echo $url_order ?>')">KH phải trả <?php if ($order_by == 'total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
@@ -162,7 +164,7 @@ elseif ($order_by == 'order_tire_number')
     
    </thead>
    <tbody>
-    <?php $tongsl = 0; $tongthu=0; $tongthue=0; $tonggiam=0; $tongtra=0; $tongchiphi=0; ?>
+    <?php $tongsl = 0; $tongthu=0; $tongthue=0; $tonggiam=0; $tongtra=0; $tongchiphi=0; $tongbh=0; ?>
 
     <?php foreach ($group_order as $key=>$value) { ?>
         <tr style="font-weight: bold;" class="show_order" data="<?php echo $key; ?>">
@@ -171,9 +173,10 @@ elseif ($order_by == 'order_tire_number')
             <td class="fix"><?php echo '('.count($value['order']).') ĐH'; ?></td>
             <td class="fix"><a target="_blank" href="<?php echo $this->url('customer/index/'.$key); ?>"><?php echo $value['customer']; ?></a></td>
             <td class="fix text-right"><?php echo $value['sl']; ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($value['total']-$value['vat']+$value['discount']); ?></td>
+            <td class="fix text-right"><?php echo $lib->formatMoney($value['total']-$value['vat']+$value['discount']+$value['warranty']); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($value['vat']); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($value['discount']); ?></td>
+            <td class="fix text-right"><?php echo $lib->formatMoney($value['warranty']); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($value['total']); ?></td>
             <td class="fix" colspan="8"></td>
         </tr>
@@ -182,9 +185,10 @@ elseif ($order_by == 'order_tire_number')
             <?php
 
             $tongsl += $order_tire->order_tire_number; 
-            $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce; 
+            $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty; 
             $tongthue += $order_tire->vat; 
             $tonggiam += $order_tire->discount+$order_tire->reduce; 
+            $tongbh += $order_tire->warranty; 
             $tongtra += $order_tire->total;
             $tongchiphi += $order_tire->order_cost;
 
@@ -256,17 +260,20 @@ elseif ($order_by == 'order_tire_number')
             </td>
             <td class="fix text-right" id="thu_<?php echo $order_tire->order_tire_id; ?>">
                 <a  style="font-weight:bold;text-decoration:underline" href="<?php echo $this->url('ordertire/getDetailOrder?order='.$order_tire->order_tire_id); ?>"  class="detail_order"><i class="fa fa-external-link"></i></a>   
-                <?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce); ?>
+                <?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty); ?>
             </td> 
             <td class="fix text-right"  id="vat_<?php echo $order_tire->order_tire_id; ?>">
                 <b>
-                <a class="order_vat" tabindex="<?php echo $lib->formatMoney($order_tire->vat_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce)); ?>" title="<?php echo $order_tire->check_price_vat>0?1:0; ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></a>
+                <a class="order_vat" tabindex="<?php echo $lib->formatMoney($order_tire->vat_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce+$order_tire->warranty):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty)); ?>" title="<?php echo $order_tire->check_price_vat>0?1:0; ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></a>
                 </b>
                 <br>
                 <a style="text-decoration:underline" class="vat_list" data="<?php echo $order_tire->order_tire_id ?>" ><i class="fa fa-file-text-o"></i> HĐ</a>
             </td>
             <td class="fix text-right"  id="discount_<?php echo $order_tire->order_tire_id; ?>">
                 <a class="order_discount" href="<?php echo $this->url('ordertire/listdiscount/'.$order_tire->order_tire_id.'/'.$order_tire->sale_lock); ?>" ><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></a>
+            </td>
+            <td class="fix text-right"  id="warranty_<?php echo $order_tire->order_tire_id; ?>">
+                <a class="order_warranty" tabindex="<?php echo $lib->formatMoney($order_tire->warranty_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce+$order_tire->warranty):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty)); ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>" ><?php echo $lib->formatMoney($order_tire->warranty); ?></a>
             </td>
             <td class="fix masterTooltip text-right"  id="total_<?php echo $order_tire->order_tire_id; ?>" <?php echo 'title="Giảm giá '.$giam.'%"'; ?> ><?php echo $lib->formatMoney($order_tire->total); ?><br>
                 <a style="text-decoration:underline" class="customer" href="<?php echo $this->url('tiredebit/customer/'.$order_tire->customer.'/'.strtotime(date('d-m-Y'))); ?>"><i class="fa fa-search-plus"></i>Công nợ</a></td>
@@ -361,9 +368,10 @@ elseif ($order_by == 'order_tire_number')
         if($order_tire->order_tire_status==1 || !array_key_exists($order_tire->customer, $group_order)){
 
         $tongsl += $order_tire->order_tire_number; 
-        $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce; 
+        $tongthu += $order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty; 
         $tongthue += $order_tire->vat; 
         $tonggiam += $order_tire->discount+$order_tire->reduce; 
+        $tongbh += $order_tire->warranty; 
         $tongtra += $order_tire->total;
         $tongchiphi += $order_tire->order_cost;
 
@@ -435,17 +443,20 @@ elseif ($order_by == 'order_tire_number')
             </td>
             <td class="fix text-right" id="thu_<?php echo $order_tire->order_tire_id; ?>">
                 <a  style="font-weight:bold;text-decoration:underline" href="<?php echo $this->url('ordertire/getDetailOrder?order='.$order_tire->order_tire_id); ?>"  class="detail_order"><i class="fa fa-external-link"></i></a> 
-                <?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce); ?>
+                <?php echo $lib->formatMoney($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty); ?>
             </td> 
             <td class="fix text-right"  id="vat_<?php echo $order_tire->order_tire_id; ?>">
                 <b>
-                <a class="order_vat" tabindex="<?php echo $lib->formatMoney($order_tire->vat_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce)); ?>" title="<?php echo $order_tire->check_price_vat>0?1:0; ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></a>
+                <a class="order_vat" tabindex="<?php echo $lib->formatMoney($order_tire->vat_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce+$order_tire->warranty):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty)); ?>" title="<?php echo $order_tire->check_price_vat>0?1:0; ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>"><?php echo $lib->formatMoney($order_tire->vat); ?></a>
                 </b>
                 <br>
                 <a style="text-decoration:underline" class="vat_list" data="<?php echo $order_tire->order_tire_id ?>" ><i class="fa fa-file-text-o"></i> HĐ</a>
             </td>
             <td class="fix text-right"  id="discount_<?php echo $order_tire->order_tire_id; ?>">
                 <a class="order_discount" href="<?php echo $this->url('ordertire/listdiscount/'.$order_tire->order_tire_id.'/'.$order_tire->sale_lock); ?>" ><?php echo $lib->formatMoney($order_tire->discount+$order_tire->reduce); ?></a>
+            </td>
+            <td class="fix text-right"  id="warranty_<?php echo $order_tire->order_tire_id; ?>">
+                <a class="order_warranty" tabindex="<?php echo $lib->formatMoney($order_tire->warranty_percent); ?>" alt="<?php echo $lib->formatMoney($order_tire->check_price_vat>0?($order_tire->total+$order_tire->discount+$order_tire->reduce+$order_tire->warranty):($order_tire->total-$order_tire->vat+$order_tire->discount+$order_tire->reduce+$order_tire->warranty)); ?>" value="<?php echo $order_tire->sale_lock ?>" data="<?php echo $order_tire->order_tire_id; ?>" ><?php echo $lib->formatMoney($order_tire->warranty); ?></a>
             </td>
             <td class="fix masterTooltip text-right"  id="total_<?php echo $order_tire->order_tire_id; ?>" <?php echo 'title="Giảm giá '.$giam.'%"'; ?> ><?php echo $lib->formatMoney($order_tire->total); ?><br>
                 <a style="text-decoration:underline" class="customer" href="<?php echo $this->url('tiredebit/customer/'.$order_tire->customer.'/'.strtotime(date('d-m-Y'))); ?>"><i class="fa fa-search-plus"></i>Công nợ</a></td>
@@ -540,6 +551,7 @@ elseif ($order_by == 'order_tire_number')
             <td class="fix text-right"><?php echo $lib->formatMoney($tongthu); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongthue); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tonggiam); ?></td>
+            <td class="fix text-right"><?php echo $lib->formatMoney($tongbh); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongtra); ?></td>
             <td class="fix text-right"><?php echo $lib->formatMoney($tongchiphi); ?></td>
             <td class="fix" colspan="7" ></td>
@@ -780,7 +792,27 @@ $this->helper('slidePaginator');
         </label> 
     </form>
 </div>
-
+<div id="dialogContent13" title="Bảo hành">
+    
+    
+    <form action="#" method="post" id="editForm9">
+        
+        
+        <label>
+            <span class="add-on"><i class="icon-retweet" ></i></span>
+            <span>Bảo hành(%): </span> <br>
+            <input type="text" id="i_warranty_percent" name="i_warranty_percent" value="" required="required" />
+            <input type="hidden" id="i_order13" name="i_order13" value="" required="required" />
+            <input type="hidden" id="i_thu13" name="i_thu13" value="" required="required" />
+        </label>
+        <label>
+            <span class="add-on"><i class="icon-ok-circle" ></i></span>
+            <span>Số tiền: </span> <br>
+            <input type="text" class="numbers" id="i_warranty" name="i_warranty" value="" required="required" />
+        </label>
+        
+    </form>
+</div>
 <script type="text/javascript">
 var x = "<?php echo $limit ?>";
 $('#chonloc option[value='+x+']').attr('selected','selected');
@@ -807,6 +839,83 @@ $('.change_delivery')
         $( "#dialogContent12" ).dialog( "open" )
     });
 
+
+$('.order_warranty')
+    //.button({ icons: { primary: "ui-icon-document" }})
+    .click(function() {
+        
+        $('#i_order13').val($(this).attr('data'));
+        $('#i_warranty').val($(this).text());
+        $('#i_warranty_percent').val($(this).attr('tabindex'));
+
+        $('#i_thu13').val($(this).attr('alt'));
+        
+        
+
+        if ($(this).attr('value') == 1) {
+            $('#i_warranty').attr('disabled',true);
+            $('#i_warranty_percent').attr('disabled',true);
+        }
+        else{
+            $('#i_warranty').attr('disabled',false);
+            $('#i_warranty_percent').attr('disabled',false);
+        }
+
+        $( "#dialogContent13" ).dialog( "open" );
+
+        $('#i_warranty_percent').keyup(function(){
+            var val = $(this).val(); 
+            var thanhtien = parseInt($('#i_thu13').val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+            $('#i_warranty').val(Math.round(thanhtien*val/100));
+            
+            
+            $('#i_warranty').val(function(index, value) {
+                return value
+                  .replace(/\D/g, "")
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+            });
+        });
+
+        $('#i_warranty').keyup(function(){
+            var val = parseInt($(this).val().replace(/[^0-9\.-]+/g,""));
+            var thanhtien = parseInt($("#i_thu13").val().replace(/[^0-9\.-]+/g,""));
+            
+            $('#i_warranty_percent').val(Math.round(val*100/thanhtien));
+            
+        });
+
+    });
+
+
+//set up the dialog box.
+$( "#dialogContent13" ).dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+        OK: function() {
+            var id = $('#i_order13').val();
+            var warranty_percent = $('#i_warranty_percent').val();
+            var warranty = $('#i_warranty').val();
+            var thu = $('#i_thu13').val();
+           
+                $.post("<?php echo BASE_URL ?>/ordertire/editwarranty", {data: id, warranty_percent: warranty_percent, warranty: warranty, thu: thu},
+                   function(data){
+                    $("html, body").animate({ scrollTop: 0 }, 100);
+                    setTimeout(function() {
+                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                      }, 200);
+                   
+                   }); 
+              
+            $( this ).dialog( "close" );
+        },        
+        Cancel: function() {
+            $( this ).dialog( "close" );
+        }
+    }
+});
 
 //set up the dialog box.
 $( "#dialogContent12" ).dialog({

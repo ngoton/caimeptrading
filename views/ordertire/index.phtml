@@ -177,6 +177,8 @@
             <input style="width:100px" type="text" class="numbers" name="vat_percent" id="vat_percent" placeholder="VAT (%)" />
             <input style="width:350px" type="text" class="number" name="vat" id="vat" placeholder="VAT" />
             <input type="checkbox" disabled name="check_price_vat" id="check_price_vat" value="1"> Giá đã có VAT
+            <input style="width:100px" type="text" class="numbers" name="warranty_percent" id="warranty_percent" placeholder="Bảo hành (%)" />
+            <input style="width:450px" type="text" class="number" name="warranty" id="warranty" placeholder="Giảm bảo hành" />
             <input type="text" class="iform ngay" name="delivery_date" id="delivery_date" placeholder="Ngày giao hàng" />
             <input type="text" class="iform ngay" name="due_date" id="due_date" placeholder="Hạn thanh toán" required="required" />
             <input type="hidden" id="max_discount" value="0">
@@ -211,15 +213,21 @@
                     <td class="fix"></td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="fix">Chiết khấu</td>
-                    <td colspan="2" class="fix"></td>
-                    <td class="fix"><span id="tong_ck"></span></td>
-                </tr>
-                <tr>
                     <td colspan="4" class="fix">VAT</td>
                     <td colspan="2" class="fix"><span id="tong_vat_percent">0</span>%</td>
                     <td class="fix"><span id="tong_vat"></span></td>
                 </tr>
+                <tr>
+                    <td colspan="4" class="fix">Chiết khấu</td>
+                    <td colspan="2" class="fix"></td>
+                    <td class="fix"><span id="tong_ck"></span></td>
+                </tr>
+                <tr class="show_warranty" style="display: none">
+                    <td colspan="4" class="fix">Bảo hành</td>
+                    <td colspan="2" class="fix"><span id="tong_warranty_percent">0</span>%</td>
+                    <td class="fix"><span id="tong_warranty"></span></td>
+                </tr>
+                
                 <tr style="font-weight:bold">
                     <td class="fix" colspan="4">Tổng thanh toán</td>
                     <td class="fix"><span id="tong_soluong"></span></td>
@@ -1097,8 +1105,8 @@ $('#check_price_vat').click(function(){
         var vat = 0;
         $('.tire_price').each(function() { 
             var p = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
-            var g = Math.round(p*val*0.1/1.1);
-            var v = g*0.1;
+            var g = p*val*0.1/1.1;
+            var v = Math.round(g*0.1);
             var n = p-v;
 
             var row = $(this).parent().parent().parent().parent().parent().parent();
@@ -1260,8 +1268,8 @@ $('#vat_percent').keyup(function(){
         var vat = 0;
         $('.tire_price_vat').each(function() { 
             var p = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
-            var g = Math.round(p*val*0.1/1.1);
-            var v = g*0.1;
+            var g = p*val*0.1/1.1;
+            var v = Math.round(g*0.1);
             var n = p-v;
 
             var row = $(this).parent().parent().parent().parent().parent().parent();
@@ -1306,6 +1314,37 @@ $('#vat_percent').keyup(function(){
     }
     else
         $('#check_price_vat').attr('disabled',false);
+
+    var val = parseFloat($('#warranty_percent').val()); 
+    var thanhtien = parseInt($('#thanhtien2').val().replace(/[^0-9\.-]+/g,"")) || 0;
+    var vat = parseInt($('#vat').val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+    $('#warranty').val(Math.round((thanhtien+vat)*val/100));
+    
+    
+    $('#warranty').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+});
+
+$('#warranty_percent').keyup(function(){
+    var val = parseFloat($(this).val()); 
+    var thanhtien = parseInt($('#thanhtien2').val().replace(/[^0-9\.-]+/g,"")) || 0;
+    var vat = parseInt($('#vat').val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+    $('#warranty').val(Math.round((thanhtien+vat)*val/100));
+    
+    
+    $('#warranty').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+
 });
 
 $('#discount').keyup(function(){
@@ -1375,14 +1414,22 @@ $('#last_next').click(function(){
         var giam = parseInt($('#reduce').val().replace(/[^0-9\.-]+/g,"")) || 0;
         var vat = parseInt($('#vat').val().replace(/[^0-9\.-]+/g,"")) || 0;
         var vat_percent = parseFloat($('#vat_percent').val());
+        var warranty = parseInt($('#warranty').val().replace(/[^0-9\.-]+/g,"")) || 0;
+        var warranty_percent = parseFloat($('#warranty_percent').val());
         var thanhtien = parseInt($('#thanhtien2').val().replace(/[^0-9\.-]+/g,"")) || 0;
         
 
         $('#tong_ck').text(chietkhau+giam);
         $('#tong_vat').text(vat);
         $('#tong_vat_percent').text(vat_percent);
-        $('#tong_thanhtoan').text(thanhtien+vat-chietkhau-giam);
+        $('#tong_warranty').text(warranty);
+        $('#tong_warranty_percent').text(warranty_percent);
+        $('#tong_thanhtoan').text(thanhtien+vat-chietkhau-giam-warranty);
 
+        $('.show_warranty').hide();
+        if (warranty>0) {
+        	$('.show_warranty').show();
+        }
 
         $('#tong_soluong').text(soluong);
 
@@ -1393,6 +1440,12 @@ $('#last_next').click(function(){
             ;
         });
         $('#tong_vat').text(function(index, value) {
+            return value
+              .replace(/\D/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+        });
+        $('#tong_warranty').text(function(index, value) {
             return value
               .replace(/\D/g, "")
               .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -1700,6 +1753,27 @@ $('#vat').keyup(function(){
     }
     else
         $('#check_price_vat').attr('disabled',false);
+
+    var val = parseFloat($('#warranty_percent').val()); 
+    var thanhtien = parseInt($('#thanhtien2').val().replace(/[^0-9\.-]+/g,"")) || 0;
+    var vat = parseInt($('#vat').val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+    $('#warranty').val(Math.round((thanhtien+vat)*val/100));
+    
+    
+    $('#warranty').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+});
+$('#warranty').keyup(function(){
+    var val = parseInt($(this).val().replace(/[^0-9\.-]+/g,""));
+    var thanhtien = parseInt($("#thanhtien2").val().replace(/[^0-9\.-]+/g,""));
+    var vat = parseInt($("#vat").val().replace(/[^0-9\.-]+/g,""));
+
+    $('#warranty_percent').val(Math.round((val*100/(thanhtien+vat))*100)/100);
 });
 
 var pickerOpay2 = {
@@ -1782,6 +1856,8 @@ $("#msform").validate({
                     var reduce = $('#reduce').attr('value');
                     var vat_percent = $('#vat_percent').attr('value');
                     var vat = $('#vat').attr('value');
+                    var warranty_percent = $('#warranty_percent').attr('value');
+                    var warranty = $('#warranty').attr('value');
                     var delivery_date = $('#delivery_date').attr('value');
                     var due_date = $('#due_date').attr('value');
                     var total = $('#tong_thanhtoan').text();
@@ -1870,6 +1946,8 @@ $("#msform").validate({
                             reduce: reduce,
                             vat_percent: vat_percent,
                             vat: vat,
+                            warranty_percent: warranty_percent,
+                            warranty: warranty,
                             delivery_date: delivery_date,
                             due_date: due_date,
                             total: total,

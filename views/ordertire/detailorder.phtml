@@ -70,6 +70,15 @@
             
         </tr>
     <?php endforeach; 
+    if ($order_tire->check_price_vat!=1) {
+    ?>
+    <tr>
+      <td class="fix text-center" colspan="4">VAT</td>
+      <td class="fix text-center" colspan="2" ><?php echo $order_tire->vat_percent.'%'; ?></td>
+      <td class="fix text-right" ><?php echo $lib->formatMoney($order_tire->vat); ?></td>
+    </tr>
+    <?php
+    }
     $ck = $order_tire->discount+$order_tire->reduce;
     if ($ck!=0) {
     ?>
@@ -80,12 +89,12 @@
     </tr>
     <?php
     }
-    if ($order_tire->check_price_vat!=1) {
+    if ($order_tire->warranty!=0) {
     ?>
     <tr>
-      <td class="fix text-center" colspan="4">VAT</td>
-      <td class="fix text-center" colspan="2" ><?php echo $order_tire->vat_percent.'%'; ?></td>
-      <td class="fix text-right" ><?php echo $lib->formatMoney($order_tire->vat); ?></td>
+      <td class="fix text-center" colspan="4">Bảo hành</td>
+      <td class="fix" colspan="2" ></td>
+      <td class="fix text-right" ><?php echo $lib->formatMoney($order_tire->warranty); ?></td>
     </tr>
     <?php
     }

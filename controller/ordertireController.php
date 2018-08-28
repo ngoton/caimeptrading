@@ -722,6 +722,7 @@ Class ordertireController Extends baseController {
                     $group_order[$tire->customer]['sl'] = isset($group_order[$tire->customer]['sl'])?$group_order[$tire->customer]['sl']+$tire->order_tire_number:$tire->order_tire_number;
                     $group_order[$tire->customer]['vat'] = isset($group_order[$tire->customer]['vat'])?$group_order[$tire->customer]['vat']+$tire->vat:$tire->vat;
                     $group_order[$tire->customer]['discount'] = isset($group_order[$tire->customer]['discount'])?$group_order[$tire->customer]['discount']+$tire->discount+$tire->reduce:$tire->discount+$tire->reduce;
+                    $group_order[$tire->customer]['warranty'] = isset($group_order[$tire->customer]['warranty'])?$group_order[$tire->customer]['warranty']+$tire->warranty:$tire->warranty;
                     $group_order[$tire->customer]['total'] = isset($group_order[$tire->customer]['total'])?$group_order[$tire->customer]['total']+$tire->total:$tire->total;
                 }
             }
@@ -1871,6 +1872,8 @@ Class ordertireController Extends baseController {
                 'reduce' => trim(str_replace(',','',$_POST['reduce'])),
                 'vat_percent' => $_POST['vat_percent'],
                 'vat' => trim(str_replace(',','',$_POST['vat'])),
+                'warranty_percent' => $_POST['warranty_percent'],
+                'warranty' => trim(str_replace(',','',$_POST['warranty'])),
                 'delivery_date' => strtotime($_POST['delivery_date']),
                 'due_date' => strtotime($_POST['due_date']),
                 'total' => trim(str_replace(',','',$_POST['total'])),
@@ -2391,7 +2394,8 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $total = $total - $discount;
+                        $warranty = round($total*$order_tire->warranty/100);
+                        $total = $total - $discount - $warranty;
 
 
                         $data_order = array(
@@ -2399,6 +2403,7 @@ Class ordertireController Extends baseController {
                             'total'=>$total,
                             'order_tire_number'=>$total_number,
                             'vat'=> $vat,
+                            'warranty'=>$warranty,
                         );
 
 
@@ -2525,13 +2530,15 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $total = $total - $discount;
+                        $warranty = round($total*$order_tire->warranty/100);
+                        $total = $total - $discount - $warranty;
 
                         $data_order = array(
                             'discount'=>$discount,
                             'total'=>$total,
                             'order_tire_number'=>$total_number,
                             'vat'=> $vat,
+                            'warranty'=>$warranty,
                         );
 
 
@@ -2696,7 +2703,7 @@ Class ordertireController Extends baseController {
                     $total_number = $total_number - $order_tire_list->tire_number;
                     $total = $total - $total_after;
 
-                    if ($order_tire->ck_ttn==1) {
+                    /*if ($order_tire->ck_ttn==1) {
                         $discount = $discount - ($total_after*0.02);
                         $total = $total + ($total_after*0.02);
                     }
@@ -2717,7 +2724,7 @@ Class ordertireController Extends baseController {
                             $discount = $discount - ($total_after*0.03);
                             $total = $total + ($total_after*0.03);
                         }
-                    }
+                    }*/
 
                     if ($order_tire->vat_percent > 0) {
                         $vat = $vat - ($total_after*$order_tire->vat_percent/100);
@@ -3470,6 +3477,62 @@ Class ordertireController Extends baseController {
 
         }
     }
+    public function listwarranty($id){
+        $this->view->disableLayout();
+        $this->view->data['lib'] = $this->lib;
+        $order_tire_model = $this->model->get('ordertireModel');
+        $order_tires = $order_tire_model->getTire($id);
+        $this->view->data['order_tires'] = $order_tires;
+        $this->view->data['lock'] = $this->registry->router->page;
+
+        $this->view->show('ordertire/listwarranty');
+    }
+    public function editwarranty(){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $order_tire_model = $this->model->get('ordertireModel');
+
+            $id = trim($_POST['data']);
+            $warranty = trim(str_replace(',','',$_POST['warranty']));
+            $warranty_percent = trim($_POST['warranty_percent']);
+
+            $order = $order_tire_model->getTire($id);
+            $total = $order->total+$order->warranty-$warranty;
+
+            $data = array(
+                'warranty'=>$warranty,
+                'warranty_percent'=>$warranty_percent,
+                'total'=>$total,
+            );
+
+            $order_tire_model->updateTire($data,array('order_tire_id'=>$id));
+
+            $receivable_model = $this->model->get('receivableModel');
+            $obtain_model = $this->model->get('obtainModel');
+            
+            $receivable_data = array(
+                'money' => $total,
+            );
+
+            $receivable_model->updateCosts($receivable_data,array('order_tire'=>$id));
+
+            $obtain_data = array(
+                'money' => $total,
+            );
+
+            $obtain_model->updateObtain($obtain_data,array('order_tire'=>$id,'money'=>$order->total));
+
+            echo "Cập nhật thành công";
+
+                        date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|warranty|".$_POST['order_tire']."|order_tire|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+
+        }
+    }
     public function editorder(){
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $order_tire_list_model = $this->model->get('ordertirelistModel');
@@ -3529,13 +3592,15 @@ Class ordertireController Extends baseController {
                     }
 
                     $discount = $order_tire->discount+$order_tire->reduce;
-                    $total = $total - $discount;
+                    $warranty = round($total*$order_tire->warranty/100);
+                    $total = $total - $discount - $warranty;
 
 
                     $data_order = array(
                         'total'=>$total,
                         'order_tire_number'=>$total_number,
                         'vat'=> $vat,
+                        'warranty'=>$warranty,
                     );
 
 
@@ -3652,12 +3717,14 @@ Class ordertireController Extends baseController {
                     }
 
                     $discount = $order_tire->discount+$order_tire->reduce;
-                    $total = $total - $discount;
+                    $warranty = round($total*$order_tire->warranty/100);
+                    $total = $total - $discount - $warranty;
 
                     $data_order = array(
                         'total'=>$total,
                         'order_tire_number'=>$total_number,
                         'vat'=> $vat,
+                        'warranty'=>$warranty,
                     );
 
 
@@ -4650,7 +4717,8 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $total = $total - $discount;
+                        $warranty = round($total*$order_tire->warranty/100);
+                        $total = $total - $discount - $warranty;
 
 
                         $data_order = array(
@@ -4658,6 +4726,7 @@ Class ordertireController Extends baseController {
                             'total'=>$total,
                             'order_tire_number'=>$total_number,
                             'vat'=> $vat,
+                            'warranty'=>$warranty,
                         );
 
 
@@ -6134,7 +6203,18 @@ Class ordertireController Extends baseController {
                        $hang++;
                   }
 
-                  if (($orders->check_price_vat!=1 && $orders->vat>0) || ($orders->discount+$orders->reduce != 0)) {
+                  if ($orders->warranty != 0) {
+                      $objPHPExcel->setActiveSheetIndex($index_worksheet)
+                        ->setCellValue('A'.($hang+1), 'Bảo hành')
+                       ->setCellValue('F'.($hang+1), ($orders->warranty));
+
+                       $tong -= ($orders->warranty);
+
+                       $objPHPExcel->getActiveSheet()->mergeCells('A'.($hang+1).':C'.($hang+1));
+                       $hang++;
+                  }
+
+                  if (($orders->check_price_vat!=1 && $orders->vat>0) || ($orders->discount+$orders->reduce != 0) || ($orders->warranty != 0)) {
                       $objPHPExcel->setActiveSheetIndex($index_worksheet)
                         ->setCellValue('A'.($hang+1), 'Tổng cộng')
                        ->setCellValue('F'.($hang+1), $tong);

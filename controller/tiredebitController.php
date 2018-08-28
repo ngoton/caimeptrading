@@ -936,7 +936,7 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValue('H' . $hang, '=F'.$hang.'*G'.$hang)
 
-                                    ->setCellValue('I' . $hang, $row->discount+$row->reduce)
+                                    ->setCellValue('I' . $hang, $row->discount+$row->reduce+$row->warranty)
 
                                     ->setCellValue('J' . $hang, $receivable->pay_money);
 
@@ -994,7 +994,7 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValue('H' . $hang, '=F'.$hang.'*G'.$hang)
 
-                                    ->setCellValue('I' . $hang, $row->discount+$row->reduce)
+                                    ->setCellValue('I' . $hang, $row->discount+$row->reduce+$row->warranty)
 
                                     ->setCellValue('J' . $hang, $receivable->pay_money);
 
@@ -1054,7 +1054,7 @@ Class tiredebitController Extends baseController {
 
                                 ->setCellValue('H' . $hang, '=F'.$hang.'*G'.$hang)
 
-                                ->setCellValue('I' . $hang, $row->discount+$row->reduce)
+                                ->setCellValue('I' . $hang, $row->discount+$row->reduce+$row->warranty)
 
                                 ->setCellValue('J' . $hang, $receivable->pay_money);
 

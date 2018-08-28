@@ -463,14 +463,14 @@ Class vatController Extends baseController {
         foreach ($items as $item) {
             $lists = $item_list_model->getAllTire(array('where'=>'order_tire='.$item->order_tire_id),array('table'=>'tire_brand,tire_size,tire_pattern','where'=>'tire_brand=tire_brand_id AND tire_size=tire_size_id AND tire_pattern=tire_pattern_id'));
 
-            $str .= '<tr style="font-weight:bold" class="tr" data="'.$item->order_tire_id.'"><td><input name="check[]" type="checkbox" class="checkbox" value="'.$item->order_tire_id.'" data="'.$item->order_tire_id.'"></td><td class="fix">'.$this->lib->hien_thi_ngay_thang($item->delivery_date).'</td><td class="fix">'.$item->order_number.'</td><td class="fix">'.$item->customer_name.'</td><td class="fix">'.$item->order_tire_number.'</td><td class="fix">'.$this->lib->formatMoney($item->total-$item->vat+$item->discount+$item->reduce).'</td><td class="fix">'.$this->lib->formatMoney($item->vat).'</td><td class="fix">'.$this->lib->formatMoney($item->total).'</td></tr>';
+            $str .= '<tr style="font-weight:bold" class="tr" data="'.$item->order_tire_id.'"><td><input name="check[]" type="checkbox" class="checkbox" value="'.$item->order_tire_id.'" data="'.$item->order_tire_id.'"></td><td class="fix">'.$this->lib->hien_thi_ngay_thang($item->delivery_date).'</td><td class="fix">'.$item->order_number.'</td><td class="fix">'.$item->customer_name.'</td><td class="fix">'.$item->order_tire_number.'</td><td class="fix">'.$this->lib->formatMoney($item->total-$item->vat+$item->discount+$item->reduce+$item->warranty).'</td><td class="fix">'.$this->lib->formatMoney($item->vat).'</td><td class="fix">'.$this->lib->formatMoney($item->total).'</td></tr>';
 
             $customer = $item->customer_name;
             $company = str_replace("\'", "'", $item->company_name);
             $mst = $item->mst;
             $dc = str_replace("\'", "'", $item->customer_address);
 
-            $trugiam = $item->discount+$item->reduce;
+            $trugiam = $item->discount+$item->reduce+$item->warranty;
             if ($trugiam<0) {
                 $trugiam = 0;
             }
