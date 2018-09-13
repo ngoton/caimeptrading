@@ -263,31 +263,36 @@ Class checksalaryController Extends baseController {
                 $total_order_day[date('d-m-Y',$order_tire->delivery_date)][$order_tire->customer] = 1; //Đơn trong ngày của KH
 
                 if ($total_order_before>0) {
-                    if ($total_order_before<20) {
+                    $choose = $total_order_before;
+                    if ($order_tire->order_tire_number > $total_order_before) {
+                        $choose = $order_tire->order_tire_number;
+                    }
+
+                    if ($choose<20) {
                         $column = "tire_retail";
                     }
-                    else if ($total_order_before<40) {
+                    else if ($choose<40) {
                         $column = "tire_20";
                     }
-                    else if ($total_order_before<60) {
+                    else if ($choose<60) {
                         $column = "tire_40";
                     }
-                    else if ($total_order_before<80) {
+                    else if ($choose<80) {
                         $column = "tire_60";
                     }
-                    else if ($total_order_before<100) {
+                    else if ($choose<100) {
                         $column = "tire_80";
                     }
-                    else if ($total_order_before<120) {
+                    else if ($choose<120) {
                         $column = "tire_100";
                     }
-                    else if ($total_order_before<150) {
+                    else if ($choose<150) {
                         $column = "tire_120";
                     }
-                    else if ($total_order_before<180) {
+                    else if ($choose<180) {
                         $column = "tire_150";
                     }
-                    else if ($total_order_before<220) {
+                    else if ($choose<220) {
                         $column = "tire_180";
                     }
                     else {
@@ -598,31 +603,36 @@ Class checksalaryController Extends baseController {
                 }
 
                 if ($total_order_before>0) {
-                    if ($total_order_before<20) {
+                    $choose = $total_order_before;
+                    if ($order_tire->order_tire_number > $total_order_before) {
+                        $choose = $order_tire->order_tire_number;
+                    }
+                    
+                    if ($choose<20) {
                         $column = "tire_retail";
                     }
-                    else if ($total_order_before<40) {
+                    else if ($choose<40) {
                         $column = "tire_20";
                     }
-                    else if ($total_order_before<60) {
+                    else if ($choose<60) {
                         $column = "tire_40";
                     }
-                    else if ($total_order_before<80) {
+                    else if ($choose<80) {
                         $column = "tire_60";
                     }
-                    else if ($total_order_before<100) {
+                    else if ($choose<100) {
                         $column = "tire_80";
                     }
-                    else if ($total_order_before<120) {
+                    else if ($choose<120) {
                         $column = "tire_100";
                     }
-                    else if ($total_order_before<150) {
+                    else if ($choose<150) {
                         $column = "tire_120";
                     }
-                    else if ($total_order_before<180) {
+                    else if ($choose<180) {
                         $column = "tire_150";
                     }
-                    else if ($total_order_before<220) {
+                    else if ($choose<220) {
                         $column = "tire_180";
                     }
                     else {

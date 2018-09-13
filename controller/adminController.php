@@ -784,6 +784,143 @@ Class adminController Extends baseController {
         }
         echo json_encode($arr);
     }
+    public function checkorder48h(){
+        $order_tire_model = $this->model->get('ordertireModel');
+        $order_tire_list_model = $this->model->get('ordertirelistModel');
+        $tire_buy_model = $this->model->get('tirebuyModel');
+        $tire_sale_model = $this->model->get('tiresaleModel');
+        $today = date('d-m-Y');
+        $before = date('d-m-Y', strtotime($today. ' - 2 days'));
+
+        $orders = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status=0) AND (order_number IS NULL OR order_number = "") AND order_tire_date <= '.strtotime($before)));
+        $arr = array();
+        foreach ($orders as $order) {
+            $ton = 0;
+            $order_lists = $order_tire_list_model->getAllTire(array('where'=>'order_tire='.$order->order_tire_id));
+            foreach ($order_lists as $order_list) {
+                $tire_buys = $tire_buy_model->getAllTire(array('where'=>'tire_buy_brand = '.$order_list->tire_brand.' AND tire_buy_size = '.$order_list->tire_size.' AND tire_buy_pattern = '.$order_list->tire_pattern));
+                foreach ($tire_buys as $tire) {
+                    $ton += $tire->tire_buy_volume;
+                }
+
+                $tire_sales = $tire_sale_model->getAllTire(array('where'=>'tire_brand = '.$order_list->tire_brand.' AND tire_size = '.$order_list->tire_size.' AND tire_pattern = '.$order_list->tire_pattern));
+                foreach ($tire_sales as $tire) {
+                    $ton -= $tire->volume;
+                }
+
+                $join = array('table'=>'order_tire','where'=>'order_tire != '.$order_list->order_tire.' AND order_tire=order_tire_id AND (order_tire_status IS NULL OR order_tire_status=0)');
+
+                $order_details = $order_tire_list_model->getAllTire(array('where'=>'tire_brand = '.$order_list->tire_brand.' AND tire_size = '.$order_list->tire_size.' AND tire_pattern = '.$order_list->tire_pattern),$join);
+                foreach ($order_details as $detail) {
+                    $ton -= $detail->tire_number;
+                }
+
+
+                if ($ton<50) {
+                    $arr[] = $order_list->order_tire_list_id;
+                }
+            }
+            
+            
+        }
+        
+        $tire_pattern_model = $this->model->get('tirepatternModel');
+        $tire_brand_model = $this->model->get('tirebrandModel');
+        $tire_size_model = $this->model->get('tiresizeModel');
+        $customer_model = $this->model->get('customerModel');
+
+        foreach ($arr as $value) {
+            $order_tire_list = $order_tire_list_model->getTire($value);
+
+            $order_tire = $order_tire_model->getTire($order_tire_list->order_tire);
+
+
+            $order_tire_list_model->deleteTire($value);
+
+            $order_lists = $order_tire_list_model->getAllTire(array('where'=>'order_tire='.$order_tire_list->order_tire));
+            $total_number = 0;
+            $total = 0;
+            $vat = 0;
+            foreach ($order_lists as $od) {
+                $total_number += $od->tire_number;
+                
+                if ($order_tire->check_price_vat == 1) {
+                    $p = $od->tire_price_vat;
+                    $v = round(($p*$order_tire->vat_percent*0.1)/1.1*0.1);
+                    $n = $p-$v;
+
+                    $vat += $v*$od->tire_number;
+                    $total += $od->tire_number*$od->tire_price_vat;
+                }
+                else{
+                    $vat += round($od->tire_number*$od->tire_price*$order_tire->vat_percent/100);
+                    $total += $od->tire_number*$od->tire_price+round($od->tire_number*$od->tire_price*$order_tire->vat_percent/100);
+                }
+            }
+
+            $discount = $order_tire->discount+$order_tire->reduce;
+            $total = $total - $discount;
+
+
+            $data_order = array(
+                'discount'=>$discount,
+                'total'=>$total,
+                'order_tire_number'=>$total_number,
+                'vat'=> $vat,
+            );
+
+
+            $order_tire_model->updateTire($data_order,array('order_tire_id'=>$order_tire_list->order_tire));
+
+            
+            if ($order_tire->id_order_agent>0) {
+                $customers = $customer_model->getCustomer($order_tire->customer);
+                // where are we posting to?
+                $url = $customers->customer_agent_link.'/ordertire/deleteagentorder';
+
+                // what post fields?
+                $fields = array(
+                    'tire_brand'=>$tire_brand_model->getTire($order_tire_list->tire_brand)->tire_brand_name,
+                    'tire_pattern'=>$tire_pattern_model->getTire($order_tire_list->tire_pattern)->tire_pattern_name,
+                    'tire_size'=>$tire_size_model->getTire($order_tire_list->tire_size)->tire_size_number,
+                   'id_order_tire' => $order_tire->id_order_agent,
+                   'id_order_vendor'=>$order_tire->order_tire_id,
+                   'link_agent' => BASE_URL,
+                   'total_number'=>$total_number,
+                    'total'=>$total,
+                );
+                // build the urlencoded data
+                $postvars = http_build_query($fields);
+
+                // open connection
+                $ch = curl_init();
+
+                // set the url, number of POST vars, POST data
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, count($fields));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                // execute post
+                $result = curl_exec($ch);
+
+                // close connection
+                curl_close($ch); 
+
+            }
+
+
+            echo "Xóa thành công";
+
+            date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+            $filename = "action_logs.txt";
+            $text = date('d/m/Y H:i:s')."|admin|"."delete"."|".$value."|order_tire_list|"."\n"."\r\n";
+            
+            $fh = fopen($filename, "a") or die("Could not open log file.");
+            fwrite($fh, $text) or die("Could not write file!");
+            fclose($fh);
+        }
+    }
 
 
 

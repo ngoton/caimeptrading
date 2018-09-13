@@ -94,7 +94,17 @@
     
   </script>
 
-      
+  <?php if(isset($_SESSION['user_logined'])){ ?>
+    <script type="text/javascript">
+      $.ajax({
+          url: '<?php echo BASE_URL ?>/admin/checkorder48h',
+          type: 'GET',
+          data: {},
+          success:function(data){
+          }
+      });
+    </script>
+  <?php } ?>    
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

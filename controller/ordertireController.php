@@ -767,31 +767,36 @@ Class ordertireController Extends baseController {
             $this_month[$tire->order_tire_id] = $total_order;
 
             if ($total_order_before>0) {
-                if ($total_order_before<20) {
+                $choose = $total_order_before;
+                if ($tire->order_tire_number > $total_order_before) {
+                    $choose = $tire->order_tire_number;
+                }
+
+                if ($choose<20) {
                     $column = "tire_retail";
                 }
-                else if ($total_order_before<40) {
+                else if ($choose<40) {
                     $column = "tire_20";
                 }
-                else if ($total_order_before<60) {
+                else if ($choose<60) {
                     $column = "tire_40";
                 }
-                else if ($total_order_before<80) {
+                else if ($choose<80) {
                     $column = "tire_60";
                 }
-                else if ($total_order_before<100) {
+                else if ($choose<100) {
                     $column = "tire_80";
                 }
-                else if ($total_order_before<120) {
+                else if ($choose<120) {
                     $column = "tire_100";
                 }
-                else if ($total_order_before<150) {
+                else if ($choose<150) {
                     $column = "tire_120";
                 }
-                else if ($total_order_before<180) {
+                else if ($choose<180) {
                     $column = "tire_150";
                 }
-                else if ($total_order_before<220) {
+                else if ($choose<220) {
                     $column = "tire_180";
                 }
                 else {
@@ -1663,66 +1668,7 @@ Class ordertireController Extends baseController {
             }
             $price['going'] = $dangve;
 
-            $sales = $tire_sale_model->queryTire('SELECT * FROM tire_sale WHERE customer = '.$customer.' AND tire_brand = '.$brand.' AND tire_size = '.$size.' AND tire_pattern = '.$pattern.' ORDER BY tire_sale_date DESC LIMIT 1');
-            if ($sales) {
-                foreach ($sales as $sale) {
-                    if ($sale->sell_price_vat > 0) {
-                        $price['price'] = $sale->sell_price_vat;
-                    }
-                    else{
-                        $price['price'] = $sale->sell_price;
-                    }
-                    
-                }
-            }
-            else{
-
-                $tire_price_discount_model = $this->model->get('tirepricediscountModel');
-                $data_q = array(
-                    'where' => 'tire_brand ='.$brand.' AND tire_size ='.$size.' AND tire_pattern ='.$pattern.' AND start_date <= '.strtotime(date('d-m-Y')).' AND (end_date IS NULL OR end_date >= '.strtotime(date('d-m-Y')).')  ORDER BY start_date DESC LIMIT 1',
-                );
-                $prices = $tire_price_discount_model->getAllTire($data_q);
-                foreach ($prices as $p) {
-                    $price['price'] = $p->tire_price;
-                }
-
-                if (!$prices) {
-                    
-
-                    $tire_brand = $tire_brand_model->getTire($brand);
-                    if ($tire_brand->tire_brand_name == "Aoteli" || $tire_brand->tire_brand_name == "Yatai" || $tire_brand->tire_brand_name == "Yatone" || $tire_brand->tire_brand_name == "Three-A") {
-                        $tire_brand_name = "Shengtai";
-                    }
-                    else if ($tire_brand->tire_brand_name == "Guangda" || $tire_brand->tire_brand_name == "Qiangwei") {
-                            $tire_brand_name = "Amberstone";
-                        }
-                    else{
-                        $tire_brand_name = $tire_brand->tire_brand_name;
-                    }
-
-                    $tire_size_number = $tire_size_model->getTire($size)->tire_size_number;
-                    $pattern_type = $tire_pattern_model->getTire($pattern)->tire_pattern_type;
-
-                    $tire_quotation_model = $this->model->get('tirequotationModel');
-                    $tire_quotation_brand_model = $this->model->get('tirequotationbrandModel');
-                    $tire_quotation_size_model = $this->model->get('tirequotationsizeModel');
-
-                    $brand = $tire_quotation_brand_model->getTireByWhere(array('tire_quotation_brand_name'=>$tire_brand_name));
-                    $brand = $brand?$brand->tire_quotation_brand_id:null;
-                    $size = $tire_quotation_size_model->getTireByWhere(array('tire_quotation_size_number'=>$tire_size_number));
-                    $size = $size?$size->tire_quotation_size_id:null;
-                  
-                    $data_q = array(
-                        'where' => 'tire_quotation_brand ='.$brand.' AND tire_quotation_size ='.$size.' AND tire_quotation_pattern IN ('.$pattern_type.') AND start_date <= '.strtotime(date('d-m-Y')).' AND (end_date IS NULL OR end_date >= '.strtotime(date('d-m-Y')).')',
-                    );
-                    $prices = $tire_quotation_model->getAllTire($data_q);
-                    foreach ($prices as $p) {
-                        $price['price'] = $p->tire_quotation_price;
-                    }
-
-                }
-                
-            }
+            
 
 
             echo json_encode($price);
@@ -2176,6 +2122,7 @@ Class ordertireController Extends baseController {
             $tire_pattern_model = $this->model->get('tirepatternModel');
             $tire_brand_model = $this->model->get('tirebrandModel');
             $tire_size_model = $this->model->get('tiresizeModel');
+            $tire_price_discount_event_model = $this->model->get('tirepricediscounteventModel');
             
             $customers = $customer_model->getCustomerByWhere(array('customer_agent_link'=>$_POST['link_agent']));
 
@@ -2238,10 +2185,34 @@ Class ordertireController Extends baseController {
                     $size = $tire_size_model->getTireByWhere(array('tire_size_number'=>$v['tire_size']))->tire_size_id;
                     $pattern = $tire_pattern_model->getTireByWhere(array('tire_pattern_name'=>$v['tire_pattern']))->tire_pattern_id;
 
+                    $ngay = strtotime(date('d-m-Y'));
+                    $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
+                    $ngaysau = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' + 1 days')));
 
-                    $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date <= '.strtotime(date('d-m-Y')).' AND (end_date IS NULL OR end_date >= '.strtotime(date('d-m-Y')).')  ORDER BY start_date DESC LIMIT 1'));
+                    $data_e = array(
+                        'where' => 'tire_brand ='.$brand.' AND tire_size ='.$size.' AND tire_pattern ='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
+                        'order_by' => 'start_date',
+                        'order' => 'DESC',
+                        'limit' => 1,
+                    );
+
+                    $tire_price_discount_events = $tire_price_discount_event_model->getAllTire($data_e);
+
+                    
+
+
+                    $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')  ORDER BY start_date DESC LIMIT 1'));
                     foreach ($prices as $p) {
                         $price_vat = $p->tire_price;
+                        foreach ($tire_price_discount_events as $event) {
+                            if ($event->percent_discount > 0) {
+                                $price_vat = $p->tire_price*((100-$event->percent_discount)/100);
+                            }
+                            else{
+                                $price_vat = $p->tire_price-$event->money_discount;
+                            }
+                        }
+                        
                         $pr = $price_vat;
                         $va = round(($pr*10*0.1)/1.1*0.1);
                         $n = $pr-$va;
@@ -2322,6 +2293,7 @@ Class ordertireController Extends baseController {
             $tire_pattern_model = $this->model->get('tirepatternModel');
             $tire_brand_model = $this->model->get('tirebrandModel');
             $tire_size_model = $this->model->get('tiresizeModel');
+            $tire_price_discount_event_model = $this->model->get('tirepricediscounteventModel');
 
             $customers = $customer_model->getCustomerByWhere(array('customer_agent_link'=>$_POST['link_agent']));
 
@@ -2356,10 +2328,33 @@ Class ordertireController Extends baseController {
                     
 
                     if ($order_tire_list) {
-                        $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date <= '.strtotime(date('d-m-Y')).' AND (end_date IS NULL OR end_date >= '.strtotime(date('d-m-Y')).')  ORDER BY start_date DESC LIMIT 1'));
+                        $ngay = strtotime(date('d-m-Y'));
+                        $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
+                        $ngaysau = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' + 1 days')));
+
+                        $data_e = array(
+                            'where' => 'tire_brand ='.$brand.' AND tire_size ='.$size.' AND tire_pattern ='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
+                            'order_by' => 'start_date',
+                            'order' => 'DESC',
+                            'limit' => 1,
+                        );
+
+                        $tire_price_discount_events = $tire_price_discount_event_model->getAllTire($data_e);
+
+
+                        $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')  ORDER BY start_date DESC LIMIT 1'));
 
                         foreach ($prices as $p) {
                             $price_vat = $p->tire_price;
+                            foreach ($tire_price_discount_events as $event) {
+                                if ($event->percent_discount > 0) {
+                                    $price_vat = $p->tire_price*((100-$event->percent_discount)/100);
+                                }
+                                else{
+                                    $price_vat = $p->tire_price-$event->money_discount;
+                                }
+                            }
+
                             $pr = $price_vat;
                             $va = round(($pr*10*0.1)/1.1*0.1);
                             $n = $pr-$va;
@@ -2488,10 +2483,33 @@ Class ordertireController Extends baseController {
 
                         $data['order_tire'] = $order_tire->order_tire_id;
 
-                        $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date <= '.strtotime(date('d-m-Y')).' AND (end_date IS NULL OR end_date >= '.strtotime(date('d-m-Y')).')  ORDER BY start_date DESC LIMIT 1'));
+                        $ngay = strtotime(date('d-m-Y'));
+                        $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
+                        $ngaysau = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' + 1 days')));
+
+                        $data_e = array(
+                            'where' => 'tire_brand ='.$brand.' AND tire_size ='.$size.' AND tire_pattern ='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')',
+                            'order_by' => 'start_date',
+                            'order' => 'DESC',
+                            'limit' => 1,
+                        );
+
+                        $tire_price_discount_events = $tire_price_discount_event_model->getAllTire($data_e);
+
+
+                        $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')  ORDER BY start_date DESC LIMIT 1'));
 
                         foreach ($prices as $p) {
                             $price_vat = $p->tire_price;
+                            foreach ($tire_price_discount_events as $event) {
+                                if ($event->percent_discount > 0) {
+                                    $price_vat = $p->tire_price*((100-$event->percent_discount)/100);
+                                }
+                                else{
+                                    $price_vat = $p->tire_price-$event->money_discount;
+                                }
+                            }
+                            
                             $pr = $price_vat;
                             $va = round(($pr*10*0.1)/1.1*0.1);
                             $n = $pr-$va;

@@ -92,6 +92,11 @@
                                         <span class="error">Đang về </span> <input value="0" style="width:50px" type="text" disabled name="going_number[]" class="going_number"> 
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="4">
+                                       <span class="error noti" style="display: none;">Số lượng trong kho < 50, đơn hàng chỉ được giữ lại trong vòng 48h, vui lòng chắc chắn về đơn hàng.</span> 
+                                    </td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -773,6 +778,13 @@ $('.tire_brand').change(function(){
             data: {brand:brand, size:size, pattern:pattern, customer:customer},
             success:function(data){
                 var data = jQuery.parseJSON(data);
+                if (data.max > 0 && data.max < 50) {
+                    $('.noti:eq('+rowIndex+')').show();
+                }
+                else{
+                    $('.noti:eq('+rowIndex+')').hide();
+                }
+
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
@@ -872,6 +884,13 @@ $('.tire_size').change(function(){
             data: {brand:brand, size:size, pattern:pattern, customer:customer},
             success:function(data){
                 var data = jQuery.parseJSON(data);
+                if (data.max > 0 && data.max < 50) {
+                    $('.noti:eq('+rowIndex+')').show();
+                }
+                else{
+                    $('.noti:eq('+rowIndex+')').hide();
+                }
+
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
@@ -961,6 +980,13 @@ $('.tire_pattern').change(function(){
             success:function(data){
                 //console.log(data);
                 var data = jQuery.parseJSON(data);
+                if (data.max > 0 && data.max < 50) {
+                    $('.noti:eq('+rowIndex+')').show();
+                }
+                else{
+                    $('.noti:eq('+rowIndex+')').hide();
+                }
+
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
@@ -2141,6 +2167,8 @@ function addRow(tableID){
     $('.tire_size:last contains:("")').attr('selected','selected');
     $('.tire_pattern:last contains:("")').attr('selected','selected');
 
+    $('.noti:last').hide();
+
     $('input[name="chk"]:last').attr('data',"");
     $('input[name="chk"]:last').attr('tabindex',0);
     $('input[name="chk"]:last').attr('title',"");
@@ -2196,6 +2224,13 @@ function addRow(tableID){
                 data: {brand:brand, size:size, pattern:pattern, customer:customer},
                 success:function(data){
                     var data = jQuery.parseJSON(data);
+                    if (data.max > 0 && data.max < 50) {
+                        $('.noti:eq('+rowIndex+')').show();
+                    }
+                    else{
+                        $('.noti:eq('+rowIndex+')').hide();
+                    }
+
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
@@ -2294,6 +2329,13 @@ function addRow(tableID){
                 data: {brand:brand, size:size, pattern:pattern, customer:customer},
                 success:function(data){
                     var data = jQuery.parseJSON(data);
+                    if (data.max > 0 && data.max < 50) {
+                        $('.noti:eq('+rowIndex+')').show();
+                    }
+                    else{
+                        $('.noti:eq('+rowIndex+')').hide();
+                    }
+
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
@@ -2382,6 +2424,13 @@ function addRow(tableID){
                 data: {brand:brand, size:size, pattern:pattern, customer:customer},
                 success:function(data){
                     var data = jQuery.parseJSON(data);
+                    if (data.max > 0 && data.max < 50) {
+                        $('.noti:eq('+rowIndex+')').show();
+                    }
+                    else{
+                        $('.noti:eq('+rowIndex+')').hide();
+                    }
+
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
