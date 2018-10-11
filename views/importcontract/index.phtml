@@ -1,0 +1,1194 @@
+
+<?php
+$url_order = 'ASC';
+if ($order_by == 'import_contract_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'import_contract_code')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'import_contract_date   ')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'import_contract_number   ')
+  $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>HÀNG ORDER</h1>
+</section>
+<div id="content" style="padding:5px;">
+    <div class="add-box">
+          
+          <a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a>
+          <a class="add_button" id="import_excel" class="import_excel" href="<?= $this->url('importcontract/import')?>"><i class="fa fa-upload"></i> Nhập</a>
+          <a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a>
+      </div>
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+    </div>
+    <div class="tablenav top">
+      <div style="clear:both"></div>
+      <div class="add-box">
+          <select id="sl_nv" name="sl_nv" style="width:80px">
+           <option value="1">Quý I</option>
+           <option value="2">Quý II</option>
+           <option value="3">Quý III</option>
+           <option value="4">Quý IV</option>
+          </select>
+          <select id="sl_tha" name="sl_tha" style="width:90px">
+           <?php 
+              for ($k=1; $k < 13; $k++) { 
+                  echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+              }
+           ?>
+          </select>
+          <select id="sl_na" name="sl_na" style="width:100px">
+           <?php 
+              $nam = date('Y');
+              for ($k=($nam-5); $k < ($nam+5); $k++) { 
+                  echo '<option value="'.$k.'">Năm '.$k.'</option>';
+              }
+           ?>
+          </select>
+
+          <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+          
+      </div>
+    </div>
+    <div class="tablenav top">
+      <div style="clear:both"></div>
+      <div class="add-box">
+                
+          Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+          Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+           <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+          
+      </div>
+
+    </div>
+    <div class="tablenav top">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+          <option  value="18446744073709">Hiển thị tất cả</option>
+          <option value="50">Hiển thị 50 giá trị</option>
+                <option value="100">Hiển thị 100 giá trị</option>
+                <option value="150">Hiển thị 150 giá trị</option>
+                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+
+<table class="table_data" id="tblExport">
+<thead>
+    <tr>
+        <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+        <th  class="fix" >
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_contract_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'import_contract_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_contract_code','<?php echo $url_order ?>')">Code <?php if ($order_by == 'import_contract_code'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_contract_date','<?php echo $url_order ?>')">Ngày order <?php if ($order_by == 'import_contract_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_contract_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'import_contract_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_contract_number','<?php echo $url_order ?>')">Số lượng <?php if ($order_by == 'import_contract_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        
+        <?php if(!isset($disable_control)){ ?>
+        <th class="fix"></th>
+        <?php } ?>
+    </tr>
+    
+   </thead>
+   <tbody>
+    <?php $tongsl=0;
+    foreach ($import_contracts as $import_contract) : 
+      $tongsl += $import_contract->import_contract_number;
+    ?>
+        <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $import_contract->import_contract_id ?>" class="edit_tr" >
+            
+            <td>
+                <input name="check[]" type="checkbox" class="checkbox" value="<?php echo $import_contract->import_contract_id ?>">
+            </td>
+            
+            <td  class="fix"><?php echo $i++; ?></td>
+            <td class="fix" id="import_contract_code_<?php echo $import_contract->import_contract_id; ?>"><?php echo $import_contract->import_contract_code; ?></td>
+            <td class="fix" id="import_contract_date_<?php echo $import_contract->import_contract_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_contract->import_contract_date); ?></td>
+            <td class="fix" id="import_contract_comment_<?php echo $import_contract->import_contract_id; ?>"><?php echo $import_contract->import_contract_comment; ?></td>
+            <td class="fix text-right" id="import_contract_number_<?php echo $import_contract->import_contract_id; ?>"><?php echo $import_contract->import_contract_number; ?></td>
+            
+            <?php if(!isset($disable_control)){ ?>
+            <td class="fix text-right">
+              <i class="fa fa-edit edit_invoice" title="Sửa" data="<?php echo $import_contract->import_contract_id ?>"></i>
+              <i class="fa fa-trash" onclick="del(<?php echo $import_contract->import_contract_id ?>)"></i>
+            </td>
+            <?php } ?>
+        </tr>
+
+
+    <?php endforeach; ?>
+        <tr style="font-weight:bold">
+          <td colspan="5" class="fix">Tổng cộng</td>
+          <td  class="fix text-right"><?php echo $lib->formatMoney($tongsl); ?></td>
+          <td  class="fix text-right"></td>
+        </tr>
+     
+   </tbody>
+</table>
+<?php
+$this->helper('slidePaginator');
+?>
+
+<div id="import_order" style="display: none;">
+  <form id="import_excel" method="post" enctype="multipart/form-data">
+  <table >
+    <tr>
+      <td>
+        <input type="file" name="import" id="import_file">
+      </td>
+    </tr>
+  </table>
+  
+  
+  </form>
+  <div class="error" id="result_import"></div>
+</div>
+<div class="add-field">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="add_import_contract" role="form" method="post" action="" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-12">
+                  <fieldset class="groupbox">
+                    <legend class="nopadding"><span><h6>Thông tin chung</h3></span></legend>
+                    <div class="box-body nopadding">
+                      <div class="form-group col-xs-6 nopadding">
+                        <label for="import_contract_code">Code</label>
+                        <input style="width:100px" type="text" id="import_contract_code"  name="import_contract_code" tabindex="1" autocomplete="off" autofocus required="required" >
+                        
+                      </div>
+                      <div class="form-group col-xs-6 nopadding">
+                        <label for="import_contract_bill_number">Ngày order hàng</label>
+                        <input type="text" class="date_mask" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask id="import_contract_date"  name="import_contract_date" tabindex="10" required="required" autocomplete="off" >
+                        
+                      </div>
+                    </div>
+                    <div class="box-body nopadding">
+                      <div class="form-group nopadding">
+                        <label for="import_contract_comment">Diễn giải </label>
+                        <input style="width:93%" type="text" id="import_contract_comment"  name="import_contract_comment" tabindex="4"  required="required" autocomplete="off" >
+                      </div>
+                    </div>
+                    
+                  </fieldset>
+                  
+                  <!-- /.box-body -->
+                  
+                </div>
+                
+                
+              </div>
+              <div class="col-md-12">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item active">
+                    <a class="nav-link active" data-toggle="tab" href="#item" role="tab">1. Hàng hóa</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#other" role="tab">2. Nhập excel</a>
+                  </li>
+                </ul>
+                
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div class="tab-pane active" id="item" role="tabpanel">
+                    <div class="table-container">
+                      <table id="dataTable0" class="dataTable">
+                        <thead>
+                          <tr>
+                            <th class="width-3">STT</th>
+                            <th class="width-10">Thương hiệu</th>
+                            <th class="width-10">Size</th>
+                            <th class="width-7">Mã gai</th>
+                            <th class="width-5">Số lượng</th>
+                            
+                            <th style="width:5px"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="width-3">1</td>
+                            <td class="width-10">
+                              <input type="text" name="tire_brand[]" class="tire_brand keep-val" required="required" autocomplete="off">
+                              <ul class="name_list_id_2"></ul>
+                            </td>
+                            <td class="width-10">
+                              <input type="text" name="tire_size[]" class="tire_size keep-val" required="required" autocomplete="off">
+                              <ul class="name_list_id_3"></ul>
+                            </td>
+                            <td class="width-7">
+                              <input type="text" name="tire_pattern[]" class="tire_pattern keep-val" required="required" autocomplete="off">
+                              <ul class="name_list_id_3"></ul>
+                            </td>
+                            <td class="width-5"><input type="text" name="tire_number[]" class="tire_number numbers text-right" required="required" autocomplete="off"></td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table id="dataTablesum">
+                        <thead>
+                        </thead>
+                      </table>
+                    </div>
+                    <i class="fa fa-plus" title="Thêm dòng mới"></i> F2: Thêm dòng
+                    <i class="fa fa-minus" title="Xóa dòng cuối cùng"></i> F3: Xóa dòng
+                    <i class="fa fa-trash" title="Xóa tất cả" id="del_all"></i> Xóa tất cả
+                    
+                  </div>
+                  
+                  <div class="tab-pane" id="other" role="tabpanel">
+                    
+                    <button type="button" class="btn btn-xs" id="find_excel" >Chọn...</button>
+                  </div>
+                </div>
+              </div>
+              <?php if(!isset($disable_control)){ ?>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+                    <button type="submit" class="btn btn-primary" tabindex="17"><i class="fa fa-save"></i> Hoàn thành</button>
+                    <button type="reset" class="btn" tabindex="18"><i class="fa fa-undo"></i>  Nhập lại</button>
+                  </div>
+                  <div class="box-footer">
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+                  </div>
+                </div>
+              </div>
+              <?php } ?>
+            </form>
+          </div>
+          <!-- /.box -->
+
+        </div>
+        <!--/.col (left) -->
+        
+      </div>
+      <!-- /.row -->
+       
+</div>
+
+<div style="display:none" id="lasted"></div>
+
+<script type="text/javascript">
+$('.add-field').hide();
+$(".date_mask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});  
+
+$('#find_excel').click(function(e) {
+  $( "#import_order" ).dialog( "open" );
+});
+
+
+
+
+
+$('.edit_invoice').click(function(e){
+    var id = $(this).attr('data');
+
+    $('.add-field input[name!="import_contract_type"]').each(function(){
+      var name = $(this).attr('id');
+      $(this).val($('#'+name+'_'+id).text());
+      $(this).attr('data',$('#'+name+'_'+id).attr('data'));
+    });
+
+    $('.add-field select').each(function(){
+      var name = $(this).attr('id');
+      var sl = $('#'+name+'_'+id).text();
+      $("#"+name+" option[value=" + sl + "]").attr('selected', 'selected');
+    });
+
+    
+
+    
+    //alert(cost_code);
+    $('#yes').val(id);
+
+    $('#dataTablesum thead tr').remove();
+    $('#dataTable0 tbody tr').remove();
+    
+    $.ajax({
+      url: '<?php echo BASE_URL ?>/importcontract/getitemadd',
+      type: 'POST',
+      data: {order:id},
+      success:function(answer){
+          //alert(answer);
+          var data = JSON.parse(answer);
+          $('#dataTablesum thead').append(data.tong);
+          $('#dataTable0 tbody').append(data.hang);
+
+          $('.tire_number').keyup(function(){
+            var tongsl = 0;
+            $('.tire_number').each(function(){
+              var rowIndex=$(this).closest('tr').index();
+              var sl = parseFloat($(this).val());
+              tongsl += sl;
+            });
+            $('#tongsl').text(tongsl);
+            updateprice();
+          });
+          
+
+          $('input').keyup(function (e) {
+              if (e.which == 39) { // right arrow
+                $(this).closest('td').next().find('input').focus();
+
+              } else if (e.which == 37) { // left arrow
+                $(this).closest('td').prev().find('input').focus();
+
+              } else if (e.which == 40) { // down arrow
+                $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+
+              } else if (e.which == 38) { // up arrow
+                $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+              }
+            });
+          $('#dataTable0 tbody tr td:nth-child(2) input').keyup(function(){
+            var val = $(this).val();
+            var trIndex = $(this).closest('tr').index();
+            $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(2) input').val(val);
+          });
+          $('#dataTable0 tbody tr td:nth-child(3) input').keyup(function(){
+            var val = $(this).val();
+            var trIndex = $(this).closest('tr').index();
+            $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(3) input').val(val);
+          });
+
+
+          $('.numbers').keyup(function(event) {
+              // skip for arrow keys
+            if(event.which >= 37 && event.which <= 40) return;
+            // format number
+            $(this).val(function(index, value) {
+              return value
+                .replace(/[^0-9-.]/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              ;
+            });
+          });
+
+          
+        }
+    });
+
+	$( document ).ajaxComplete(function() {
+		$('.add-field button').attr("disabled",false);
+	});
+
+    $( ".add-field" ).dialog( "open" );
+      
+});
+
+$('.viewdetail').click(function(e){
+	$( document ).ajaxComplete(function() {
+		$('.add-field button').attr("disabled",true);
+	});
+});
+
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
+     
+        $('.add-field input[name!="import_contract_type"]').val("");
+        $('.add-field input').attr("data","");
+        $('.add-field input').attr("alt","");
+        $('.add-field .date_mask').val("<?php echo date('d-m-Y') ?>");
+        //$('#import_contract_number').val('0000000');
+        $('#import_contract_code').val('<?php echo ++$lastID ?>');
+        
+
+        $('#dataTablesum thead tr').remove();
+        $('#dataTable0 tbody tr').remove();
+        
+    
+        $.ajax({
+          url: '<?php echo BASE_URL ?>/importcontract/getgoing',
+          type: 'GET',
+          data: {},
+          success:function(answer){
+              //console.log(answer);
+              var data = JSON.parse(answer);
+              $('#dataTablesum thead').append(data.tong);
+              $('#dataTable0 tbody').append(data.hang);
+              
+              $('.tire_number').keyup(function(){
+                var tongsl = 0;
+                $('.tire_number').each(function(){
+                  var rowIndex=$(this).closest('tr').index();
+                  var sl = parseFloat($(this).val());
+                  tongsl += sl;
+                });
+                $('#tongsl').text(tongsl);
+                updateprice();
+              });
+              
+
+              updateprice();
+
+              $('input').keyup(function (e) {
+                  if (e.which == 39) { // right arrow
+                    $(this).closest('td').next().find('input').focus();
+
+                  } else if (e.which == 37) { // left arrow
+                    $(this).closest('td').prev().find('input').focus();
+
+                  } else if (e.which == 40) { // down arrow
+                    $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+
+                  } else if (e.which == 38) { // up arrow
+                    $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                  }
+                });
+              $('#dataTable0 tbody tr td:nth-child(2) input').keyup(function(){
+                var val = $(this).val();
+                var trIndex = $(this).closest('tr').index();
+                $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(2) input').val(val);
+              });
+              $('#dataTable0 tbody tr td:nth-child(3) input').keyup(function(){
+                var val = $(this).val();
+                var trIndex = $(this).closest('tr').index();
+                $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(3) input').val(val);
+              });
+
+              $('.numbers').keyup(function(event) {
+                  // skip for arrow keys
+                if(event.which >= 37 && event.which <= 40) return;
+                // format number
+                $(this).val(function(index, value) {
+                  return value
+                    .replace(/[^0-9-.]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  ;
+                });
+              });
+
+              
+            }
+        });
+                
+        $('.numbers').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.numbers').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+    $( document ).ajaxComplete(function() {
+      $('.add-field button').attr("disabled",false);
+    });
+
+    $( ".add-field" ).dialog( "open" );
+}
+
+$(document).ready(function(){
+  // Validate form
+  $("#add_import_contract").validate({
+      errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+      rules: {
+
+      },
+      submitHandler: function(form) {
+        var import_contract_code = $('#import_contract_code').val();
+        var import_contract_comment = $('#import_contract_comment').val();
+        var import_contract_date = $('#import_contract_date').val();
+        
+        var import_contract_number = $('#tongsl').text();
+
+
+        var import_list = [];
+        var tire_list_id = [];
+        var tire_brand = [];
+        var tire_size = [];
+        var tire_pattern = [];
+        var tire_number = [];
+        
+
+        $('.tire_brand').each(function(){
+          tire_brand.push($(this).attr('value'));
+        });
+        $('.tire_size').each(function(){
+          tire_size.push($(this).attr('value'));
+        });
+        $('.tire_pattern').each(function(){
+          tire_pattern.push($(this).attr('value'));
+        });
+        $('.tire_number').each(function(){
+          tire_number.push($(this).attr('value'));
+          tire_list_id.push($(this).attr('data') || 0);
+        });
+        
+
+        for (var j = 0; j < tire_number.length; j++) {
+          import_list.push({'tire_list_id':tire_list_id[j],'tire_brand':tire_brand[j],'tire_size':tire_size[j],'tire_pattern':tire_pattern[j],'tire_number':tire_number[j]});
+        }
+
+
+        var yes = $('#yes').val();
+
+        $.ajax({
+          url: '<?php echo BASE_URL ?>/importcontract/add',
+          type: 'POST',
+          data: {
+            yes: yes,
+            import_contract_code: import_contract_code,
+            import_contract_comment: import_contract_comment,
+            import_contract_date: import_contract_date,
+            import_list: import_list,
+          },
+          success:function(answer){
+              //alert(answer);
+              $('#error').hide();
+              $('#error').slideToggle(100); // hiển thị thẻ div success
+              $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+              $('#error').fadeOut(10000);
+
+              if (yes != "") {
+                  if (answer.trim() == "Cập nhật thành công" ) {
+                      setTimeout(function() {
+                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                      }, 200);
+                      
+                  }
+              }
+              else{
+                  if (answer.trim() == "Thêm thành công" ) {
+                      setTimeout(function() {
+                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                      }, 200);
+                      
+                  }
+              }
+          }
+        });
+
+      }
+    });
+});
+
+
+
+$('.tire_number').keyup(function(){
+  var tongsl = 0;
+  $('.tire_number').each(function(){
+    var rowIndex=$(this).closest('tr').index();
+    var sl = parseFloat($(this).val());
+    tongsl += sl;
+  });
+  $('#tongsl').text(tongsl);
+  updateprice();
+});
+
+
+function updateprice(cont_change){
+  var tongsl = 0;
+    $('.tire_number').each(function(){
+      var rowIndex=$(this).closest('tr').index();
+      var sl = parseFloat($(this).val());
+      tongsl += sl;
+    });
+    $('#tongsl').text(tongsl);
+}
+</script>
+
+<script type="text/javascript">
+function roundDecimal(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+function get_number(id){
+  return $(id).val().replace(/\,/g,'');
+}
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "60%",
+    title: "Nhập hàng order",
+    hide: 'fold',
+    show: 'blind',
+    position: ['center',5],
+});
+$("#import_order").dialog({
+    draggable:true,
+    modal: true,
+    autoOpen: false,
+    height:300,
+    width:400,
+    resizable: false,
+    title:'Import Excel',
+    buttons: {
+        Import: function() {
+            var formData = new FormData();
+            formData.append('import', document.getElementById('import_file').files[0]);
+
+            $.ajax({
+                   url : '<?php echo $this->url('importcontract/import') ?>',
+                   type : 'POST',
+                   data : formData,
+                   processData: false,  // tell jQuery not to process the data
+                   contentType: false,  // tell jQuery not to set contentType
+                   success : function(data) {
+                       $('#result_import').text(data);
+
+                       $('#dataTablesum thead tr').remove();
+                       $('#dataTable0 tbody tr').remove();
+    
+                      $.ajax({
+                        url: '<?php echo BASE_URL ?>/importcontract/getgoing',
+                        type: 'GET',
+                        data: {},
+                        success:function(answer){
+                            //alert(data);
+                            var data = JSON.parse(answer);
+                            $('#dataTablesum thead').append(data.tong);
+                            $('#dataTable0 tbody').append(data.hang);
+
+                            $('#tongcuoctau').text($('#oceanfreight').val());
+
+                            $('.tire_number').keyup(function(){
+                              var tongsl = 0;
+                              $('.tire_number').each(function(){
+                                var rowIndex=$(this).closest('tr').index();
+                                var sl = parseFloat($(this).val());
+                                tongsl += sl;
+                              });
+                              $('#tongsl').text(tongsl);
+                              updateprice();
+                            });
+                            
+                            updateprice();
+
+                            $('input').keyup(function (e) {
+                                if (e.which == 39) { // right arrow
+                                  $(this).closest('td').next().find('input').focus();
+
+                                } else if (e.which == 37) { // left arrow
+                                  $(this).closest('td').prev().find('input').focus();
+
+                                } else if (e.which == 40) { // down arrow
+                                  $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+
+                                } else if (e.which == 38) { // up arrow
+                                  $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                                }
+                              });
+                            $('#dataTable0 tbody tr td:nth-child(2) input').keyup(function(){
+                              var val = $(this).val();
+                              var trIndex = $(this).closest('tr').index();
+                              $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(2) input').val(val);
+                            });
+                            $('#dataTable0 tbody tr td:nth-child(3) input').keyup(function(){
+                              var val = $(this).val();
+                              var trIndex = $(this).closest('tr').index();
+                              $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(3) input').val(val);
+                            });
+
+                            $('.numbers').keyup(function(event) {
+                                // skip for arrow keys
+                              if(event.which >= 37 && event.which <= 40) return;
+                              // format number
+                              $(this).val(function(index, value) {
+                                return value
+                                  .replace(/[^0-9-.]/g, "")
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                ;
+                              });
+                            });
+
+                            
+                          }
+                      });
+                   }
+            });
+              
+            //$( this ).dialog( "close" );
+        },        
+        Cancel: function() {
+            $( this ).dialog( "close" );
+        }
+    }
+});
+
+$(".import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:300,
+            width:400,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+
+
+ 
+
+var x = "<?php echo $limit ?>";
+$('#chonloc option[value='+x+']').attr('selected','selected');
+var nv = "<?php echo $nv ?>";
+$('#sl_nv option[value='+nv+']').attr('selected','selected');
+var tha = "<?php echo $tha ?>";
+$('#sl_tha option[value='+tha+']').attr('selected','selected');
+var na = "<?php echo $na ?>";
+$('#sl_na option[value='+na+']').attr('selected','selected');
+
+$('.numbers').keyup(function(event) {
+      // skip for arrow keys
+  if(event.which >= 37 && event.which <= 40) return;
+  // format number
+  $(this).val(function(index, value) {
+    return value
+      .replace(/[^0-9-.]/g, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+});
+
+var pickerOpts2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        showWeek: true,
+        weekHeader: 'Tuần',
+        isRTL: false,
+        showButtonPanel: true,
+         
+    };  
+  $(".ngay").datepicker(pickerOpts2);
+
+var pickerOpts3 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        showWeek: true,
+        weekHeader: 'Tuần',
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+         },
+         
+    };  
+    $("#batdau").datepicker(pickerOpts3);
+
+    var pickerOpts4 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+        "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+        "T6", "T7"],
+        //defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        showWeek: true,
+        weekHeader: 'Tuần',
+        isRTL: false,
+        showButtonPanel: true,
+        onClose: function(selectedDate) {
+                
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+                
+         },
+         
+    };  
+    $("#ketthuc").datepicker(pickerOpts4);
+
+$('#sl_nv').change(function(){
+      var q = $(this).val();
+      var y = $('#sl_na').val();
+      var m,n;
+      
+      switch(q) {
+        case "1":
+            m=1;
+            n=3;
+            break;
+        case "2":
+            m=4;
+            n=6;
+            break;
+        case "3":
+            m=7;
+            n=9;
+            break;
+        case "4":
+            m=10;
+            n=12;
+            break;
+      }
+
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, n, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+$('#sl_tha').change(function(){
+      var m = $(this).val();
+      var y = $('#sl_na').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+
+  $('#sl_na').change(function(){
+      var y = $(this).val();
+      var m = $('#sl_tha').val();
+      var firstDay = new Date(y, m-1, 1);
+      var lastDay = new Date(y, m, 0);
+
+      $('#batdau').datepicker("setDate", firstDay );
+      $('#ketthuc').datepicker("setDate", lastDay );
+
+  });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+ 
+      $('input').keyup(function (e) {
+        if (e.which == 39) { // right arrow
+          $(this).closest('td').next().find('input').focus();
+ 
+        } else if (e.which == 37) { // left arrow
+          $(this).closest('td').prev().find('input').focus();
+ 
+        } else if (e.which == 40) { // down arrow
+          $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+ 
+        } else if (e.which == 38) { // up arrow
+          $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+        }
+      });
+ 
+    // un-comment to display key code
+    // $("input").keydown(function (e) {
+    //   console.log(e.which);
+    // });
+    });
+
+$('#dataTable0 tbody tr td:nth-child(2) input').keyup(function(){
+  var val = $(this).val();
+  var trIndex = $(this).closest('tr').index();
+  $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(2) input').val(val);
+});
+$('#dataTable0 tbody tr td:nth-child(3) input').keyup(function(){
+  var val = $(this).val();
+  var trIndex = $(this).closest('tr').index();
+  $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(3) input').val(val);
+});
+
+document.addEventListener("keydown", function(event) {
+  var index = $('.nav-tabs li.active').index();
+  var rowIndex=$('#dataTable'+index+' input:focus').closest('tr').index();
+  if ($('#dataTable'+index+' input').is(':focus')) {
+    if (event.keyCode == 113) { //F8
+      //addRow('dataTable'+index);
+      $('.dataTable').each(function(){
+        addRow($(this).attr('id'));
+      });
+    }
+    if (event.keyCode == 114) { //F9
+      //delRow('dataTable'+index);
+      $('.dataTable').each(function(){
+        delRow($(this).attr('id'),rowIndex);
+      });
+    }
+    if (event.keyCode == 13) {
+        
+        event.preventDefault();
+        return false;
+    }
+  }
+});
+
+function addRow(id){
+  var table=document.getElementById(id);
+  var rowCount=table.rows.length;
+  var row=table.insertRow(rowCount);
+  var colCount=table.rows[1].cells.length;
+  for(var i=0;i<colCount;i++){
+      var newcell=row.insertCell(i);
+      newcell.innerHTML=table.rows[1].cells[i].innerHTML;
+      newcell.className=table.rows[1].cells[i].className;
+      /*switch(newcell.childNodes[0].type){
+          case"text":newcell.childNodes[0].value="";
+          break;
+          case"checkbox":newcell.childNodes[0].checked=false;
+          break;
+          case"select-one":newcell.childNodes[0].selectedIndex=0;
+          break;
+      }*/
+  }
+  $('#'+id+' tr:last td input').val("");
+  $('#'+id+' tr:last td input.keep-val').each(function(){
+    $(this).val($(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').val());
+  });
+  $('#'+id+' tr:last td input').attr("data","");
+  $('#'+id+' tr:last td input').attr("alt","");
+  $('#'+id+' tr:last td input:first').focus();
+  var i=1;
+  $('#'+id+' tbody tr td:first-child').each(function() {
+    $(this).text(i);
+    i++;
+  });
+
+  $('.tire_number').keyup(function(){
+    var tongsl = 0;
+    $('.tire_number').each(function(){
+      var rowIndex=$(this).closest('tr').index();
+      var sl = parseFloat($(this).val());
+      tongsl += sl;
+    });
+    $('#tongsl').text(tongsl);
+    updateprice();
+  });
+  
+
+  $('input').keyup(function (e) {
+      if (e.which == 39) { // right arrow
+        $(this).closest('td').next().find('input').focus();
+
+      } else if (e.which == 37) { // left arrow
+        $(this).closest('td').prev().find('input').focus();
+
+      } else if (e.which == 40) { // down arrow
+        $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+
+      } else if (e.which == 38) { // up arrow
+        $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+      }
+    });
+  $('#dataTable0 tbody tr td:nth-child(2) input').keyup(function(){
+    var val = $(this).val();
+    var trIndex = $(this).closest('tr').index();
+    $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(2) input').val(val);
+  });
+  $('#dataTable0 tbody tr td:nth-child(3) input').keyup(function(){
+    var val = $(this).val();
+    var trIndex = $(this).closest('tr').index();
+    $('#dataTable1 tbody tr:eq('+trIndex+') td:nth-child(3) input').val(val);
+  });
+
+  $('.numbers').keyup(function(event) {
+      // skip for arrow keys
+    if(event.which >= 37 && event.which <= 40) return;
+    // format number
+    $(this).val(function(index, value) {
+      return value
+        .replace(/[^0-9-.]/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      ;
+    });
+  });
+
+  
+
+}
+function delRow(id,rowIndex){
+  try{
+      var table=document.getElementById(id);
+      var rowCount=table.rows.length;
+      if(rowCount<=2){
+        alert("Cannot delete all the rows.");
+      }
+      else{
+        table.deleteRow(rowIndex+1);
+      }
+      
+      $('#'+id+' tr:last td input:first').focus();
+      var i=1;
+      $('#'+id+' tbody tr td:first-child').each(function() {
+        $(this).text(i);
+        i++;
+      });
+
+      updateprice();
+      
+  }
+  catch(e){
+      alert(e);
+  }
+}
+
+$('#del_all').click(function(){
+  var r = confirm("Bạn có chắc chắn muốn xóa không?");
+  if (r == true){
+    $.ajax({
+        url: '<?php echo BASE_URL ?>/importcontract/delall',
+        type: 'GET',
+        data: {},
+        success:function(answer){
+        }
+    });
+  }
+});
+</script>
+<style type="text/css">
+.table-container {
+    min-height: 5em;
+    font-size: 11px;
+}
+.table-container table {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+.table-container table thead {
+    /* head takes the height it requires, 
+    and it's not scaled when table is resized */
+    flex: 0 0 auto;
+    width: calc(100% - 0.9em);
+}
+.table-container table tbody {
+    /* body takes all the remaining available space */
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
+}
+.table-container table tbody tr {
+    width: 100%;
+}
+.table-container table thead,
+.table-container table tbody tr {
+    display: table;
+    table-layout: fixed;
+}
+/* decorations */
+
+.table-container table {
+    border: 1px solid lightgrey;
+}
+.table-container table td, .table-container table th {
+    text-align: center;
+    padding: 0;
+    border: 1px solid lightgrey;
+}
+.table-container table th {
+    border: 1px solid grey;
+}
+.width-3 {
+    width: 3%;
+}
+.width-5 {
+    width: 5%;
+}
+.width-7 {
+    width: 7%;
+}
+.width-10 {
+    width: 10%;
+}
+.table-container table td input{
+  width: 90%;
+  margin: 0;
+}
+
+.right {
+    margin-left: -50px;
+    height: auto;
+    width: auto;
+    background: rgba(0, 0, 0, 0.08);
+    border: 0;
+}
+</style>

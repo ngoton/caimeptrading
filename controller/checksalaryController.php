@@ -183,17 +183,6 @@ Class checksalaryController Extends baseController {
             $first_order = 0;
             
 
-            $check_sale = $check_sale_salary_model->getSalaryByWhere(array('order_tire'=>$order_tire->order_tire_id));
-            if ($check_sale) {
-                $info['khmoi'][$order_tire->order_tire_id] = $check_sale->new_customer;
-                $info['khcu'][$order_tire->order_tire_id] = $check_sale->new_customer;
-                $info['percent'][$order_tire->order_tire_id] = $check_sale->bonus_percent;
-                $info['vuotgia'][$order_tire->order_tire_id] = $check_sale->bonus_over;
-                $info['bonus'][$order_tire->order_tire_id] = $check_sale->bonus;
-                $info['kpi'][$order_tire->order_tire_id] = $check_sale->bonus_kpi;
-                $info['thangluong'][$order_tire->order_tire_id] = $check_sale->salary_date;
-            }
-            else{
                 $data = array(
                     'where' => 'customer = '.$order_tire->customer.' AND tire_sale_date < '.$order_tire->delivery_date,
                     'limit' => 1,
@@ -262,44 +251,44 @@ Class checksalaryController Extends baseController {
 
                 $total_order_day[date('d-m-Y',$order_tire->delivery_date)][$order_tire->customer] = 1; //Đơn trong ngày của KH
 
-                if ($total_order_before>0) {
-                    $choose = $total_order_before;
-                    if ($order_tire->order_tire_number > $total_order_before) {
-                        $choose = $order_tire->order_tire_number;
-                    }
+                // if ($total_order_before>0) {
+                //     $choose = $total_order_before;
+                //     if ($order_tire->order_tire_number > $total_order_before) {
+                //         $choose = $order_tire->order_tire_number;
+                //     }
 
-                    if ($choose<20) {
-                        $column = "tire_retail";
-                    }
-                    else if ($choose<40) {
-                        $column = "tire_20";
-                    }
-                    else if ($choose<60) {
-                        $column = "tire_40";
-                    }
-                    else if ($choose<80) {
-                        $column = "tire_60";
-                    }
-                    else if ($choose<100) {
-                        $column = "tire_80";
-                    }
-                    else if ($choose<120) {
-                        $column = "tire_100";
-                    }
-                    else if ($choose<150) {
-                        $column = "tire_120";
-                    }
-                    else if ($choose<180) {
-                        $column = "tire_150";
-                    }
-                    else if ($choose<220) {
-                        $column = "tire_180";
-                    }
-                    else {
-                        $column = "tire_cont";
-                    }
-                }
-                else{
+                //     if ($choose<20) {
+                //         $column = "tire_retail";
+                //     }
+                //     else if ($choose<40) {
+                //         $column = "tire_20";
+                //     }
+                //     else if ($choose<60) {
+                //         $column = "tire_40";
+                //     }
+                //     else if ($choose<80) {
+                //         $column = "tire_60";
+                //     }
+                //     else if ($choose<100) {
+                //         $column = "tire_80";
+                //     }
+                //     else if ($choose<120) {
+                //         $column = "tire_100";
+                //     }
+                //     else if ($choose<150) {
+                //         $column = "tire_120";
+                //     }
+                //     else if ($choose<180) {
+                //         $column = "tire_150";
+                //     }
+                //     else if ($choose<220) {
+                //         $column = "tire_180";
+                //     }
+                //     else {
+                //         $column = "tire_cont";
+                //     }
+                // }
+                // else{
                     if ($total_order<20) {
                         $column = "tire_retail";
                     }
@@ -330,7 +319,7 @@ Class checksalaryController Extends baseController {
                     else {
                         $column = "tire_cont";
                     }
-                }
+                //}
 
                 
 
@@ -435,19 +424,34 @@ Class checksalaryController Extends baseController {
                     $salary = (($gia-$tire_price_origin)*$arr_salary['phantram']/100)*$sale->volume;
 
 
-                    if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                    // if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                    //     $salary = 0;
+                    // }
+                    // else{
+                    //     if ($sale->customer_type==1) {
+                    //         if ($dongia < $tire_prices*0.96) {
+                    //             $salary = $arr_salary['sanluong']*$sale->volume;
+                    //         }
+                    //     }
+                    //     else{
+                    //         if ($dongia < $tire_prices*0.98) {
+                    //             $salary = $arr_salary['sanluong']*$sale->volume;
+                    //         }
+                    //     }
+
+                    //     if ($salary < $arr_salary['sanluong']*$sale->volume) {
+                    //         $salary = $arr_salary['sanluong']*$sale->volume;
+                    //     }
+                    // }
+
+                    if ($dongia < $giacongkhai*0.748) {
                         $salary = 0;
                     }
                     else{
-                        if ($sale->customer_type==1) {
-                            if ($dongia < $tire_prices*0.96) {
-                                $salary = $arr_salary['sanluong']*$sale->volume;
-                            }
-                        }
-                        else{
-                            if ($dongia < $tire_prices*0.98) {
-                                $salary = $arr_salary['sanluong']*$sale->volume;
-                            }
+                        $quydinh = $tire_prices*100/$giacongkhai;
+                        $ban = $dongia*100/$giacongkhai;
+                        if ($ban < ($quydinh-4)) {
+                            $salary = $arr_salary['sanluong']*$sale->volume;
                         }
 
                         if ($salary < $arr_salary['sanluong']*$sale->volume) {
@@ -466,6 +470,15 @@ Class checksalaryController Extends baseController {
                 $info['percent'][$order_tire->order_tire_id] = round($info['bonus'][$order_tire->order_tire_id]/$order_tire->total*100,1);
 
                 
+            $check_sale = $check_sale_salary_model->getSalaryByWhere(array('order_tire'=>$order_tire->order_tire_id));
+            if ($check_sale) {
+                $info['khmoi'][$order_tire->order_tire_id] = $check_sale->new_customer;
+                $info['khcu'][$order_tire->order_tire_id] = $check_sale->new_customer;
+                $info['percent'][$order_tire->order_tire_id] = $check_sale->bonus_percent;
+                $info['vuotgia'][$order_tire->order_tire_id] = $check_sale->bonus_over;
+                $info['bonus'][$order_tire->order_tire_id] = $check_sale->bonus;
+                $info['kpi'][$order_tire->order_tire_id] = $check_sale->bonus_kpi;
+                $info['thangluong'][$order_tire->order_tire_id] = $check_sale->salary_date;
             }
 
             
@@ -530,17 +543,7 @@ Class checksalaryController Extends baseController {
             $receivables = $receivable_model->getCostsByWhere(array('order_tire'=>$order_tire->order_tire_id));
             $info['congno'][$order_tire->order_tire_id] = $receivables->money-$receivables->pay_money;
 
-            $check_sale = $check_sale_salary_model->getSalaryByWhere(array('order_tire'=>$order_tire->order_tire_id));
-            if ($check_sale) {
-                $info['khmoi'][$order_tire->order_tire_id] = $check_sale->new_customer;
-                $info['khcu'][$order_tire->order_tire_id] = $check_sale->new_customer;
-                $info['percent'][$order_tire->order_tire_id] = $check_sale->bonus_percent;
-                $info['vuotgia'][$order_tire->order_tire_id] = $check_sale->bonus_over;
-                $info['bonus'][$order_tire->order_tire_id] = $check_sale->bonus;
-                $info['kpi'][$order_tire->order_tire_id] = $check_sale->bonus_kpi;
-                $info['thangluong'][$order_tire->order_tire_id] = $check_sale->salary_date;
-            }
-            else{
+            
 
                 $data = array(
                     'where' => 'customer = '.$order_tire->customer.' AND tire_sale_date < '.$order_tire->delivery_date,
@@ -602,44 +605,44 @@ Class checksalaryController Extends baseController {
                     
                 }
 
-                if ($total_order_before>0) {
-                    $choose = $total_order_before;
-                    if ($order_tire->order_tire_number > $total_order_before) {
-                        $choose = $order_tire->order_tire_number;
-                    }
+                // if ($total_order_before>0) {
+                //     $choose = $total_order_before;
+                //     if ($order_tire->order_tire_number > $total_order_before) {
+                //         $choose = $order_tire->order_tire_number;
+                //     }
                     
-                    if ($choose<20) {
-                        $column = "tire_retail";
-                    }
-                    else if ($choose<40) {
-                        $column = "tire_20";
-                    }
-                    else if ($choose<60) {
-                        $column = "tire_40";
-                    }
-                    else if ($choose<80) {
-                        $column = "tire_60";
-                    }
-                    else if ($choose<100) {
-                        $column = "tire_80";
-                    }
-                    else if ($choose<120) {
-                        $column = "tire_100";
-                    }
-                    else if ($choose<150) {
-                        $column = "tire_120";
-                    }
-                    else if ($choose<180) {
-                        $column = "tire_150";
-                    }
-                    else if ($choose<220) {
-                        $column = "tire_180";
-                    }
-                    else {
-                        $column = "tire_cont";
-                    }
-                }
-                else{
+                //     if ($choose<20) {
+                //         $column = "tire_retail";
+                //     }
+                //     else if ($choose<40) {
+                //         $column = "tire_20";
+                //     }
+                //     else if ($choose<60) {
+                //         $column = "tire_40";
+                //     }
+                //     else if ($choose<80) {
+                //         $column = "tire_60";
+                //     }
+                //     else if ($choose<100) {
+                //         $column = "tire_80";
+                //     }
+                //     else if ($choose<120) {
+                //         $column = "tire_100";
+                //     }
+                //     else if ($choose<150) {
+                //         $column = "tire_120";
+                //     }
+                //     else if ($choose<180) {
+                //         $column = "tire_150";
+                //     }
+                //     else if ($choose<220) {
+                //         $column = "tire_180";
+                //     }
+                //     else {
+                //         $column = "tire_cont";
+                //     }
+                // }
+                // else{
                     if ($total_order<20) {
                         $column = "tire_retail";
                     }
@@ -670,7 +673,7 @@ Class checksalaryController Extends baseController {
                     else {
                         $column = "tire_cont";
                     }
-                }
+                //}
 
                 
 
@@ -771,19 +774,34 @@ Class checksalaryController Extends baseController {
 
                     
                     $salary = (($gia-$tire_price_origin)*$arr_salary['phantram']/100)*$sale->volume;
-                    if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                    // if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                    //     $salary = 0;
+                    // }
+                    // else{
+                    //     if ($sale->customer_type==1) {
+                    //         if ($dongia < $tire_prices*0.96) {
+                    //             $salary = $arr_salary['sanluong']*$sale->volume;
+                    //         }
+                    //     }
+                    //     else{
+                    //         if ($dongia < $tire_prices*0.98) {
+                    //             $salary = $arr_salary['sanluong']*$sale->volume;
+                    //         }
+                    //     }
+
+                    //     if ($salary < $arr_salary['sanluong']*$sale->volume) {
+                    //         $salary = $arr_salary['sanluong']*$sale->volume;
+                    //     }
+                    // }
+
+                    if ($dongia < $giacongkhai*0.748) {
                         $salary = 0;
                     }
                     else{
-                        if ($sale->customer_type==1) {
-                            if ($dongia < $tire_prices*0.96) {
-                                $salary = $arr_salary['sanluong']*$sale->volume;
-                            }
-                        }
-                        else{
-                            if ($dongia < $tire_prices*0.98) {
-                                $salary = $arr_salary['sanluong']*$sale->volume;
-                            }
+                        $quydinh = $tire_prices*100/$giacongkhai;
+                        $ban = $dongia*100/$giacongkhai;
+                        if ($ban < ($quydinh-4)) {
+                            $salary = $arr_salary['sanluong']*$sale->volume;
                         }
 
                         if ($salary < $arr_salary['sanluong']*$sale->volume) {
@@ -801,6 +819,15 @@ Class checksalaryController Extends baseController {
 
 
                 
+            $check_sale = $check_sale_salary_model->getSalaryByWhere(array('order_tire'=>$order_tire->order_tire_id));
+            if ($check_sale) {
+                $info['khmoi'][$order_tire->order_tire_id] = $check_sale->new_customer;
+                $info['khcu'][$order_tire->order_tire_id] = $check_sale->new_customer;
+                $info['percent'][$order_tire->order_tire_id] = $check_sale->bonus_percent;
+                $info['vuotgia'][$order_tire->order_tire_id] = $check_sale->bonus_over;
+                $info['bonus'][$order_tire->order_tire_id] = $check_sale->bonus;
+                $info['kpi'][$order_tire->order_tire_id] = $check_sale->bonus_kpi;
+                $info['thangluong'][$order_tire->order_tire_id] = $check_sale->salary_date;
             }
         }
 

@@ -81,6 +81,7 @@ Class checksalarytotalController Extends baseController {
         $lift_model = $this->model->get('liftModel');
         $time_salary_model = $this->model->get('timesalaryModel');
         $overtime_salary_model = $this->model->get('overtimesalaryModel');
+        $salary_bonus_model = $this->model->get('salarybonusModel');
         //$importtire_model = $this->model->get('importtireModel');
 
         $tu = 2000;
@@ -183,6 +184,14 @@ Class checksalarytotalController Extends baseController {
 
         $this->view->data['arr_overtime_salary'] = $arr_overtime_salary;
 
+        $salary_bonuss = $salary_bonus_model->getAllSalary($data);
+        $arr_thuong = array();
+        foreach ($salary_bonuss as $salary_bonus) {
+            $arr_thuong[$salary_bonus->staff] = isset($arr_thuong[$salary_bonus->staff])?$arr_thuong[$salary_bonus->staff]+$salary_bonus->salary_bonus:$salary_bonus->salary_bonus;
+        }
+
+        $this->view->data['arr_thuong'] = $arr_thuong;
+
         
         $attendance_model = $this->model->get('attendanceModel');
         $attendance_rate_model = $this->model->get('attendancerateModel');
@@ -196,6 +205,7 @@ Class checksalarytotalController Extends baseController {
         );
         $attendances = $attendance_model->getAllAttendance($data);
         $arr_attend = array();
+        $arr_minute = array();
         foreach ($attendances as $attendance) {
             $sotieng = round($attendance->attendance_total/8,2);
             if ($attendance->check_in_1 != "" && $attendance->check_in_1 != 0) {
@@ -214,9 +224,16 @@ Class checksalarytotalController Extends baseController {
             $tre = $phuttre>$phut?(($phuttre-$phut+3)*2/60)/8:0;
 
             $arr_attend[$attendance->staff] = isset($arr_attend[$attendance->staff])?$arr_attend[$attendance->staff]+$sotieng-$tre:$sotieng-$tre;
+
+            $tru=0;
+            $sophut = $attendance->attendance_total*60;
+            $tru = $phuttre>$phut?($phuttre-($phut+3))*2:0;
+
+            $arr_minute[$attendance->staff] = isset($arr_minute[$attendance->staff])?$arr_minute[$attendance->staff]+$sophut-$tru:$sophut-$tru;
         }
 
         $this->view->data['arr_attend'] = $arr_attend;
+        $this->view->data['arr_minute'] = $arr_minute;
 
         $qr = 'SELECT * FROM (SELECT * FROM attendance_rate WHERE create_time <= '.strtotime($ketthuc).' ORDER BY create_time DESC) d GROUP BY d.staff';
         $attendance_rates = $attendance_rate_model->queryAttendance($qr);
@@ -1633,6 +1650,65 @@ Class checksalarytotalController Extends baseController {
                         $filename = "action_logs.txt";
 
                         $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."overtime_salary"."|".$data."|overtime_salary|"."\n"."\r\n";
+
+                        
+
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+
+                        fwrite($fh, $text) or die("Could not write file!");
+
+                        fclose($fh);
+
+
+
+            return true;
+
+                    
+
+        }
+
+    }
+
+    public function thuong(){
+
+        
+
+        if (!isset($_SESSION['userid_logined'])) {
+
+            return $this->view->redirect('user/login');
+
+        }
+
+        if (isset($_POST['data'])) {
+
+            $batdau = '01-'.$_POST['thang'];
+            $ketthuc = date('t-m-Y',strtotime($batdau));
+
+            $salary_bonus = $this->model->get('salarybonusModel');
+
+            $salary_bonus_data = $salary_bonus->getAllSalary(array('where'=>'create_time >= '.strtotime($batdau).' AND create_time <= '.strtotime($ketthuc).' AND staff = '.$_POST['data']));
+
+            $data = array(
+                'staff' => $_POST['data'],
+                'create_time' => strtotime($batdau),
+                'salary_bonus' => trim(str_replace(',','',$_POST['keyword'])),
+                );
+
+            if (!$salary_bonus_data) {
+                $salary_bonus->createSalary($data);
+            }
+            else{
+                $salary_bonus->querySalary('UPDATE salary_bonus SET salary_bonus = '.trim(str_replace(',','',$_POST['keyword'])).' WHERE staff = '.$_POST['data'].' AND create_time >= '.strtotime($batdau).' AND create_time <= '.strtotime($ketthuc));
+                
+            }
+
+
+
+            date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+
+                        $filename = "action_logs.txt";
+
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."salary_bonus"."|".$data."|salary_bonus|"."\n"."\r\n";
 
                         
 

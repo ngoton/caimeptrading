@@ -27,6 +27,38 @@ Class ordertireController Extends baseController {
             $limit = 50;
         }
 
+        $import_tire_order_model = $this->model->get('importtireorderModel');
+        $import_tire_list_model = $this->model->get('importtirelistModel');
+        $tire_buy_model = $this->model->get('tirebuyModel');
+        $tire_sale_model = $this->model->get('tiresaleModel');
+
+        $tonkho = array();
+        
+        $tire_buys = $tire_buy_model->getAllTire();
+        foreach ($tire_buys as $buy) {
+            $tonkho['brand'][$buy->tire_buy_brand] = isset($tonkho['brand'][$buy->tire_buy_brand])?$tonkho['brand'][$buy->tire_buy_brand]+$buy->tire_buy_volume:$buy->tire_buy_volume;
+            $tonkho['size'][$buy->tire_buy_size] = isset($tonkho['size'][$buy->tire_buy_size])?$tonkho['size'][$buy->tire_buy_size]+$buy->tire_buy_volume:$buy->tire_buy_volume;
+            $tonkho['pattern'][$buy->tire_buy_pattern] = isset($tonkho['pattern'][$buy->tire_buy_pattern])?$tonkho['pattern'][$buy->tire_buy_pattern]+$buy->tire_buy_volume:$buy->tire_buy_volume;
+        }
+
+        $tire_sales = $tire_sale_model->getAllTire();
+        foreach ($tire_sales as $sale) {
+            $tonkho['brand'][$sale->tire_brand] = isset($tonkho['brand'][$sale->tire_brand])?$tonkho['brand'][$sale->tire_brand]-$sale->volume:(0-$sale->volume);
+            $tonkho['size'][$sale->tire_size] = isset($tonkho['size'][$sale->tire_size])?$tonkho['size'][$sale->tire_size]-$sale->volume:(0-$sale->volume);
+            $tonkho['pattern'][$sale->tire_pattern] = isset($tonkho['size'][$sale->tire_pattern])?$tonkho['pattern'][$sale->tire_pattern]-$sale->volume:(0-$sale->volume);
+        }
+
+     
+        $tire_goings = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND (import_tire_order_status=2 OR import_tire_order_status=4)','order_by'=>'import_tire_order_expect_date ASC'));
+        foreach ($tire_goings as $tire_going) {
+            $goings = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$tire_going->import_tire_order_id)); //tire_brand thay tire_brand_group
+            foreach ($goings as $going) {
+                $tonkho['brand'][$going->tire_brand] = isset($tonkho['brand'][$going->tire_brand])?$tonkho['brand'][$going->tire_brand]+$going->tire_number:$going->tire_number;
+	            $tonkho['size'][$going->tire_size] = isset($tonkho['size'][$going->tire_size])?$tonkho['size'][$going->tire_size]+$going->tire_number:$going->tire_number;
+	            $tonkho['pattern'][$going->tire_pattern] = isset($tonkho['size'][$going->tire_pattern])?$tonkho['pattern'][$going->tire_pattern]+$going->tire_number:$going->tire_number;
+            }
+        }
+
         $tire_brand_model = $this->model->get('tirebrandModel');
         $tire_size_model = $this->model->get('tiresizeModel');
         $tire_pattern_model = $this->model->get('tirepatternModel');
@@ -34,6 +66,22 @@ Class ordertireController Extends baseController {
         $tire_brands = $tire_brand_model->getAllTire(array('order_by'=>'tire_brand_name ASC'));
         $tire_sizes = $tire_size_model->getAllTire(array('order_by'=>'tire_size_number ASC'));
         $tire_patterns = $tire_pattern_model->getAllTire(array('order_by'=>'tire_pattern_name ASC'));
+
+        foreach ($tire_brands as $key => $brand) {
+        	if (!isset($tonkho['brand'][$brand->tire_brand_id]) || $tonkho['brand'][$brand->tire_brand_id] == 0) {
+        		unset($tire_brands[$key]);
+        	}
+        }
+        foreach ($tire_sizes as $key => $size) {
+        	if (!isset($tonkho['size'][$size->tire_size_id]) || $tonkho['size'][$size->tire_size_id] == 0) {
+        		unset($tire_sizes[$key]);
+        	}
+        }
+        foreach ($tire_patterns as $key => $pattern) {
+        	if (!isset($tonkho['pattern'][$pattern->tire_pattern_id]) || $tonkho['pattern'][$pattern->tire_pattern_id] == 0) {
+        		unset($tire_patterns[$key]);
+        	}
+        }
 
         $this->view->data['tire_brands'] = $tire_brands;
         $this->view->data['tire_sizes'] = $tire_sizes;
@@ -533,7 +581,7 @@ Class ordertireController Extends baseController {
             $order = $this->registry->router->order_by ? $this->registry->router->order : 'DESC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
-            $limit = 50;
+            $limit = 18446744073709;
             $trangthai = 0;
             $nv = "";
             $batdau = '01-'.date('m-Y');
@@ -766,44 +814,44 @@ Class ordertireController Extends baseController {
             $last_month[$tire->order_tire_id] = $total_order_before;
             $this_month[$tire->order_tire_id] = $total_order;
 
-            if ($total_order_before>0) {
-                $choose = $total_order_before;
-                if ($tire->order_tire_number > $total_order_before) {
-                    $choose = $tire->order_tire_number;
-                }
+            // if ($total_order_before>0) {
+            //     $choose = $total_order_before;
+            //     if ($tire->order_tire_number > $total_order_before) {
+            //         $choose = $tire->order_tire_number;
+            //     }
 
-                if ($choose<20) {
-                    $column = "tire_retail";
-                }
-                else if ($choose<40) {
-                    $column = "tire_20";
-                }
-                else if ($choose<60) {
-                    $column = "tire_40";
-                }
-                else if ($choose<80) {
-                    $column = "tire_60";
-                }
-                else if ($choose<100) {
-                    $column = "tire_80";
-                }
-                else if ($choose<120) {
-                    $column = "tire_100";
-                }
-                else if ($choose<150) {
-                    $column = "tire_120";
-                }
-                else if ($choose<180) {
-                    $column = "tire_150";
-                }
-                else if ($choose<220) {
-                    $column = "tire_180";
-                }
-                else {
-                    $column = "tire_cont";
-                }
-            }
-            else{
+            //     if ($choose<20) {
+            //         $column = "tire_retail";
+            //     }
+            //     else if ($choose<40) {
+            //         $column = "tire_20";
+            //     }
+            //     else if ($choose<60) {
+            //         $column = "tire_40";
+            //     }
+            //     else if ($choose<80) {
+            //         $column = "tire_60";
+            //     }
+            //     else if ($choose<100) {
+            //         $column = "tire_80";
+            //     }
+            //     else if ($choose<120) {
+            //         $column = "tire_100";
+            //     }
+            //     else if ($choose<150) {
+            //         $column = "tire_120";
+            //     }
+            //     else if ($choose<180) {
+            //         $column = "tire_150";
+            //     }
+            //     else if ($choose<220) {
+            //         $column = "tire_180";
+            //     }
+            //     else {
+            //         $column = "tire_cont";
+            //     }
+            // }
+            // else{
                 if ($total_order<20) {
                     $column = "tire_retail";
                 }
@@ -834,7 +882,7 @@ Class ordertireController Extends baseController {
                 else {
                     $column = "tire_cont";
                 }
-            }
+            //}
 
             $tongchiphi = $tire->order_cost+$tire->discount+$tire->reduce;
             $tongsoluong = $tire->order_tire_number;      
@@ -931,19 +979,34 @@ Class ordertireController Extends baseController {
                 $salary = (($gia-$tire_price_origin)*$arr_salary['phantram']/100)*$sale->tire_number;
 
 
-                if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                // if ($dongia < $tire_prices*0.95 || $dongia < $tire_price_origin) {
+                //     $salary = 0;
+                // }
+                // else{
+                //     if ($tire->customer_type==1) {
+                //         if ($dongia < $tire_prices*0.96) {
+                //             $salary = $arr_salary['sanluong']*$sale->tire_number;
+                //         }
+                //     }
+                //     else{
+                //         if ($dongia < $tire_prices*0.98) {
+                //             $salary = $arr_salary['sanluong']*$sale->tire_number;
+                //         }
+                //     }
+
+                //     if ($salary < $arr_salary['sanluong']*$sale->tire_number) {
+                //         $salary = $arr_salary['sanluong']*$sale->tire_number;
+                //     }
+                // }
+
+                if ($dongia < $giacongkhai*0.748) {
                     $salary = 0;
                 }
                 else{
-                    if ($tire->customer_type==1) {
-                        if ($dongia < $tire_prices*0.96) {
-                            $salary = $arr_salary['sanluong']*$sale->tire_number;
-                        }
-                    }
-                    else{
-                        if ($dongia < $tire_prices*0.98) {
-                            $salary = $arr_salary['sanluong']*$sale->tire_number;
-                        }
+                    $quydinh = $tire_prices*100/$giacongkhai;
+                    $ban = $dongia*100/$giacongkhai;
+                    if ($ban < ($quydinh-4)) {
+                        $salary = $arr_salary['sanluong']*$sale->tire_number;
                     }
 
                     if ($salary < $arr_salary['sanluong']*$sale->tire_number) {
@@ -1007,7 +1070,7 @@ Class ordertireController Extends baseController {
             $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
-            $limit = 50;
+            $limit = 18446744073709;
             $trangthai = 0;
             $nv = "";
             $batdau = '01-'.date('m-Y');
@@ -2182,8 +2245,11 @@ Class ordertireController Extends baseController {
                     $price=0;
 
                     $brand = $tire_brand_model->getTireByWhere(array('tire_brand_name'=>$v['tire_brand']))->tire_brand_id;
-                    $size = $tire_size_model->getTireByWhere(array('tire_size_number'=>$v['tire_size']))->tire_size_id;
+                    $sizes = $tire_size_model->getTireByWhere(array('tire_size_number'=>$v['tire_size']));
                     $pattern = $tire_pattern_model->getTireByWhere(array('tire_pattern_name'=>$v['tire_pattern']))->tire_pattern_id;
+
+                    $size = $sizes->tire_size_id;
+                    $size_num = explode('R', $sizes->tire_size_number)[0];
 
                     $ngay = strtotime(date('d-m-Y'));
                     $ngaytruoc = strtotime(date('d-m-Y', strtotime(date('d-m-Y',$ngay). ' - 1 days')));
@@ -2211,6 +2277,15 @@ Class ordertireController Extends baseController {
                             else{
                                 $price_vat = $p->tire_price-$event->money_discount;
                             }
+                        }
+
+                        $price_vat = round($price_vat*0.995/1000)*1000;
+
+                        if (intval($size_num) > 10) {
+                        	$price_vat = $price_vat-70000;
+                        }
+                        else{
+                        	$price_vat = $price_vat-40000;
                         }
                         
                         $pr = $price_vat;
@@ -2301,7 +2376,10 @@ Class ordertireController Extends baseController {
                 $order = trim($_POST['id_order_tire']);
                 $brand = $tire_brand_model->getTireByWhere(array('tire_brand_name'=>$_POST['tire_brand']))->tire_brand_id;
                 $pattern = $tire_pattern_model->getTireByWhere(array('tire_pattern_name'=>$_POST['tire_pattern']))->tire_pattern_id;
-                $size = $tire_size_model->getTireByWhere(array('tire_size_number'=>$_POST['tire_size']))->tire_size_id;
+                $sizes = $tire_size_model->getTireByWhere(array('tire_size_number'=>$_POST['tire_size']));
+                $size = $sizes->tire_size_id;
+                $size_num = explode('R', $sizes->tire_size_number)[0];
+
                 $number = trim($_POST['tire_number']);
 
                 $data = array(
@@ -2354,6 +2432,15 @@ Class ordertireController Extends baseController {
                                     $price_vat = $p->tire_price-$event->money_discount;
                                 }
                             }
+
+                            $price_vat = round($price_vat*0.995/1000)*1000;
+
+	                        if (intval($size_num) > 10) {
+	                        	$price_vat = $price_vat-70000;
+	                        }
+	                        else{
+	                        	$price_vat = $price_vat-40000;
+	                        }
 
                             $pr = $price_vat;
                             $va = round(($pr*10*0.1)/1.1*0.1);
@@ -2509,6 +2596,15 @@ Class ordertireController Extends baseController {
                                     $price_vat = $p->tire_price-$event->money_discount;
                                 }
                             }
+
+                            $price_vat = round($price_vat*0.995/1000)*1000;
+
+	                        if (intval($size_num) > 10) {
+	                        	$price_vat = $price_vat-70000;
+	                        }
+	                        else{
+	                        	$price_vat = $price_vat-40000;
+	                        }
                             
                             $pr = $price_vat;
                             $va = round(($pr*10*0.1)/1.1*0.1);
@@ -3251,11 +3347,11 @@ Class ordertireController Extends baseController {
             'where' => 'order_tire='.$id,
         );
 
-        /*if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 8) {
+        if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 3 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 8 && $_SESSION['role_logined'] != 2) {
             $data = array(
                 'where' => 'order_tire IN (SELECT order_tire_id FROM order_tire WHERE order_tire_id ='.$id.' AND sale = '.$_SESSION["userid_logined"].')',
             );
-        }*/
+        }
 
         $order_tire_lists = $order_tire_list_model->getAllTire($data,$join);
         $this->view->data['order_tire_lists'] = $order_tire_lists;
@@ -3543,7 +3639,7 @@ Class ordertireController Extends baseController {
 
                         date_default_timezone_set("Asia/Ho_Chi_Minh"); 
                         $filename = "action_logs.txt";
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|warranty|".$_POST['order_tire']."|order_tire|"."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|warranty|".$_POST['data']."|order_tire|"."\n"."\r\n";
                         
                         $fh = fopen($filename, "a") or die("Could not open log file.");
                         fwrite($fh, $text) or die("Could not write file!");
