@@ -45,7 +45,7 @@ Class ordertireController Extends baseController {
         foreach ($tire_sales as $sale) {
             $tonkho['brand'][$sale->tire_brand] = isset($tonkho['brand'][$sale->tire_brand])?$tonkho['brand'][$sale->tire_brand]-$sale->volume:(0-$sale->volume);
             $tonkho['size'][$sale->tire_size] = isset($tonkho['size'][$sale->tire_size])?$tonkho['size'][$sale->tire_size]-$sale->volume:(0-$sale->volume);
-            $tonkho['pattern'][$sale->tire_pattern] = isset($tonkho['size'][$sale->tire_pattern])?$tonkho['pattern'][$sale->tire_pattern]-$sale->volume:(0-$sale->volume);
+            $tonkho['pattern'][$sale->tire_pattern] = isset($tonkho['pattern'][$sale->tire_pattern])?$tonkho['pattern'][$sale->tire_pattern]-$sale->volume:(0-$sale->volume);
         }
 
      
@@ -55,7 +55,7 @@ Class ordertireController Extends baseController {
             foreach ($goings as $going) {
                 $tonkho['brand'][$going->tire_brand] = isset($tonkho['brand'][$going->tire_brand])?$tonkho['brand'][$going->tire_brand]+$going->tire_number:$going->tire_number;
 	            $tonkho['size'][$going->tire_size] = isset($tonkho['size'][$going->tire_size])?$tonkho['size'][$going->tire_size]+$going->tire_number:$going->tire_number;
-	            $tonkho['pattern'][$going->tire_pattern] = isset($tonkho['size'][$going->tire_pattern])?$tonkho['pattern'][$going->tire_pattern]+$going->tire_number:$going->tire_number;
+	            $tonkho['pattern'][$going->tire_pattern] = isset($tonkho['pattern'][$going->tire_pattern])?$tonkho['pattern'][$going->tire_pattern]+$going->tire_number:$going->tire_number;
             }
         }
 
@@ -577,7 +577,7 @@ Class ordertireController Extends baseController {
             $code = isset($_POST['tu']) ? $_POST['tu'] : null;
         }
         else{
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'order_tire_status ASC, order_number';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'order_tire_status ASC, ABS(SUBSTRING(order_number,4,4)) DESC, ABS(SUBSTRING(order_number,4))';
             $order = $this->registry->router->order_by ? $this->registry->router->order : 'DESC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
@@ -1066,7 +1066,7 @@ Class ordertireController Extends baseController {
             $code = isset($_POST['tu']) ? $_POST['tu'] : null;
         }
         else{
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'order_tire_status ASC, order_number';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'order_tire_status ASC, ABS(SUBSTRING(order_number,4,4)) DESC, ABS(SUBSTRING(order_number,4))';
             $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
@@ -1764,33 +1764,55 @@ Class ordertireController Extends baseController {
 
             if (trim($_POST['customer']) == "") {
                 if (trim($_POST['customer_name']) != "") {
-                    $data_cus = array(
-                        'customer_name' => addslashes(trim($_POST['customer_name'])),
-                        'company_name' => addslashes(trim($_POST['company'])),
-                        'mst' => trim($_POST['mst']),
-                        'customer_address' => addslashes(trim($_POST['address'])),
-                        'customer_phone' => trim($_POST['phone']),
-                        'customer_email' => trim($_POST['email']),
-                        'customer_contact' => trim($_POST['contact']),
-                        'customer_create_user' => trim($_POST['order_staff']),
-                        'customer_tire_type' => $_POST['customer_type'],
-                    );
+                    $cus = $customer_model->getCustomerByWhere(array('customer_name' => trim($_POST['customer_name'])));
+                    if (!$cus) {
+                        if (trim($_POST['mst']) != "") {
+                            $cus = $customer_model->getCustomerByWhere(array('mst' => trim($_POST['mst'])));
+                        }
+                        if (!$cus) {
+                            if (trim($_POST['phone']) != "") {
+                                $cus = $customer_model->getCustomerByWhere(array('customer_phone' => trim($_POST['phone'])));
+                                if (!$cus) {
+                                    $cus = $customer_model->getCustomerByWhere(array('customer_phone' => str_replace(' ', '', trim($_POST['phone']))));
+                                }
+                            }
+                        }
+                    }
+                    
 
-                    $customer_model->createCustomer($data_cus);
-                    $id_customer = $customer_model->getLastCustomer()->customer_id;
+                    if ($cus) {
+                        $id_customer = $cus->customer_id;
+                    }
+                    else{
+                        $data_cus = array(
+                            'customer_name' => addslashes(trim($_POST['customer_name'])),
+                            'company_name' => addslashes(trim($_POST['company'])),
+                            'mst' => trim($_POST['mst']),
+                            'customer_address' => addslashes(trim($_POST['address'])),
+                            'customer_phone' => trim($_POST['phone']),
+                            'customer_email' => trim($_POST['email']),
+                            'customer_contact' => trim($_POST['contact']),
+                            'customer_create_user' => trim($_POST['order_staff']),
+                            'customer_tire_type' => $_POST['customer_type'],
+                        );
 
-                    $data_contact_person = array(
-                        'contact_person_name' => trim($_POST['contact']),
-                        'contact_person_phone' => trim($_POST['phone']),
-                        'contact_person_mobile' => trim($_POST['phone']),
-                        'contact_person_email' => trim($_POST['email']),
-                        'contact_person_birthday' => null,
-                        'contact_person_address' => null,
-                        'contact_person_position' => null,
-                        'contact_person_department' => null,
-                        'customer' => $id_customer,
-                    );
-                    $contact_person_model->createCustomer($data_contact_person);
+                        $customer_model->createCustomer($data_cus);
+                        $id_customer = $customer_model->getLastCustomer()->customer_id;
+
+                        $data_contact_person = array(
+                            'contact_person_name' => trim($_POST['contact']),
+                            'contact_person_phone' => trim($_POST['phone']),
+                            'contact_person_mobile' => trim($_POST['phone']),
+                            'contact_person_email' => trim($_POST['email']),
+                            'contact_person_birthday' => null,
+                            'contact_person_address' => null,
+                            'contact_person_position' => null,
+                            'contact_person_department' => null,
+                            'customer' => $id_customer,
+                        );
+                        $contact_person_model->createCustomer($data_contact_person);
+                    }
+                    
                 }
             }
             else{
@@ -3043,6 +3065,7 @@ Class ordertireController Extends baseController {
             $invoice_tire_model = $this->model->get('invoicetireModel');
             $invoice_tire_detail_model = $this->model->get('invoicetiredetailModel');
             $additional_model = $this->model->get('additionalModel');
+            $account_balance_model = $this->model->get('accountbalanceModel');
             if (isset($_POST['xoa'])) {
                 $data = explode(',', $_POST['xoa']);
                 foreach ($data as $data) {
@@ -3069,7 +3092,11 @@ Class ordertireController Extends baseController {
                         $lift->queryLift('DELETE FROM lift WHERE order_tire = '.$data);
                         $invoice_tire_model->queryInvoice('DELETE FROM invoice_tire WHERE order_tire = '.$data);
                         $invoice_tire_detail_model->queryInvoice('DELETE FROM invoice_tire_detail WHERE order_tire = '.$data);
-                        $additional_model->queryAdditional('DELETE FROM additional WHERE order_tire = '.$data);
+                        $additionals = $additional_model->getAllAdditional(array('where'=>'order_tire = '.$data));
+                        foreach ($additionals as $add) {
+                           $additional_model->deleteAdditional($add->additional_id);
+                           $account_balance_model->queryAccount("DELETE FROM account_balance WHERE additional = ".$add->additional_id);
+                        }
                         $order_tire_model->deleteTire($data);
                         echo "Xóa thành công";
                         date_default_timezone_set("Asia/Ho_Chi_Minh"); 
@@ -3109,6 +3136,11 @@ Class ordertireController Extends baseController {
                         $invoice_tire_model->queryInvoice('DELETE FROM invoice_tire WHERE order_tire = '.$_POST['data']);
                         $invoice_tire_detail_model->queryInvoice('DELETE FROM invoice_tire_detail WHERE order_tire = '.$_POST['data']);
                         $additional_model->queryAdditional('DELETE FROM additional WHERE order_tire = '.$_POST['data']);
+                        $additionals = $additional_model->getAllAdditional(array('where'=>'order_tire = '.$_POST['data']));
+                        foreach ($additionals as $add) {
+                           $additional_model->deleteAdditional($add->additional_id);
+                           $account_balance_model->queryAccount("DELETE FROM account_balance WHERE additional = ".$add->additional_id);
+                        }
                         $order_tire_model->deleteTire($_POST['data']);
                         echo "Xóa thành công";
                         date_default_timezone_set("Asia/Ho_Chi_Minh"); 
@@ -5470,7 +5502,7 @@ Class ordertireController Extends baseController {
 
             if ($str == "") {
                 $last = "";
-                $lasts = $order_tire_model->getAllTire(array('order_by'=>'order_number DESC','limit'=>1));
+                $lasts = $order_tire_model->getAllTire(array('order_by'=>'ABS(SUBSTRING(order_number,4,4)) DESC, ABS(SUBSTRING(order_number,4)) DESC','limit'=>1));
                 foreach ($lasts as $tire) {
                     $last = str_replace('lx-', '', $tire->order_number);
                 }

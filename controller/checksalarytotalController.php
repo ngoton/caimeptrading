@@ -209,13 +209,13 @@ Class checksalarytotalController Extends baseController {
         foreach ($attendances as $attendance) {
             $sotieng = round($attendance->attendance_total/8,2);
             if ($attendance->check_in_1 != "" && $attendance->check_in_1 != 0) {
-                $ngay = explode(':', $attendance->check_in_1);
+                $ngay = intval(explode(':', $attendance->check_in_1));
             }
             else{
                 $ngay = [7,30];
             }
 
-            if ($ngay[0] > 8) {
+            if ($ngay[0] > 8 || $ngay[0]==0) {
                 $ngay = [7,30];
             }
             

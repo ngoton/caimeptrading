@@ -54,6 +54,23 @@ Class stockanalyticsController Extends baseController {
                 $dangve[$tire_going->import_tire_order_id][$going->tire_brand_name.$going->tire_size_number.$going->tire_pattern_name] = isset($dangve[$tire_going->import_tire_order_id][$going->tire_brand_name.$going->tire_size_number.$going->tire_pattern_name])?$dangve[$tire_going->import_tire_order_id][$going->tire_brand_name.$going->tire_size_number.$going->tire_pattern_name]+$going->tire_number:$going->tire_number;
             }
         }
+
+        $batdau = '01-01-'.date('Y');
+        $ketthuc = date('t-m-Y');   
+        $ngayketthuc = date('d-m-Y', strtotime($ketthuc. ' + 1 days'));
+
+        $data = array(
+            'where' => 'import_tire_order_date >= '.strtotime($batdau).' AND import_tire_order_date < '.strtotime($ngayketthuc),
+        );
+
+        $import_tire_orders = $import_tire_order_model->getAllImport($data,null);
+        $total_cont = 1;
+        foreach ($import_tire_orders as $import_tire_order) {
+            if ($import_tire_order->import_tire_order_status == 3 && $import_tire_order->import_tire_order_total >= 200) {
+                $total_cont += $import_tire_order->import_tire_order_cont_total;
+            }
+        }
+        $this->view->data['total_cont'] = $total_cont;
         
 
         $this->view->data['orders'] = $orders;

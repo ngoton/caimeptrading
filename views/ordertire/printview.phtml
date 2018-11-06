@@ -6,7 +6,7 @@
     <style type="text/css">
     @media print {
       @page { margin: 0; }
-      body { margin: 0.8cm 0.8cm 0cm 0.8cm; height: 100%; -webkit-print-color-adjust: exact;}
+      body { margin: 0.5cm 0.5cm 0cm 0.5cm; height: 100%; -webkit-print-color-adjust: exact;}
       .footer{
        position:fixed;
        bottom:15px;
@@ -14,6 +14,7 @@
         color: #8e8a8a;
        }
     }
+    @page { margin: 0.3cm 0.3cm 0cm 0.3cm; }
     #wrap{
             background: url('/public/img/watermarkA4.png') no-repeat;
         }
@@ -559,7 +560,8 @@
                 </tr>
             </tbody>
         </table>
-        <div class="footer"><i>Please visit our website to view the status of your order. https://www.viet-trade.org</i><img height="50" src="<?php echo BASE_URL.'/'.$img ?>" /></div>
+        
     </div>
+    <div class="footer"><i>Please visit our website to view the status of your order. https://www.viet-trade.org</i><img height="50" src="<?php echo BASE_URL.'/'.$img ?>" /></div>
     </body>
 </html>

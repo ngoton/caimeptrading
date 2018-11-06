@@ -238,7 +238,7 @@ elseif ($order_by == 'order_tire_number')
         ?>
         <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $order_tire->order_tire_id ?>" class="edit_tr font-italic or_<?php echo $order_tire->customer ?>" data="<?php echo ($order_tire->sale==$_SESSION['userid_logined'] || $_SESSION['role_logined']==1)?1:0 ?>" <?php echo $color!=""?'style="background:'.$color.'"':null ?> >
             <td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $order_tire->order_tire_id ?>"></td>
-            <td class="fix"><?php echo $m++; ?></td>
+            <td class="fix getAgent" title="<?php echo $order_tire->id_order_agent; ?>" alt="<?php echo $order_tire->customer_agent_link; ?>"><?php echo $m++; ?></td>
             <td class="fix masterTooltip"  id="order_number_<?php echo $order_tire->order_tire_id; ?>" <?php echo ($_SESSION['role_logined']==1 || $_SESSION['role_logined']==9 || $order_tire->sale==$_SESSION['userid_logined']) ? 'title="Lương SP: '.$lib->formatMoney($salary[$order_tire->order_tire_id]).'"' : null; ?> >
                 <?php 
                 if($order_tire->order_number != ""){ ?>
@@ -250,7 +250,7 @@ elseif ($order_by == 'order_tire_number')
                     echo '<button class="order_number" data="'.$order_tire->order_tire_id.'">Số ĐH</button>';
                 ?>
             </td>
-            <td class="fix getAgent" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>" title="<?php echo $order_tire->id_order_agent; ?>" alt="<?php echo $order_tire->customer_agent_link; ?>" ><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a> <br><a  style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->customer ?>" value="1"  class="editButton"><i class="fa fa-file-text-o"></i> Hợp đồng</a> 
+            <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>"  ><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a> <br><a  style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->customer ?>" value="1"  class="editButton"><i class="fa fa-file-text-o"></i> Hợp đồng</a> 
                 <?php if(($order_tire->sale_lock!=1 && ($order_tire->sale==$_SESSION['userid_logined'] || $order_tire->sale_cskh==$_SESSION['userid_logined'])) || $_SESSION['role_logined']==1 || $_SESSION['role_logined']==3){ ?>
                 <a title="Chuyển" style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->order_tire_id ?>" value="<?php echo $order_tire->customer ?>" class="editCustomer"><i class="fa fa-mail-forward"></i></a>
                 <?php } ?>
@@ -421,7 +421,7 @@ elseif ($order_by == 'order_tire_number')
     ?>
         <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $order_tire->order_tire_id ?>" class="edit_tr" data="<?php echo ($order_tire->sale==$_SESSION['userid_logined'] || $_SESSION['role_logined']==1)?1:0 ?>" <?php echo $color!=""?'style="background:'.$color.'"':null ?> >
         	<td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $order_tire->order_tire_id ?>"></td>
-            <td class="fix"><?php echo $k++; ?></td>
+            <td class="fix getAgent" title="<?php echo $order_tire->id_order_agent; ?>" alt="<?php echo $order_tire->customer_agent_link; ?>"><?php echo $k++; ?></td>
             <td class="fix masterTooltip"  id="order_number_<?php echo $order_tire->order_tire_id; ?>" <?php echo ($_SESSION['role_logined']==1 || $_SESSION['role_logined']==9 || $order_tire->sale==$_SESSION['userid_logined']) ? 'title="Lương SP: '.$lib->formatMoney($salary[$order_tire->order_tire_id]).'"' : null; ?> >
                 <?php 
                 if($order_tire->order_number != ""){ ?>
@@ -433,7 +433,7 @@ elseif ($order_by == 'order_tire_number')
                     echo '<button class="order_number" data="'.$order_tire->order_tire_id.'">Số ĐH</button>';
                 ?>
             </td>
-            <td class="fix getAgent" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>" title="<?php echo $order_tire->id_order_agent; ?>" alt="<?php echo $order_tire->customer_agent_link; ?>" ><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a> <br><a  style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->customer ?>" value="1"  class="editButton"><i class="fa fa-file-text-o"></i> Hợp đồng</a> 
+            <td class="fix" data="<?php echo $order_tire->customer; ?>"  id="customer_<?php echo $order_tire->order_tire_id; ?>"  ><a target="_blank" href="<?php echo $this->url('customer/index/'.$order_tire->customer); ?>"><?php echo $order_tire->customer_name; ?></a> <br><a  style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->customer ?>" value="1"  class="editButton"><i class="fa fa-file-text-o"></i> Hợp đồng</a> 
                 <?php if(($order_tire->sale_lock!=1 && ($order_tire->sale==$_SESSION['userid_logined'] || $order_tire->sale_cskh==$_SESSION['userid_logined'])) || $_SESSION['role_logined']==1 || $_SESSION['role_logined']==3){ ?>
                 <a title="Chuyển" style="font-weight:bold;text-decoration:underline" data="<?php echo $order_tire->order_tire_id ?>" value="<?php echo $order_tire->customer ?>" class="editCustomer"><i class="fa fa-mail-forward"></i></a>
                 <?php } ?>
@@ -2644,7 +2644,7 @@ $('.masterTooltip').hover(function(){
         .css({ top: mousey, left: mousex })
 });
 
-/*$('.getAgent').hover(function(){
+$('.getAgent').toggle(function(){
         // Hover over code
         var title = $(this).attr('title');
         var link = $(this).attr('alt');
@@ -2670,7 +2670,7 @@ $('.masterTooltip').hover(function(){
         var mousey = e.pageY - 100; //Get Y coordinates
         $('.showAgent')
         .css({ top: mousey, left: mousex })
-});*/
+});
 
 
 });

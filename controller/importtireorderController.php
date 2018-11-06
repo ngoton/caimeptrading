@@ -72,8 +72,17 @@ Class importtireorderController Extends baseController {
         $data = array(
             'where' => 'import_tire_order_date >= '.strtotime($batdau).' AND import_tire_order_date < '.strtotime($ngayketthuc),
         );
+
+        $import_tire_orders = $import_tire_order_model->getAllImport($data,null);
+        $total_cont = 1;
+        foreach ($import_tire_orders as $import_tire_order) {
+            if ($import_tire_order->import_tire_order_status == 3 && $import_tire_order->import_tire_order_total >= 200) {
+                $total_cont += $import_tire_order->import_tire_order_cont_total;
+            }
+        }
+        $this->view->data['total_cont'] = $total_cont;
         
-        $tongsodong = count($import_tire_order_model->getAllImport($data,null));
+        $tongsodong = count($import_tire_orders);
         $tongsotrang = ceil($tongsodong / $sonews);
         
 
@@ -110,13 +119,7 @@ Class importtireorderController Extends baseController {
         
         $this->view->data['import_tire_orders'] = $import_tire_orders;
 
-        $total_cont = 1;
-        foreach ($import_tire_orders as $order) {
-            if ($order->import_tire_order_status == 3 && $order->import_tire_order_total >= 200) {
-                $total_cont += $order->import_tire_order_cont_total;
-            }
-        }
-        $this->view->data['total_cont'] = $total_cont;
+        
        
         $this->view->data['lastID'] = isset($import_tire_order_model->getLastImport()->import_tire_order_code)?$import_tire_order_model->getLastImport()->import_tire_order_code:0;
 

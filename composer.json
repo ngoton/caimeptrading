@@ -11,7 +11,8 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "~6.0",
-        "phpseclib/phpseclib": "~2.0"
+        "phpseclib/phpseclib": "~2.0",
+        "mpdf/mpdf": "^7.1"
     },
     "autoload": {
         "psr-4": {

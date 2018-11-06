@@ -393,11 +393,13 @@ Class adminController Extends baseController {
         // $end_year = date('Y',strtotime($ketthuc));
 
 
-        $join = array('table'=>'user','where'=>'account=user_id');
-        $staff_datas = $staff_model->getAllStaff(array('where'=>'(staff_id=67 OR staff_id=66 OR staff_id=65 OR staff_id=64 OR staff_id=63 OR staff_id=14 OR staff_id=12 OR staff_id=2)'),$join);
+        // $join = array('table'=>'user','where'=>'account=user_id');
+        // $staff_datas = $staff_model->getAllStaff(array('where'=>'(staff_id=67 OR staff_id=66 OR staff_id=65 OR staff_id=64 OR staff_id=63 OR staff_id=14 OR staff_id=12 OR staff_id=2)'),$join);
 
+        // $this->view->data['staff_datas'] = $staff_datas;
+
+        $staff_datas = $staff_sales;
         $this->view->data['staff_datas'] = $staff_datas;
-
 
 
         $start = $month = strtotime('01-01-2015');
@@ -828,12 +830,21 @@ Class adminController Extends baseController {
         $tire_brand_model = $this->model->get('tirebrandModel');
         $tire_size_model = $this->model->get('tiresizeModel');
         $customer_model = $this->model->get('customerModel');
+        $order_tire_lock_model = $this->model->get('ordertirelockModel');
 
         foreach ($arr as $value) {
             $order_tire_list = $order_tire_list_model->getTire($value);
 
             $order_tire = $order_tire_model->getTire($order_tire_list->order_tire);
 
+            $data_lock = array(
+                'sale'=>$order_tire->sale,
+                'tire_brand'=>$order_tire_list->tire_brand,
+                'tire_size'=>$order_tire_list->tire_size,
+                'tire_pattern'=>$order_tire_list->tire_pattern,
+                'expired_date'=>strtotime(date('d-m-Y') . " +1 days"),
+            );
+            $order_tire_lock_model->createTire($data_lock);
 
             $order_tire_list_model->deleteTire($value);
 
