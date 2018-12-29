@@ -1418,7 +1418,7 @@ Class dailyController Extends baseController {
             $payment_request_detail_model = $this->model->get('paymentrequestdetailModel');
             
             $accounts = $account_model->getAllAccount(array('order_by'=>'account_number ASC'));
-            $additionals = $payment_request_detail_model->getAllPayment(array('where'=>'payment_request='.$_GET['payment']));
+            $additionals = $payment_request_detail_model->getAllPayment(array('where'=>'payment_request='.$_GET['payment'],'order_by'=>'payment_request_detail_code ASC'));
 
             $str = "";
             $i = 1;

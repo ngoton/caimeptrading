@@ -25,7 +25,7 @@ Class expectpayedController Extends baseController {
             $trangthai = isset($_POST['trangthai']) ? $_POST['trangthai'] : null;
         }
         else{
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'pay.pay_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'pay_id ASC,pay.pay_date';
             $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'DESC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
@@ -131,7 +131,7 @@ Class expectpayedController Extends baseController {
         $this->view->data['payables'] = $payables;
 
         $join = array('table'=>'bank','where'=>'bank.bank_id = costs.source');
-        $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'pay_date';
+        $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'costs_id ASC,pay_date';
 
         $costs_model = $this->model->get('costsModel');
         $sonews = $limit;

@@ -158,6 +158,7 @@ Class vatController Extends baseController {
         $items = $params;
 
         $guid = null;
+        $invoice_code = null;
         if ($items['eHD'][0] == 1) {
             $invoices = $invoice_tire_model->getAllInvoice(array('where'=>'invoice_tire_number = "'.$items['sohd'][0].'" AND invoice_tire_form = "'.$items['mauso'][0].'" AND invoice_tire_symbol = "'.$items['kyhieu'][0].'"'));
 
@@ -181,6 +182,7 @@ Class vatController Extends baseController {
             $res = json_decode($eHD->Object);
             if (isset($res[0]->InvoiceGUID)) {
                 $guid = $res[0]->InvoiceGUID;
+                $invoice_code = $res[0]->InvoiceCode;
             }
         }
 
@@ -194,6 +196,7 @@ Class vatController Extends baseController {
                     'invoice_tire_date'=> strtotime($items['ngay'][0].'-'.$items['thang'][0].'-20'.$items['nam'][0]),
                     'invoice_tire_create_user'=>$_SESSION['userid_logined'],
                     'invoice_tire_guid'=>$guid,
+                    'invoice_tire_code'=>$invoice_code,
                     'invoice_tire_form'=>$items['mauso'][0],
                     'invoice_tire_symbol'=>$items['kyhieu'][0],
                 );
@@ -278,6 +281,11 @@ Class vatController Extends baseController {
         $this->view->data['congtien'] = str_replace(',', '', $params['congtien'][0]);
         $this->view->data['tienthue'] = str_replace(',', '', $params['tienthue'][0]);
         $this->view->data['tongcong'] = str_replace(',', '', $params['tongcong'][0]);
+
+        $this->view->data['errorHD'] = 0;
+        if ($items['eHD'][0] == 1 && ($guid == null || $guid == "00000000-0000-0000-0000-000000000000")) {
+            $this->view->data['errorHD'] = 1;
+        }
 
         
 
@@ -318,6 +326,7 @@ Class vatController Extends baseController {
         $items = $params;
 
         $guid = null;
+        $invoice_code = null;
         if ($items['eHD'][0] == 1) {
             $invoices = $invoice_tire_model->getAllInvoice(array('where'=>'invoice_tire_number = "'.$items['sohd'][0].'" AND invoice_tire_form = "'.$items['mauso'][0].'" AND invoice_tire_symbol = "'.$items['kyhieu'][0].'"'));
 
@@ -341,6 +350,7 @@ Class vatController Extends baseController {
             $res = json_decode($eHD->Object);
             if (isset($res[0]->InvoiceGUID)) {
                 $guid = $res[0]->InvoiceGUID;
+                $invoice_code = $res[0]->InvoiceCode;
             }
         }
         
@@ -353,6 +363,7 @@ Class vatController Extends baseController {
                     'invoice_tire_date'=> strtotime($items['ngay'][0].'-'.$items['thang'][0].'-20'.$items['nam'][0]),
                     'invoice_tire_create_user'=>$_SESSION['userid_logined'],
                     'invoice_tire_guid'=>$guid,
+                    'invoice_tire_code'=>$invoice_code,
                     'invoice_tire_form'=>$items['mauso'][0],
                     'invoice_tire_symbol'=>$items['kyhieu'][0],
                 );
@@ -436,6 +447,11 @@ Class vatController Extends baseController {
         $this->view->data['congtien'] = str_replace(',', '', $params['congtien'][0]);
         $this->view->data['tienthue'] = str_replace(',', '', $params['tienthue'][0]);
         $this->view->data['tongcong'] = str_replace(',', '', $params['tongcong'][0]);
+
+        $this->view->data['errorHD'] = 0;
+        if ($items['eHD'][0] == 1 && ($guid == null || $guid == "00000000-0000-0000-0000-000000000000")) {
+            $this->view->data['errorHD'] = 1;
+        }
 
         $this->view->show('vat/printview');
     }
@@ -525,6 +541,25 @@ Class vatController Extends baseController {
             date_default_timezone_set("Asia/Ho_Chi_Minh"); 
             $filename = "action_logs.txt";
             $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."delete"."|".$_POST['data']."|invoice_tire|".$_POST['data']."\n"."\r\n";
+            
+            $fh = fopen($filename, "a") or die("Could not open log file.");
+            fwrite($fh, $text) or die("Could not write file!");
+            fclose($fh);
+        }
+   }
+   public function deleteall(){
+        if (isset($_POST['data'])) {
+            $invoice_tire_model = $this->model->get('invoicetireModel');
+            $invoice_tire_detail_model = $this->model->get('invoicetiredetailModel');
+
+            $invoice_tire_model->queryInvoice('DELETE FROM invoice_tire WHERE invoice_tire_number="'.$_POST['data'].'" and invoice_tire_form = "'.$_POST['mauso'].'" AND invoice_tire_symbol="'.$_POST['kyhieu'].'"');
+
+            $invoice_tire_detail_model->queryInvoice('DELETE FROM invoice_tire_detail  WHERE invoice_tire_detail_number="'.$_POST['data'].'" and invoice_tire_detail_form = "'.$_POST['mauso'].'" AND invoice_tire_detail_symbol="'.$_POST['kyhieu'].'"');
+
+
+            date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+            $filename = "action_logs.txt";
+            $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."deleteall"."|".$_POST['data']."|invoice_tire|".$_POST['data']."\n"."\r\n";
             
             $fh = fopen($filename, "a") or die("Could not open log file.");
             fwrite($fh, $text) or die("Could not write file!");
@@ -681,7 +716,7 @@ Class vatController Extends baseController {
                 $pattern = $tire_pattern_model->getTire($items['pattern'][$j])->tire_pattern_name;
 
                 $CommandObject[0]['ListInvoiceDetailsWS'][] = array(
-                    'ItemName' => $brand.' '.$size.' '.$pattern,
+                    'ItemName' => 'Lốp '.$brand.' '.$size.' '.$pattern,
                     'UnitName' => substr($size, -2)=='.5'?'Cái':'Bộ',
                     'Qty' => $items['sl'][$j],
                     'Price' => str_replace(',', '', $items['dg'][$j]),

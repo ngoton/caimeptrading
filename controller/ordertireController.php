@@ -1,4 +1,6 @@
 <?php
+require "lib/google-api-php-client-2.2.2/vendor/autoload.php";
+
 Class ordertireController Extends baseController {
     
     public function index() {
@@ -793,7 +795,7 @@ Class ordertireController Extends baseController {
             $total_order_before = 0; //Tổng sản lượng tháng trước
             $total_order = 0; //Tổng sản lượng tháng này
 
-            $myDate = strtotime(date("d-m-Y", strtotime('01-'.date('m-Y',$tire->delivery_date))) . "-1 month" ) ;
+            $myDate = strtotime(date("d-m-Y", $ngay) . "-1 month" ) ;
 
             $sum_order = $tiresale_model->queryTire('SELECT SUM(volume) AS tong FROM tire_sale WHERE customer='.$tire->customer.' AND tire_sale_date >= '.strtotime('01-'.date('m-Y',$myDate)).' AND tire_sale_date <= '.strtotime(date('t-m-Y',$myDate)).' GROUP BY customer');
                 
@@ -854,33 +856,43 @@ Class ordertireController Extends baseController {
             // else{
                 if ($total_order<20) {
                     $column = "tire_retail";
+                    $column_agent = "tire_agent_10";
                 }
                 else if ($total_order<40) {
                     $column = "tire_20";
+                    $column_agent = "tire_agent_20";
                 }
                 else if ($total_order<60) {
                     $column = "tire_40";
+                    $column_agent = "tire_agent_40";
                 }
                 else if ($total_order<80) {
                     $column = "tire_60";
+                    $column_agent = "tire_agent_60";
                 }
                 else if ($total_order<100) {
                     $column = "tire_80";
+                    $column_agent = "tire_agent_80";
                 }
                 else if ($total_order<120) {
                     $column = "tire_100";
+                    $column_agent = "tire_agent_100";
                 }
                 else if ($total_order<150) {
                     $column = "tire_120";
+                    $column_agent = "tire_agent_120";
                 }
                 else if ($total_order<180) {
                     $column = "tire_150";
+                    $column_agent = "tire_agent_150";
                 }
                 else if ($total_order<220) {
                     $column = "tire_180";
+                    $column_agent = "tire_agent_180";
                 }
                 else {
                     $column = "tire_cont";
+                    $column_agent = "tire_agent_cont";
                 }
             //}
 
@@ -888,7 +900,7 @@ Class ordertireController Extends baseController {
             $tongsoluong = $tire->order_tire_number;      
             
             $data = array(
-                'where' => 'order_tire = '.$tire->order_tire_id,
+                'where' => 'tire_number>0 AND order_tire = '.$tire->order_tire_id,
             );
             $sales = $tire_list_model->getAllTire($data);
             foreach ($sales as $sale) {
@@ -927,6 +939,7 @@ Class ordertireController Extends baseController {
                 $tire_price_discount_events = $tire_price_discount_event_model->getAllTire($data_e);
 
                 $tire_prices = $dongia;
+                $tire_price_agents = $dongia;
                 $giacongkhai = $dongia;
 
                 foreach ($tire_price_discounts as $price) {
@@ -938,17 +951,20 @@ Class ordertireController Extends baseController {
                     // }
 
                     $tire_prices = $price->$column;
+                    $tire_price_agents = $price->$column_agent;
                     $tire_price_origin = ($price->tire_price*0.75); // giá công khai giảm 25% + vc
                     $giacongkhai = $price->tire_price;
 
                     foreach ($tire_price_discount_events as $event) {
                         if ($event->percent_discount > 0) {
                             $tire_prices = $price->$column*((100-$event->percent_discount)/100);
+                            $tire_price_agents = $price->$column_agent*((100-$event->percent_discount)/100);
                             $tire_price_origin = ($price->tire_price*0.75)*((100-$event->percent_discount)/100);
                             $giacongkhai = $price->tire_price*((100-$event->percent_discount)/100);
                         }
                         else{
                             $tire_prices = $price->$column-$event->money_discount;
+                            $tire_price_agents = $price->$column_agent-$event->money_discount;
                             $tire_price_origin = ($price->tire_price*0.75)-$event->money_discount;
                             $giacongkhai = $price->tire_price-$event->money_discount;
                         }
@@ -961,17 +977,33 @@ Class ordertireController Extends baseController {
                 $gia = $dongia-$chiphi;
                 $dongia = $dongia-$chiphi;
 
-                if ($tire->vat==0) {
-                    if ($tire_prices<5000000) {
-                        $discount = 160000;
-                    }
-                    else{
-                        $discount = 200000;
-                    }
+                if ($tire->customer_type==1) {
+                    if ($tire->vat==0) {
+                        if ($tire_price_agents<5000000) {
+                            $discount = 160000;
+                        }
+                        else{
+                            $discount = 200000;
+                        }
 
-                    $gia = $gia+$discount;
-                    $dongia = $dongia+$discount;
+                        $gia = $gia+$discount;
+                        $dongia = $dongia+$discount;
+                    }
                 }
+                else{
+                    if ($tire->vat==0) {
+                        if ($tire_prices<5000000) {
+                            $discount = 160000;
+                        }
+                        else{
+                            $discount = 200000;
+                        }
+
+                        $gia = $gia+$discount;
+                        $dongia = $dongia+$discount;
+                    }
+                }
+                
 
                 $order_tire_discount[$tire->order_tire_id]['thu'] = isset($order_tire_discount[$tire->order_tire_id]['thu'])?$order_tire_discount[$tire->order_tire_id]['thu']+$gia*$sale->tire_number:$gia*$sale->tire_number;
                 $order_tire_discount[$tire->order_tire_id]['gia'] = isset($order_tire_discount[$tire->order_tire_id]['gia'])?$order_tire_discount[$tire->order_tire_id]['gia']+$giacongkhai*$sale->tire_number:$giacongkhai*$sale->tire_number;
@@ -1003,7 +1035,13 @@ Class ordertireController Extends baseController {
                     $salary = 0;
                 }
                 else{
-                    $quydinh = $tire_prices*100/$giacongkhai;
+                    if ($tire->customer_type==1) {
+                        $quydinh = $tire_price_agents*100/$giacongkhai;
+                    }
+                    else{
+                        $quydinh = $tire_prices*100/$giacongkhai;
+                    }
+                    
                     $ban = $dongia*100/$giacongkhai;
                     if ($ban < ($quydinh-4)) {
                         $salary = $arr_salary['sanluong']*$sale->tire_number;
@@ -2498,7 +2536,7 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $warranty = round($total*$order_tire->warranty/100);
+                        $warranty = round($total*$order_tire->warranty_percent/100);
                         $total = $total - $discount - $warranty;
 
 
@@ -2666,7 +2704,7 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $warranty = round($total*$order_tire->warranty/100);
+                        $warranty = round($total*$order_tire->warranty_percent/100);
                         $total = $total - $discount - $warranty;
 
                         $data_order = array(
@@ -3738,7 +3776,7 @@ Class ordertireController Extends baseController {
                     }
 
                     $discount = $order_tire->discount+$order_tire->reduce;
-                    $warranty = round($total*$order_tire->warranty/100);
+                    $warranty = round($total*$order_tire->warranty_percent/100);
                     $total = $total - $discount - $warranty;
 
 
@@ -3863,7 +3901,7 @@ Class ordertireController Extends baseController {
                     }
 
                     $discount = $order_tire->discount+$order_tire->reduce;
-                    $warranty = round($total*$order_tire->warranty/100);
+                    $warranty = round($total*$order_tire->warranty_percent/100);
                     $total = $total - $discount - $warranty;
 
                     $data_order = array(
@@ -4863,7 +4901,7 @@ Class ordertireController Extends baseController {
                         }
 
                         $discount = $order_tire->discount+$order_tire->reduce;
-                        $warranty = round($total*$order_tire->warranty/100);
+                        $warranty = round($total*$order_tire->warranty_percent/100);
                         $total = $total - $discount - $warranty;
 
 
@@ -5551,7 +5589,15 @@ Class ordertireController Extends baseController {
                     $str .= '<td></td><td>Ngày hóa đơn</td>';
                     $str .= '<td><input tabindex="2" class="invoice_tire_date" type="date" name="invoice_tire_date[]" required="required" value="'.date('Y-m-d',$v->invoice_tire_date) .'"></td></tr>';
                     
-                    $str .= '</table></td></tr>';                                         
+                    $str .= '</table></td>';
+                    if ($v->invoice_tire_guid!="") {
+                        $str .= '<td><a href="https://van.ehoadon.vn/Lookup?InvoiceGUID='.$v->invoice_tire_guid.'" target="_blank" ><i class="fa fa-search"></i> Tra cứu</a></td>';
+                    }
+                    else{
+                        $str .= '<td><a href="https://van.ehoadon.vn/TCHD?MTC='.$v->invoice_tire_code.'" target="_blank" ><i class="fa fa-search"></i> Tra cứu</a></td>';
+                    }
+                    
+                    $str .= '</tr>';                                         
                     
                 }
             }
@@ -5578,6 +5624,284 @@ Class ordertireController Extends baseController {
         }
     }
 
+
+    public function attachment($id) {
+        $this->view->disableLayout();
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        $authUrl = "";
+
+        $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/ordertire/uploadDrive';
+        $client = new Google_Client();
+        $client->setAuthConfig('client_credentials.json');
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->setAccessType('offline');        // offline access
+        $client->setApprovalPrompt('force');
+        $client->setIncludeGrantedScopes(true);   // incremental auth
+        $service = new Google_Service_Drive($client);
+
+        $tokenPath = 'google_token.json';
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+            $_SESSION['upload_token'] = $accessToken;
+        }
+        
+        // set the access token as part of the client
+        if (!empty($_SESSION['upload_token'])) {
+          $client->setAccessToken($_SESSION['upload_token']);
+          // If there is no previous token or it's expired.
+            if ($client->isAccessTokenExpired()) {
+                // Refresh the token if possible, else fetch a new one.
+                if ($client->getRefreshToken()) {
+                    $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+                } else {
+                    $authUrl = $client->createAuthUrl();
+                }
+            }
+
+        } else {
+          $authUrl = $client->createAuthUrl();
+        }
+        $attachment_model = $this->model->get('attachmentModel');
+
+        $attachments = $attachment_model->getAllAttachment(array('where'=>'order_tire='.$id));
+
+        $this->view->data['order'] = $id;
+        $this->view->data['attachments'] = $attachments;
+        $this->view->data['authUrl'] = $authUrl;
+        $this->view->show('ordertire/attachment');
+        
+    }
+    public function uploadDrive() {
+        $this->view->disableLayout();
+
+        $attachment_model = $this->model->get('attachmentModel');
+        
+        $tokenPath = 'google_token.json';
+        $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/ordertire/uploadDrive';
+        $client = new Google_Client();
+        $client->setAuthConfig('client_credentials.json');
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->setAccessType('offline');        // offline access
+        $client->setApprovalPrompt('force');
+        $client->setIncludeGrantedScopes(true);   // incremental auth
+        $service = new Google_Service_Drive($client);
+
+        /************************************************
+         * If we have a code back from the OAuth 2.0 flow,
+         * we need to exchange that with the
+         * Google_Client::fetchAccessTokenWithAuthCode()
+         * function. We store the resultant access token
+         * bundle in the session, and redirect to ourself.
+         ************************************************/
+        if (isset($_GET['code'])) {
+          $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+          $client->setAccessToken($token);
+          // store in the session also
+          $_SESSION['upload_token'] = $token;
+          // Save the token to a file.
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
+            }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+          // redirect back to the example
+          echo "<script>window.close();</script>";
+        }
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+            $_SESSION['upload_token'] = $accessToken;
+        }
+
+        $file = new Google_Service_Drive_DriveFile();
+
+
+        $output_dir = "public/files/";
+        if(isset($_FILES["myfile"]))
+        {
+            $ret = array();
+
+            $error =$_FILES["myfile"]["error"];
+            //You need to handle  both cases
+            //If Any browser does not support serializing of multiple files using FormData() 
+            if(!is_array($_FILES["myfile"]["name"])) //single file
+            {
+                $fileName = $_FILES["myfile"]["name"];
+                $fullpath = $output_dir.$fileName;
+                $file_info = pathinfo($fullpath);
+                $uploaded_filename = $file_info['filename'];
+
+                $count = 1;                 
+                while (file_exists($fullpath)) {
+                  $info = pathinfo($fullpath);
+                  $uploaded_filename .= '(' . $count++ . ')';
+                  $fullpath = $info['dirname'] . '/' . $uploaded_filename . '.' . $info['extension'];
+                }
+                move_uploaded_file($_FILES["myfile"]["tmp_name"],$fullpath);
+                
+                $file->setName($uploaded_filename);
+                $result = $service->files->create($file, array(
+                  'data' => file_get_contents($fullpath),
+                  'mimeType' => 'application/octet-stream',
+                  'uploadType' => 'media'
+                ));
+
+                $fileId = $result->id;
+                $service->getClient()->setUseBatch(true);
+                try {
+                    $batch = $service->createBatch();
+
+                    $domainPermission = new Google_Service_Drive_Permission(array(
+                        'type' => 'anyone',
+                        'role' => 'reader'
+                    ));
+                    $request = $service->permissions->create(
+                        $fileId, $domainPermission, array('fields' => 'id'));
+                    $batch->add($request, 'anyone');
+                    $batch->execute();
+
+                } finally {
+                    $service->getClient()->setUseBatch(false);
+                }
+
+                $ret[] = $result->id;
+
+                $data = array(
+                    'order_tire'=>$_POST['order'],
+                    'attachment_date'=>time(),
+                    'attachment_name'=>$result->name,
+                    'attachment_link'=>'https://drive.google.com/open?id='.$result->id,
+                    'attachment_user'=>$_SESSION['userid_logined']
+                );
+                $attachment_model->createAttachment($data);
+
+                unlink($fullpath);
+            }
+            else  //Multiple files, file[]
+            {
+              $fileCount = count($_FILES["myfile"]["name"]);
+              for($i=0; $i < $fileCount; $i++)
+              {
+                $fileName = $_FILES["myfile"]["name"][$i];
+                $fullpath = $output_dir.$fileName;
+                $file_info = pathinfo($fullpath);
+                $uploaded_filename = $file_info['filename'];
+
+                $count = 1;                 
+                while (file_exists($fullpath)) {
+                  $info = pathinfo($fullpath);
+                  $uploaded_filename .= '(' . $count++ . ')';
+                  $fullpath = $info['dirname'] . '/' . $uploaded_filename . '.' . $info['extension'];
+                }
+                move_uploaded_file($_FILES["myfile"]["tmp_name"][$i],$fullpath);
+
+                $file->setName($uploaded_filename);
+                $result = $service->files->create($file, array(
+                  'data' => file_get_contents($fullpath),
+                  'mimeType' => 'application/octet-stream',
+                  'uploadType' => 'media'
+                ));
+
+                $fileId = $result->id;
+                $service->getClient()->setUseBatch(true);
+                try {
+                    $batch = $service->createBatch();
+
+                    $domainPermission = new Google_Service_Drive_Permission(array(
+                        'type' => 'anyone',
+                        'role' => 'reader'
+                    ));
+                    $request = $service->permissions->create(
+                        $fileId, $domainPermission, array('fields' => 'id'));
+                    $batch->add($request, 'anyone');
+                    $batch->execute();
+
+                } finally {
+                    $service->getClient()->setUseBatch(false);
+                }
+
+                $ret[] = $result->id;
+
+                $data = array(
+                    'order_tire'=>$_POST['order'],
+                    'attachment_date'=>time(),
+                    'attachment_name'=>$result->name,
+                    'attachment_link'=>'https://drive.google.com/open?id='.$result->id,
+                    'attachment_user'=>$_SESSION['userid_logined']
+                );
+                $attachment_model->createAttachment($data);
+                
+                unlink($fullpath);
+              }
+            
+            }
+
+            echo json_encode($ret);
+            
+         }
+
+        // Now lets try and send the metadata as well using multipart!
+          
+    }
+    public function deleteDrive(){
+        $this->view->disableLayout();
+
+        $attachment_model = $this->model->get('attachmentModel');
+
+        $tokenPath = 'google_token.json';
+        $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/ordertire/uploadDrive';
+        $client = new Google_Client();
+        $client->setAuthConfig('client_credentials.json');
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->setAccessType('offline');        // offline access
+        $client->setApprovalPrompt('force');
+        $client->setIncludeGrantedScopes(true);   // incremental auth
+        $service = new Google_Service_Drive($client);
+
+        /************************************************
+         * If we have a code back from the OAuth 2.0 flow,
+         * we need to exchange that with the
+         * Google_Client::fetchAccessTokenWithAuthCode()
+         * function. We store the resultant access token
+         * bundle in the session, and redirect to ourself.
+         ************************************************/
+        if (isset($_GET['code'])) {
+          $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+          $client->setAccessToken($token);
+          // store in the session also
+          $_SESSION['upload_token'] = $token;
+          // Save the token to a file.
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
+            }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+          // redirect back to the example
+          echo "<script>window.close();</script>";
+        }
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+            $_SESSION['upload_token'] = $accessToken;
+        }
+
+        
+
+        $output_dir = "https://drive.google.com/open?id=";
+        if(isset($_POST["op"]) && $_POST["op"] == "delete" && isset($_POST['name']))
+        {
+            $fileName =$_POST['name'];
+            $filePath = $output_dir. $fileName;
+            $attachment_model->queryAttachment('DELETE FROM attachment WHERE attachment_link ="'.$output_dir. $fileName.'"');
+
+            $service->files->delete($fileName);
+        }
+    }
+
     public function contract() {
         $this->view->disableLayout();
         if (!isset($_SESSION['userid_logined'])) {
@@ -5585,6 +5909,7 @@ Class ordertireController Extends baseController {
         }
 
         $customer_model = $this->model->get('customerModel');
+        $order_tire_model = $this->model->get('ordertireModel');
 
         $customers = $customer_model->getCustomer($this->registry->router->param_id);
 
@@ -5592,6 +5917,15 @@ Class ordertireController Extends baseController {
         $info = $this->registry->router->addition;
         
         $arr = explode('@', $info);
+
+        $data = array(
+            'contract_number'=>str_replace('$', '/', $arr[1]),
+            'contract_date'=>strtotime($arr[0]),
+            'contract_pay_1'=>$arr[2],
+            'contract_pay_2'=>$arr[3],
+            'contract_end_date'=>strtotime($arr[4]),
+        );
+        $order_tire_model->updateTire($data,array('order_tire_id'=>$this->registry->router->page));
 
         $this->view->data['company'] = strtoupper($customers->company_name);
         $this->view->data['mst'] = $customers->mst;
@@ -5603,7 +5937,7 @@ Class ordertireController Extends baseController {
         $this->view->data['name'] = $customers->director;
 
         $this->view->data['contract_date'] = explode('-', $arr[0]);
-        $this->view->data['contract_number'] = $arr[1];
+        $this->view->data['contract_number'] = str_replace('$', '/', $arr[1]);
         $this->view->data['contract_pay'] = $arr[2];
         $this->view->data['contract_pay2'] = $arr[3];
         $this->view->data['contract_valid'] = str_replace('-', '/', $arr[4]);
@@ -5671,9 +6005,9 @@ Class ordertireController Extends baseController {
             $index_worksheet = 0; //(worksheet mặc định là 0, nếu tạo nhiều worksheet $index_worksheet += 1)
             $objPHPExcel->setActiveSheetIndex($index_worksheet)
                 ->setCellValue('A1', 'Đơn vị bán hàng: CÔNG TY TNHH VIỆT TRA DE')
-                ->setCellValue('A2', 'Địa chỉ: Số 545, Tổ 10, Ấp Hương Phước, Phước Tân, Biên Hòa, Đồng Nai')
+                ->setCellValue('A2', 'Địa chỉ: Số 29, Quốc lộ 51, Ấp Đồng, Phước Tân, Biên Hòa, Đồng Nai')
                 ->setCellValue('A3', 'MST: 3603295302')
-                ->setCellValue('A4', 'Điện thoại: 0613 937 677')
+                ->setCellValue('A4', 'Điện thoại: 02513 937 677')
                 ->setCellValue('A6', 'BẢNG KÊ')
                 ->setCellValue('G7', 'TP Biên Hòa, Ngày '.date('d').' tháng '.date('m').' năm '.date('Y').'')
                ->setCellValue('A9', 'Kính gửi: '.$customers->company_name)
@@ -5939,9 +6273,9 @@ Class ordertireController Extends baseController {
                 ->setCellValue('A6', 'MST: ')
                 ->setCellValue('B6', "'3603295302")
                 ->setCellValue('A7', 'Địa chỉ: ')
-                ->setCellValue('B7', 'Số 545, Tổ 10, Ấp Hương Phước, xã Phước Tân, TP.Biên Hòa, Đồng Nai')
+                ->setCellValue('B7', 'Số 29, Quốc lộ 51, Ấp Đồng, Xã Phước Tân, TP.Biên Hòa, Đồng Nai')
                 ->setCellValue('A8', 'Điện thoại: ')
-                ->setCellValue('B8', '0613 937 677')
+                ->setCellValue('B8', '02513 937 677')
                 ->setCellValue('C8', 'STK: ')
                 ->setCellValue('D8', '200970509 ')
                 ->setCellValue('E8', 'ACB Biên Hòa')
@@ -6258,7 +6592,7 @@ Class ordertireController Extends baseController {
                 ->setCellValue('C8', 'CÔNG TY TNHH VIỆT TRA DE')
                 ->setCellValue('A9', '- Mã số thuế: 3603295302')
                 ->setCellValue('F9', 'Hotline: 0283 500 9000')
-                ->setCellValue('A10', '- Địa chỉ: Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP.Biên Hòa, Đồng Nai')
+                ->setCellValue('A10', '- Địa chỉ: Số 29, Quốc lộ 51, Ấp Đồng, Xã Phước Tân, TP.Biên Hòa, Đồng Nai')
                 ->setCellValue('A11', '- Ông/bà: '.$staffs->staff_name)
                 ->setCellValue('E11', 'Chức vụ: ')
                 ->setCellValue('F11', 'SĐT: '.$staffs->staff_phone)

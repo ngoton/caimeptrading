@@ -332,7 +332,7 @@ $this->helper('slidePaginator');
                             <td><input type="hidden" readonly id="yes" name="yes" required="required" ></td>
                             <td>&nbsp;</td>
                         </tr>
-                        
+                        <?php if($_SESSION['role_logined']==1) { ?>
                         
                          <tr>
                             <td></td>
@@ -344,6 +344,7 @@ $this->helper('slidePaginator');
                             <td></td>
                              
                         </tr>
+                        <?php } ?>
                     </table> 
                 </form>
             </div>

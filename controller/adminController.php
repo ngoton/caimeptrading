@@ -220,6 +220,9 @@ Class adminController Extends baseController {
 
                 }
             }
+            else{
+                $info_staff['kh'][$tire->sale] = 1;
+            }
             
 
             $c[$tire->sale][] = $tire->customer;
@@ -791,6 +794,7 @@ Class adminController Extends baseController {
         $order_tire_list_model = $this->model->get('ordertirelistModel');
         $tire_buy_model = $this->model->get('tirebuyModel');
         $tire_sale_model = $this->model->get('tiresaleModel');
+        $tire_going_model = $this->model->get('tiregoingModel');
         $today = date('d-m-Y');
         $before = date('d-m-Y', strtotime($today. ' - 2 days'));
 
@@ -808,6 +812,11 @@ Class adminController Extends baseController {
                 $tire_sales = $tire_sale_model->getAllTire(array('where'=>'tire_brand = '.$order_list->tire_brand.' AND tire_size = '.$order_list->tire_size.' AND tire_pattern = '.$order_list->tire_pattern));
                 foreach ($tire_sales as $tire) {
                     $ton -= $tire->volume;
+                }
+
+                $tire_goings = $tire_going_model->getAllTire(array('where'=>'(status IS NULL OR status != 1 ) AND tire_brand = '.$order_list->tire_brand.' AND tire_size = '.$order_list->tire_size.' AND tire_pattern = '.$order_list->tire_pattern));
+                foreach ($tire_goings as $going) {
+                    $ton += $going->tire_number;
                 }
 
                 $join = array('table'=>'order_tire','where'=>'order_tire != '.$order_list->order_tire.' AND order_tire=order_tire_id AND (order_tire_status IS NULL OR order_tire_status=0)');
@@ -845,6 +854,7 @@ Class adminController Extends baseController {
                 'expired_date'=>strtotime(date('d-m-Y') . " +1 days"),
             );
             $order_tire_lock_model->createTire($data_lock);
+            $order_tire_lock_model->queryTire('DELETE FROM order_tire_lock WHERE sale = '.$order_tire->sale.' AND expired_date < '.strtotime(date('d-m-Y') . " -1 days"));
 
             $order_tire_list_model->deleteTire($value);
 

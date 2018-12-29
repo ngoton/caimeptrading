@@ -5,9 +5,9 @@ $tongorder = 0;
 $tongdangve = 0;
 ?>
 <center style="clear:both;"><h1>BẢNG THEO DÕI</h1></center>
-<a class="add_button" id="btnExport" >Export Excel</a>
+<a class="add_button" href="<?php echo $this->url('stockanalytics/export') ?>" >Export Excel</a>
 <div class="add-box thongtin" style="text-align:center;width:20%">
-  <table class="table_data">
+  <table class="table_data_edit">
     <tr>
       <th>SL cont nhập</th>
       <th>Tỷ lệ</th>
@@ -18,12 +18,10 @@ $tongdangve = 0;
     </tr>
   </table>
 </div>
+<div style="clear: both;"></div>
 <div class="report">
-    <table id="tblExport">
-        <tr>
-            <td>
-                <div class="report-left">
-                    <table class="table_data">
+    <div class="report-left">
+                    <table class="table_data_edit">
                         <thead>
                             <tr>
                                 <th colspan="3" class="fix">GOODRIDE</th>
@@ -132,9 +130,10 @@ $tongdangve = 0;
                        
                     </table>
                 </div>
+            
                 <div class="report-right">
-                    <div class="report-right report-right-fix" style="float:left">
-                        <table class="table_data">
+                    <div style="float:left">
+                        <table class="table_data_edit">
                             <thead>
                                 <tr>
                                     <?php foreach ($orders as $order) { ?>
@@ -307,15 +306,15 @@ $tongdangve = 0;
                             </tbody>
                         </table>
                     </div>
-                    <div class="report-right">
-                    <div class="report-right report-right-fix" style="float:left">
-                        <table class="table_data">
+                    
+                    <div  style="float:left">
+                        <table class="table_data_edit">
                             <thead>
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
                                         <th class="fix show_going"><?php echo $tire_going->import_tire_order_code ?></th>
                                     <?php } ?>
-                                    <th style="background: rgba(255, 165, 0, 0.2)" class="fix" id="show_going">Tổng đang về</th>
+                                    <th style="background: rgba(255, 165, 0, 0.2)" class="fix" id="show_going">Đang về</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -479,12 +478,96 @@ $tongdangve = 0;
                                     } ?>
                                     <td style="background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($tongdangve) ?></td>
                                 </tr>
+                                <tr style="font-weight: bold;">
+                                    <?php foreach ($tire_goings as $tire_going) { 
+                                        if ($tire_going->import_tire_order_status==4) {
+                                    ?>
+                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" value="2">Cho đặt</button></td>
+                                    <?php 
+                                        }
+                                        else{
+                                    ?>
+                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" value="4">Hủy đặt</button></td>
+                                    <?php
+                                        }
+                                    } ?>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    
-                    <div class="report-right report-right-fix" style="float:left">
-                        <table class="table_data">
+                    <div  style="float:left">
+                        <table class="table_data_edit">
+                            <thead>
+                                <tr>
+                                    <th class="fix">Đang chờ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride7.50R16CR926'])?$chodat['Goodride7.50R16CR926']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride9.00-20CL946'])?$chodat['Goodride9.00-20CL946']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride10.00R20CR926'])?$chodat['Goodride10.00R20CR926']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CR926'])?$chodat['Goodride11.00R20CR926']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CR976A'])?$chodat['Goodride11.00R20CR976A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CM987'])?$chodat['Goodride11.00R20CM987']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CB972'])?$chodat['Goodride11.00R20CB972']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CR926'])?$chodat['Goodride12.00R20CR926']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CM913A'])?$chodat['Goodride12.00R20CM913A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20EZ356'])?$chodat['Goodride12.00R20EZ356']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11R22.5CR976A'])?$chodat['Goodride11R22.5CR976A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11R22.5AS668'])?$chodat['Goodride11R22.5AS668']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11R22.5CM983'])?$chodat['Goodride11R22.5CM983']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5CR926'])?$chodat['Goodride12R22.5CR926']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5CR976A'])?$chodat['Goodride12R22.5CR976A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5AS668'])?$chodat['Goodride12R22.5AS668']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5MD738'])?$chodat['Goodride12R22.5MD738']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CR960A'])?$chodat['Goodride295/75R22.5CR960A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CM983'])?$chodat['Goodride295/75R22.5CM983']:null ?></td>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td class="fix"><?php echo $lib->formatMoney(array_sum($chodat)) ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div  style="float:left">
+                        <table class="table_data_edit">
                             <thead>
                                 <tr>
                                     <th style="background: rgba(0, 128, 0, 0.2)" class="fix">Tồn kho</th>
@@ -554,8 +637,8 @@ $tongdangve = 0;
                             </tbody>
                         </table>
                     </div>
-                    <div class="report-right report-right-fix" style="float:left">
-                        <table class="table_data">
+                    <div  style="float:left">
+                        <table class="table_data_edit">
                             <thead>
                                 <tr>
                                     <th style="background: rgba(0, 0, 255, 0.2)" class="fix">Đặt hàng</th>
@@ -626,9 +709,7 @@ $tongdangve = 0;
                         </table>
                     </div>
                 </div>
-            </td>
-        </tr>
-    </table>
+            
 </div>
 
 <script type="text/javascript">
@@ -642,12 +723,24 @@ $tongdangve = 0;
     },function(){
         $('.show_going').hide();
     });
+
+$('.stock_going').click(function(){
+    var data = $(this).attr('data');
+    var val = $(this).attr('value');
+    $.post("<?php echo BASE_URL ?>/stockanalytics/going", {data: data, value: val},
+       function(data){
+        setTimeout(function() {
+            sapxep('1','','');
+          }, 200);
+       
+       }); 
+});
 </script>
 
 <style type="text/css">
 .report{
     width: 100%;
-    margin: -5px auto;
+    margin: 5px auto;
 }
 .report-left{
     float: left;
@@ -655,8 +748,7 @@ $tongdangve = 0;
     margin-right:15px;
 }
 .report-right{
-    
-    overflow: auto;
+    width: 100%;
 }
 .report-right td{
     height: 39px;
@@ -665,4 +757,45 @@ $tongdangve = 0;
 .show_order, .show_going{
     display: none;
 }
+.table_data_edit {
+border-color: #d1e5ee;
+background-color: #fff;
+border-spacing: 0;
+width: 100%;
+margin: 0;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+-moz-border-radius: 3px;
+border-width: 1px;
+border-style: solid;
+}
+.table_data_edit thead tr th.fix{
+text-align: center;
+border:1px solid;
+}
+.table_data_edit thead tr th {
+background: #f5fafd;
+background-image: -webkit-gradient(linear,left bottom,left top,from(#eff8ff),to(#f7fcfe));
+background-image: -webkit-linear-gradient(bottom,#eff8ff,#f7fcfe);
+background-image: -moz-linear-gradient(bottom,#eff8ff,#f7fcfe);
+background-image: -o-linear-gradient(bottom,#eff8ff,#f7fcfe);
+background-image: linear-gradient(to top,#eff8ff,#f7fcfe);
+padding: 5px;
+color: #21759b;
+text-align: left;
+cursor: pointer;
+}
+.table_data_edit td {
+border-top: 1px solid #80C8E5;
+padding: 4px;
+vertical-align: middle;
+line-height: inherit;
+overflow: hidden;
+}
+.table_data_edit tbody tr td.fix {
+    border-right: 1px dotted #21759b;
+}
+.table_data_edit tr:nth-child(even) {background: rgba(255, 240, 250, 0.59)}
+.table_data_edit tr:nth-child(odd) {background: #FFF}
+.table_data_edit tr:hover{background: rgba(68, 157, 245, 0.56); cursor: pointer;}
 </style>

@@ -291,33 +291,43 @@ Class checksalaryController Extends baseController {
                 // else{
                     if ($total_order<20) {
                         $column = "tire_retail";
+                        $column_agent = "tire_agent_10";
                     }
                     else if ($total_order<40) {
                         $column = "tire_20";
+                        $column_agent = "tire_agent_20";
                     }
                     else if ($total_order<60) {
                         $column = "tire_40";
+                        $column_agent = "tire_agent_40";
                     }
                     else if ($total_order<80) {
                         $column = "tire_60";
+                        $column_agent = "tire_agent_60";
                     }
                     else if ($total_order<100) {
                         $column = "tire_80";
+                        $column_agent = "tire_agent_80";
                     }
                     else if ($total_order<120) {
                         $column = "tire_100";
+                        $column_agent = "tire_agent_100";
                     }
                     else if ($total_order<150) {
                         $column = "tire_120";
+                        $column_agent = "tire_agent_120";
                     }
                     else if ($total_order<180) {
                         $column = "tire_150";
+                        $column_agent = "tire_agent_150";
                     }
                     else if ($total_order<220) {
                         $column = "tire_180";
+                        $column_agent = "tire_agent_180";
                     }
                     else {
                         $column = "tire_cont";
+                        $column_agent = "tire_agent_cont";
                     }
                 //}
 
@@ -345,6 +355,7 @@ Class checksalaryController Extends baseController {
                     
 
                     $tire_prices = $dongia;
+                    $tire_price_agents = $dongia;
                     $tire_price_origin = $dongia;
                     $giacongkhai = $dongia;
 
@@ -378,17 +389,20 @@ Class checksalaryController Extends baseController {
                         }
 
                         $tire_prices = $tire->$column;
+                        $tire_price_agents = $tire->$column_agent; 
                         $tire_price_origin = ($tire->tire_price*0.75); // giá công khai giảm 25% + vc
                         $giacongkhai = $tire->tire_price; // giá công khai
 
                         foreach ($tire_price_discount_events as $event) {
                             if ($event->percent_discount > 0) {
                                 $tire_prices = $tire->$column*((100-$event->percent_discount)/100);
+                                $tire_price_agents = $tire->$column_agent*((100-$event->percent_discount)/100);
                                 $tire_price_origin = ($tire->tire_price*0.75)*((100-$event->percent_discount)/100);
                                 $giacongkhai = $tire->tire_price*((100-$event->percent_discount)/100);
                             }
                             else{
                                 $tire_prices = $tire->$column-$event->money_discount;
+                                $tire_price_agents = $tire->$column_agent-$event->money_discount;
                                 $tire_price_origin = ($tire->tire_price*0.75)-$event->money_discount;
                                 $giacongkhai = $tire->tire_price-$event->money_discount;
                             }
@@ -404,18 +418,35 @@ Class checksalaryController Extends baseController {
                     $gia = $dongia-$chiphi;
                     $dongia = $dongia-$chiphi;
 
-                    // Không lấy Hđ
-                    if ($order_tire->vat==0) {
-                        if ($tire_prices<5000000) {
-                            $discount = 160000;
-                        }
-                        else{
-                            $discount = 200000;
-                        }
+                    if ($sale->customer_type==1) {
+                        // Không lấy Hđ
+                        if ($order_tire->vat==0) {
+                            if ($tire_price_agents<5000000) {
+                                $discount = 160000;
+                            }
+                            else{
+                                $discount = 200000;
+                            }
 
-                        $gia = $gia+$discount;
-                        $dongia = $dongia+$discount;
+                            $gia = $gia+$discount;
+                            $dongia = $dongia+$discount;
+                        }
                     }
+                    else{
+                        // Không lấy Hđ
+                        if ($order_tire->vat==0) {
+                            if ($tire_prices<5000000) {
+                                $discount = 160000;
+                            }
+                            else{
+                                $discount = 200000;
+                            }
+
+                            $gia = $gia+$discount;
+                            $dongia = $dongia+$discount;
+                        }
+                    }
+                    
 
                     $order_tire_discount[$order_tire->order_tire_id]['thu'] = isset($order_tire_discount[$order_tire->order_tire_id]['thu'])?$order_tire_discount[$order_tire->order_tire_id]['thu']+$gia*$sale->volume:$gia*$sale->volume;
                     $order_tire_discount[$order_tire->order_tire_id]['gia'] = isset($order_tire_discount[$order_tire->order_tire_id]['gia'])?$order_tire_discount[$order_tire->order_tire_id]['gia']+$giacongkhai*$sale->volume:$giacongkhai*$sale->volume;
@@ -448,7 +479,13 @@ Class checksalaryController Extends baseController {
                         $salary = 0;
                     }
                     else{
-                        $quydinh = $tire_prices*100/$giacongkhai;
+                        if ($sale->customer_type==1) {
+                            $quydinh = $tire_price_agents*100/$giacongkhai;
+                        }
+                        else{
+                            $quydinh = $tire_prices*100/$giacongkhai;
+                        }
+                        
                         $ban = $dongia*100/$giacongkhai;
                         if ($ban < ($quydinh-4)) {
                             $salary = $arr_salary['sanluong']*$sale->volume;
@@ -645,33 +682,43 @@ Class checksalaryController Extends baseController {
                 // else{
                     if ($total_order<20) {
                         $column = "tire_retail";
+                        $column_agent = "tire_agent_10";
                     }
                     else if ($total_order<40) {
                         $column = "tire_20";
+                        $column_agent = "tire_agent_20";
                     }
                     else if ($total_order<60) {
                         $column = "tire_40";
+                        $column_agent = "tire_agent_40";
                     }
                     else if ($total_order<80) {
                         $column = "tire_60";
+                        $column_agent = "tire_agent_60";
                     }
                     else if ($total_order<100) {
                         $column = "tire_80";
+                        $column_agent = "tire_agent_80";
                     }
                     else if ($total_order<120) {
                         $column = "tire_100";
+                        $column_agent = "tire_agent_100";
                     }
                     else if ($total_order<150) {
                         $column = "tire_120";
+                        $column_agent = "tire_agent_120";
                     }
                     else if ($total_order<180) {
                         $column = "tire_150";
+                        $column_agent = "tire_agent_150";
                     }
                     else if ($total_order<220) {
                         $column = "tire_180";
+                        $column_agent = "tire_agent_180";
                     }
                     else {
                         $column = "tire_cont";
+                        $column_agent = "tire_agent_cont";
                     }
                 //}
 
@@ -698,6 +745,7 @@ Class checksalaryController Extends baseController {
                     }
 
                     $tire_prices = $dongia;
+                    $tire_price_agents = $dongia;
                     $tire_price_origin = $dongia;
                     $giacongkhai = $dongia;
 
@@ -731,17 +779,20 @@ Class checksalaryController Extends baseController {
                         }
                         
                         $tire_prices = $tire->$column;
+                        $tire_price_agents = $tire->$column_agent;
                         $tire_price_origin = ($tire->tire_price*0.75);
                         $giacongkhai = $tire->tire_price;
 
                         foreach ($tire_price_discount_events as $event) {
                             if ($event->percent_discount > 0) {
                                 $tire_prices = $tire->$column*((100-$event->percent_discount)/100);
+                                $tire_price_agents = $tire->$column_agent*((100-$event->percent_discount)/100);
                                 $tire_price_origin = ($tire->tire_price*0.75)*((100-$event->percent_discount)/100);
                                 $giacongkhai = $tire->tire_price*((100-$event->percent_discount)/100);
                             }
                             else{
                                 $tire_prices = $tire->$column-$event->money_discount;
+                                $tire_price_agents = $tire->$column_agent-$event->money_discount;
                                 $tire_price_origin = ($tire->tire_price*0.75)-$event->money_discount;
                                 $giacongkhai = $tire->tire_price-$event->money_discount;
                             }
@@ -756,18 +807,35 @@ Class checksalaryController Extends baseController {
                     $gia = $dongia-$chiphi;
                     $dongia = $dongia-$chiphi;
 
-                    // Không lấy Hđ
-                    if ($order_tire->vat==0) {
-                        if ($tire_prices<5000000) {
-                            $discount = 160000;
-                        }
-                        else{
-                            $discount = 200000;
-                        }
+                    if ($sale->customer_type==1) {
+                        // Không lấy Hđ
+                        if ($order_tire->vat==0) {
+                            if ($tire_price_agents<5000000) {
+                                $discount = 160000;
+                            }
+                            else{
+                                $discount = 200000;
+                            }
 
-                        $gia = $gia+$discount;
-                        $dongia = $dongia+$discount;
+                            $gia = $gia+$discount;
+                            $dongia = $dongia+$discount;
+                        }
                     }
+                    else{
+                        // Không lấy Hđ
+                        if ($order_tire->vat==0) {
+                            if ($tire_prices<5000000) {
+                                $discount = 160000;
+                            }
+                            else{
+                                $discount = 200000;
+                            }
+
+                            $gia = $gia+$discount;
+                            $dongia = $dongia+$discount;
+                        }
+                    }
+                    
 
                     $order_tire_discount[$order_tire->order_tire_id]['thu'] = isset($order_tire_discount[$order_tire->order_tire_id]['thu'])?$order_tire_discount[$order_tire->order_tire_id]['thu']+$gia*$sale->volume:$gia*$sale->volume;
                     $order_tire_discount[$order_tire->order_tire_id]['gia'] = isset($order_tire_discount[$order_tire->order_tire_id]['gia'])?$order_tire_discount[$order_tire->order_tire_id]['gia']+$giacongkhai*$sale->volume:$giacongkhai*$sale->volume;
@@ -798,7 +866,13 @@ Class checksalaryController Extends baseController {
                         $salary = 0;
                     }
                     else{
-                        $quydinh = $tire_prices*100/$giacongkhai;
+                        if ($sale->customer_type==1) {
+                            $quydinh = $tire_price_agents*100/$giacongkhai;
+                        }
+                        else{
+                            $quydinh = $tire_prices*100/$giacongkhai;
+                        }
+                        
                         $ban = $dongia*100/$giacongkhai;
                         if ($ban < ($quydinh-4)) {
                             $salary = $arr_salary['sanluong']*$sale->volume;

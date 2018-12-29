@@ -508,6 +508,7 @@ $this->helper('slidePaginator');
                 <!-- Tab panes -->
                 <div class="tab-content">
                   <div class="tab-pane active" id="item" role="tabpanel">
+                    <div class="add-box"><input type="checkbox" id="check_auto" checked>Auto</div>
                     <div class="table-container">
                       <table id="dataTable0" class="dataTable">
                         <thead>
@@ -837,24 +838,29 @@ $('.additional_code').keyup(function(){
     
 });
 $('.additional_debit:first').chosen().change(function(){
-  var val = $(this).val();
-  $('.additional_debit').each(function(){
-    var rowIndex=$(this).closest('tr').index();
-    if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-      $(this).val(val);
-      $(this).trigger("chosen:updated");
-    }
-  });
+  if ($('#check_auto').is(':checked')) {
+    var val = $(this).val();
+    $('.additional_debit').each(function(){
+      var rowIndex=$(this).closest('tr').index();
+      if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+        $(this).val(val);
+        $(this).trigger("chosen:updated");
+      }
+    });
+  }
+  
 });
 $('.additional_credit:first').chosen().change(function(){
-  var val = $(this).val();
-  $('.additional_credit').each(function(){
-    var rowIndex=$(this).closest('tr').index();
-    if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-      $(this).val(val);
-      $(this).trigger("chosen:updated");
-    }
-  });
+  if ($('#check_auto').is(':checked')) {
+    var val = $(this).val();
+    $('.additional_credit').each(function(){
+      var rowIndex=$(this).closest('tr').index();
+      if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+        $(this).val(val);
+        $(this).trigger("chosen:updated");
+      }
+    });
+  }
 });
 
 function set_item(item,name) {
@@ -885,6 +891,7 @@ function set_item_code(item,value,vitri,money,max,usd) {
     
     $('.additional_code:eq('+vitri+')').val(item);
     $('.additional_code:eq('+vitri+')').attr("data",value);
+    $('.additional_comment:eq('+vitri+')').val($('#comment').val());
     // hide proposition list
     $('.customer_list_id').hide();
     $('.additional_code:eq('+vitri+')').focus();
@@ -1040,24 +1047,28 @@ function set_item_payment(item,name,comment,money,receive,request,approve) {
             });
 
             $('.additional_debit:first').chosen().change(function(){
-              var val = $(this).val();
-              $('.additional_debit').each(function(){
-                var rowIndex=$(this).closest('tr').index();
-                if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                  $(this).val(val);
-                  $(this).trigger("chosen:updated");
-                }
-              });
+              if ($('#check_auto').is(':checked')) {
+                var val = $(this).val();
+                $('.additional_debit').each(function(){
+                  var rowIndex=$(this).closest('tr').index();
+                  if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                    $(this).val(val);
+                    $(this).trigger("chosen:updated");
+                  }
+                });
+              }
             });
             $('.additional_credit:first').chosen().change(function(){
-              var val = $(this).val();
-              $('.additional_credit').each(function(){
-                var rowIndex=$(this).closest('tr').index();
-                if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                  $(this).val(val);
-                  $(this).trigger("chosen:updated");
-                }
-              });
+              if ($('#check_auto').is(':checked')) {
+                var val = $(this).val();
+                $('.additional_credit').each(function(){
+                  var rowIndex=$(this).closest('tr').index();
+                  if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                    $(this).val(val);
+                    $(this).trigger("chosen:updated");
+                  }
+                });
+              }
             });
 
             $('#service option[value='+$('.additional_service').val()+']').attr('selected',true);
@@ -1258,24 +1269,28 @@ $('.edit_daily').click(function(e){
           });
 
           $('.additional_debit:first').chosen().change(function(){
-            var val = $(this).val();
-            $('.additional_debit').each(function(){
-              var rowIndex=$(this).closest('tr').index();
-              if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                $(this).val(val);
-                $(this).trigger("chosen:updated");
-              }
-            });
+            if ($('#check_auto').is(':checked')) {
+              var val = $(this).val();
+              $('.additional_debit').each(function(){
+                var rowIndex=$(this).closest('tr').index();
+                if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                  $(this).val(val);
+                  $(this).trigger("chosen:updated");
+                }
+              });
+            }
           });
           $('.additional_credit:first').chosen().change(function(){
-            var val = $(this).val();
-            $('.additional_credit').each(function(){
-              var rowIndex=$(this).closest('tr').index();
-              if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                $(this).val(val);
-                $(this).trigger("chosen:updated");
-              }
-            });
+            if ($('#check_auto').is(':checked')) {
+              var val = $(this).val();
+              $('.additional_credit').each(function(){
+                var rowIndex=$(this).closest('tr').index();
+                if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                  $(this).val(val);
+                  $(this).trigger("chosen:updated");
+                }
+              });
+            }
           });
 
           $('.numbers').keyup(function(event) {
@@ -1455,24 +1470,28 @@ function add_click(){
               });
 
               $('.additional_debit:first').chosen().change(function(){
-                var val = $(this).val();
-                $('.additional_debit').each(function(){
-                  var rowIndex=$(this).closest('tr').index();
-                  if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                    $(this).val(val);
-                    $(this).trigger("chosen:updated");
-                  }
-                });
+                if ($('#check_auto').is(':checked')) {
+                  var val = $(this).val();
+                  $('.additional_debit').each(function(){
+                    var rowIndex=$(this).closest('tr').index();
+                    if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                      $(this).val(val);
+                      $(this).trigger("chosen:updated");
+                    }
+                  });
+                }
               });
               $('.additional_credit:first').chosen().change(function(){
-                var val = $(this).val();
-                $('.additional_credit').each(function(){
-                  var rowIndex=$(this).closest('tr').index();
-                  if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-                    $(this).val(val);
-                    $(this).trigger("chosen:updated");
-                  }
-                });
+                if ($('#check_auto').is(':checked')) {
+                  var val = $(this).val();
+                  $('.additional_credit').each(function(){
+                    var rowIndex=$(this).closest('tr').index();
+                    if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+                      $(this).val(val);
+                      $(this).trigger("chosen:updated");
+                    }
+                  });
+                }
               });
 
               $('.numbers').keyup(function(event) {
@@ -1575,6 +1594,8 @@ $(document).ready(function(){
         
         var payment_request_number = $('#payment_request').attr('value');
         var payment_request = $('#payment_request').attr('data');
+
+        var daily_rate = $('#daily_rate').attr('value');
 
         var yes = $('#yes').attr('value');
 
@@ -1695,6 +1716,7 @@ $(document).ready(function(){
                 account_out: account_out,
                 payment_request: payment_request,
                 payment_request_number: payment_request_number,
+                daily_rate: daily_rate,
                 yes: yes,
 
                 }, // giá trị post
@@ -2072,24 +2094,28 @@ function addRow(id){
     
   });
   $('.additional_debit:first').chosen().change(function(){
-    var val = $(this).val();
-    $('.additional_debit').each(function(){
-      var rowIndex=$(this).closest('tr').index();
-      if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-        $(this).val(val);
-        $(this).trigger("chosen:updated");
-      }
-    });
+    if ($('#check_auto').is(':checked')) {
+      var val = $(this).val();
+      $('.additional_debit').each(function(){
+        var rowIndex=$(this).closest('tr').index();
+        if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+          $(this).val(val);
+          $(this).trigger("chosen:updated");
+        }
+      });
+    }
   });
   $('.additional_credit:first').chosen().change(function(){
-    var val = $(this).val();
-    $('.additional_credit').each(function(){
-      var rowIndex=$(this).closest('tr').index();
-      if ($('.additional_money:eq('+rowIndex+')').val() != "") {
-        $(this).val(val);
-        $(this).trigger("chosen:updated");
-      }
-    });
+    if ($('#check_auto').is(':checked')) {
+      var val = $(this).val();
+      $('.additional_credit').each(function(){
+        var rowIndex=$(this).closest('tr').index();
+        if ($('.additional_money:eq('+rowIndex+')').val() != "") {
+          $(this).val(val);
+          $(this).trigger("chosen:updated");
+        }
+      });
+    }
   });
 
   $('.numbers').keyup(function(event) {

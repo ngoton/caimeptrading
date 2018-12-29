@@ -20,7 +20,7 @@ Class paymentrequestdetailController Extends baseController {
         }
         else{
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'payment_request_date';
-            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC, payment_request_number ASC';
+            $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'ASC, payment_request_number ASC, payment_request_detail_code ASC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
             $limit = 18446744073709;

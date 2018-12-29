@@ -8127,3 +8127,5 @@ bxep: 6x14 = 84k-5-4--1484000
 
 04/10/2018 10:05:19|admincmg|edit|1|import_contract|1001-Nhập hàng-1538604000
 
+11/12/2018 08:09:47|admincmg|edit|comment|10|import_tire_order|
+

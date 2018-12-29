@@ -25,7 +25,7 @@ Class expectrevenuedController Extends baseController {
             $trangthai = isset($_POST['trangthai']) ? $_POST['trangthai'] : null;
         }
         else{
-            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'receive_date';
+            $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'receive_id ASC,receive_date';
             $order = $this->registry->router->order_by ? $this->registry->router->order_by : 'DESC';
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
             $keyword = "";
@@ -191,7 +191,7 @@ Class expectrevenuedController Extends baseController {
 
         $join = array('table'=>'bank','where'=>'bank.bank_id = costs.source_in');
 
-        $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'pay_date';
+        $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'costs_id ASC,pay_date';
 
         
         $sonews = $limit;

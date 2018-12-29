@@ -1131,3 +1131,37 @@ Time|User|Action
 
 31/10/2018 15:36:07|admincmg|login|127.0.0.1
 
+15/11/2018 10:56:37|admincmg|login|127.0.0.1
+
+16/11/2018 16:07:15|admincmg|login|127.0.0.1
+
+17/11/2018 08:02:44|admincmg|login|127.0.0.1
+
+20/11/2018 08:25:44|admincmg|login|127.0.0.1
+
+04/12/2018 10:27:06|admincmg|login|127.0.0.1
+
+05/12/2018 07:47:59|admincmg|login|127.0.0.1
+
+05/12/2018 11:19:12|admincmg|login|::1
+
+05/12/2018 13:39:46|admincmg|login|::1
+
+05/12/2018 14:06:39|admincmg|login|::1
+
+05/12/2018 14:21:05|admincmg|login|::1
+
+05/12/2018 14:32:15|admincmg|login|::1
+
+05/12/2018 14:38:09|admincmg|login|::1
+
+05/12/2018 14:50:29|admincmg|login|::1
+
+05/12/2018 14:52:05|admincmg|login|::1
+
+05/12/2018 15:23:00|admincmg|login|::1
+
+06/12/2018 14:49:10|admincmg|login|127.0.0.1
+
+11/12/2018 07:57:21|admincmg|login|127.0.0.1
+

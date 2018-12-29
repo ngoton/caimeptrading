@@ -154,6 +154,9 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_total','<?php echo $url_order ?>')">Tổng cộng <?php if ($order_by == 'import_tire_order_total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_note','<?php echo $url_order ?>')">Note <?php if ($order_by == 'import_tire_order_note'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_status','<?php echo $url_order ?>')">Trạng thái <?php if ($order_by == 'import_tire_order_status'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <?php if(!isset($disable_control)){ ?>
@@ -192,6 +195,9 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <td class="fix text-right" id="import_tire_order_stevedore_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_stevedore); ?></td>
             <td class="fix text-right" id="import_tire_order_cost_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_bank_cost+$import_tire_order->import_tire_order_other_cost); ?></td>
             <td class="fix text-right" id="tong_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_sum+$import_tire_order->import_tire_order_tax+$import_tire_order->import_tire_order_logistics+$import_tire_order->import_tire_order_bank_cost+$import_tire_order->import_tire_order_other_cost); ?></td>
+            <td class="fix masterTooltip import_tire_order_note" id="import_tire_order_note_<?php echo $import_tire_order->import_tire_order_id; ?>" title="<?php echo $import_tire_order->import_tire_order_note; ?>" alt="<?php echo $import_tire_order->import_tire_order_note; ?>" data="<?php echo $import_tire_order->import_tire_order_id; ?>">  
+                <b>...</b>
+            </td>
             <td class="fix" id="import_tire_order_status_<?php echo $import_tire_order->import_tire_order_id; ?>">
               <?php echo $import_tire_order->import_tire_order_status==2?'<b class="text-warning">Đang về</b>':($import_tire_order->import_tire_order_status==3?'<b class="text-success">Nhập kho</b>':($import_tire_order->import_tire_order_status==4?'<b class="text-warning">Cập cảng</b>':'<b class="text-danger">Đã order</b>')); ?>
                 
@@ -278,7 +284,6 @@ $this->helper('slidePaginator');
   <label>Trạng thái</label>
   <select id="import_status">
     <option value="1">Đã order</option>
-    <option value="2">Đang về</option>
     <option value="4">Cập cảng</option>
     <option value="3">Nhập kho</option>
   </select>
@@ -682,6 +687,15 @@ $this->helper('slidePaginator');
       <!-- /.row -->
        
 </div>
+<div id="dialogContent11" title="Ghi chú">
+    <form action="#" method="post" id="editForm7">
+        <label>
+            <textarea id="i_order_comment" rows="6" style="width: 100%"></textarea>
+            <input type="hidden" id="i_order11" name="i_order11" value="" required="required" />
+        </label>
+    </form>
+</div>
+
 <input type="hidden" name="oceanfreight" id="oceanfreight" value="0">
 <input type="hidden" name="lift" id="lift" value="0">
 <input type="hidden" name="bill" id="bill" value="<?php echo $custom_price[1]['1cont'] ?>" data="<?php echo $custom_price[1]['2cont'] ?>" alt="<?php echo $custom_price[1]['plus'] ?>" title="<?php echo $custom_price[1]['vat'] ?>">
@@ -1731,6 +1745,8 @@ $('#import_tire_order_port_from').change(function(){
             $('#tongcuoctau').text(data.trim());
 
             $('#lift_1cont').val($('#lift').val());
+            $('#lift_2cont').val($('#lift').attr('data'));
+            $('#lift_plus').val($('#lift').attr('alt'));
             $('#truck_1cont').val($('#truck').val());
             $('#truck_2cont').val($('#truck').attr('data'));
             $('#truck_plus').val($('#truck').attr('alt'));
@@ -1758,6 +1774,8 @@ $('#import_tire_order_port_to').change(function(){
             $('#lift').val(data.trim());
 
             $('#lift_1cont').val($('#lift').val());
+            $('#lift_2cont').val($('#lift').attr('data'));
+            $('#lift_plus').val($('#lift').attr('alt'));
             $('#truck_1cont').val($('#truck').val());
             $('#truck_2cont').val($('#truck').attr('data'));
             $('#truck_plus').val($('#truck').attr('alt'));
@@ -1775,6 +1793,8 @@ $('#import_tire_order_port_to').change(function(){
 
 $('.custom').keyup(function(){
   $('#lift').val(get_number('#lift_1cont') || 0);
+  $('#lift').attr('data',get_number('#lift_2cont') || 0);
+  $('#lift').attr('alt',get_number('#lift_plus') || 0);
   $('#truck').val(get_number('#truck_1cont') || 0);
   $('#truck').attr('data',get_number('#truck_2cont') || 0);
   $('#truck').attr('alt',get_number('#truck_plus') || 0);
@@ -2178,6 +2198,8 @@ function updateprice(cont_change){
     var truck_2 = parseFloat($('#truck').attr('data')) || 0;
     var truck_plus = parseFloat($('#truck').attr('alt')) || 0;
     var lift = parseFloat($('#lift').val()) || 0;
+    var lift_2 = parseFloat($('#lift').attr('data')) || 0;
+    var lift_plus = parseFloat($('#lift').attr('alt')) || 0;
 
     var nho = parseFloat(get_number('#stevedore_small')) || 0;
     var lon = parseFloat(get_number('#stevedore_large')) || 0;
@@ -2214,8 +2236,13 @@ function updateprice(cont_change){
     }
     truck = truck+truck_plus;
 
-    
-    lift = lift*socont;
+    if (lift_2>0) {
+      lift = lift+(socont-1)*lift_2;
+    }
+    else{
+      lift = lift*socont;
+    }
+    lift = lift+lift_plus;
     
 
     var tire_bill = roundDecimal(bill/(stuff*tongphantram),2);
@@ -3167,6 +3194,65 @@ $('#del_all').click(function(){
     });
   }
 });
+
+$('.import_tire_order_note')
+    //.button({ icons: { primary: "ui-icon-document" }})
+    .click(function() {
+        $('#i_order11').val($(this).attr('data'));
+        $('#i_order_comment').val($(this).attr('alt'));
+        $( "#dialogContent11" ).dialog( "open" )
+    });
+
+
+//set up the dialog box.
+$( "#dialogContent11" ).dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+        OK: function() {
+            var id = $('#i_order11').val();
+            var order_comment = $('#i_order_comment').val();
+                
+                $.post("<?php echo BASE_URL ?>/importtireorder/addcomment", {data: id, order_comment: order_comment},
+                   function(data){
+                    $("html, body").animate({ scrollTop: 0 }, 100);
+                    setTimeout(function() {
+                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                      }, 200);
+                   
+                   }); 
+              
+            $( this ).dialog( "close" );
+        },        
+        Cancel: function() {
+            $( this ).dialog( "close" );
+        }
+    }
+});
+$(document).ready(function() {
+  // Tooltip only Text
+  $('.masterTooltip').hover(function(){
+          // Hover over code
+          var title = $(this).attr('title');
+          $(this).data('tipText', title).removeAttr('title');
+          if (title != "") {
+              $('<p class="showtooltip"></p>')
+              .text(title)
+              .appendTo('body')
+              .fadeIn('slow');
+          }
+          
+  }, function() {
+          // Hover out code
+          $(this).attr('title', $(this).data('tipText'));
+          $('.showtooltip').remove();
+  }).mousemove(function(e) {
+          var mousex = e.pageX - 100; //Get X coordinates
+          var mousey = e.pageY + 20; //Get Y coordinates
+          $('.showtooltip')
+          .css({ top: mousey, left: mousex })
+  });
+});
 </script>
 <style type="text/css">
 .table-container {
@@ -3235,5 +3321,15 @@ $('#del_all').click(function(){
     width: auto;
     background: rgba(0, 0, 0, 0.08);
     border: 0;
+}
+.showtooltip {
+    display:none;
+    position:absolute;
+    border:1px solid #333;
+    background-color:#161616;
+    border-radius:5px;
+    padding:10px;
+    color:#fff;
+    font-size:12px Arial;
 }
 </style>

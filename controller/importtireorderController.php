@@ -381,22 +381,22 @@ Class importtireorderController Extends baseController {
                     
                 }
                 else if ($import_orders->import_tire_order_status==2 || $import_orders->import_tire_order_status==4) {
-                    $tire_going = array(
-                    'tire_going_date' => strtotime($_POST['date']),
-                    'code' => $import_orders->import_tire_order_code,
-                    'tire_size' => $order->tire_size,
-                    'tire_pattern' => $order->tire_pattern,
-                    'tire_brand' => $order->tire_brand,
-                    'tire_number' => $order->tire_number,
-                    'import_tire_list' => $order->import_tire_list_id,
-                    'status' => 0,
-                    );
-                    if (!$tire_going_model->getTireByWhere(array('import_tire_list' => $order->import_tire_list_id))) {
-                        $tire_going_model->createTire($tire_going);
-                    }
-                    else{
-                        $tire_going_model->updateTire($tire_going,array('import_tire_list' => $order->import_tire_list_id));
-                    }
+                    // $tire_going = array(
+                    // 'tire_going_date' => strtotime($_POST['date']),
+                    // 'code' => $import_orders->import_tire_order_code,
+                    // 'tire_size' => $order->tire_size,
+                    // 'tire_pattern' => $order->tire_pattern,
+                    // 'tire_brand' => $order->tire_brand,
+                    // 'tire_number' => $order->tire_number,
+                    // 'import_tire_list' => $order->import_tire_list_id,
+                    // 'status' => 0,
+                    // );
+                    // if (!$tire_going_model->getTireByWhere(array('import_tire_list' => $order->import_tire_list_id))) {
+                    //     $tire_going_model->createTire($tire_going);
+                    // }
+                    // else{
+                    //     $tire_going_model->updateTire($tire_going,array('import_tire_list' => $order->import_tire_list_id));
+                    // }
                     
                     $tirebuy->queryTire('DELETE FROM tire_buy WHERE import_tire_list='.$order->import_tire_list_id);
                     $tireimport->queryTire('DELETE FROM tire_import WHERE import_tire_list='.$order->import_tire_list_id);
@@ -3937,6 +3937,32 @@ Class importtireorderController Extends baseController {
             }
 
                     
+        }
+    }
+    public function addcomment(){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $import_tire_model = $this->model->get('importtireorderModel');
+
+            $id = trim($_POST['data']);
+            $order_comment = trim($_POST['order_comment']);
+
+            $data = array(
+                'import_tire_order_note'=>$order_comment,
+            );
+
+            $import_tire_model->updateImport($data,array('import_tire_order_id'=>$id));
+
+
+            echo "Cập nhật thành công";
+
+                        date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                        $filename = "action_logs.txt";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|comment|".$_POST['data']."|import_tire_order|"."\n"."\r\n";
+                        
+                        $fh = fopen($filename, "a") or die("Could not open log file.");
+                        fwrite($fh, $text) or die("Could not write file!");
+                        fclose($fh);
+
         }
     }
 

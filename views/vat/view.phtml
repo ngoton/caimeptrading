@@ -69,9 +69,9 @@ Số hóa đơn <input type="text" name="batdau" id="batdau" value="">
           <b><span style="font-size:
   18.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;color:red">CÔNG TY TNHH  VIỆT TRA DE</span></b><b><span style="font-size:13.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;color:red"> <br />
           </span></b><span style="font-size:13.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
-  color:red">Địa chỉ: Số 545, Tổ 10, Ấp Hương Phước, Xã Phước Tân, TP. Biên Hòa, T. Đồng Nai  <br />
+  color:red">Địa chỉ: Số 29, Quốc lộ 51, Ấp Đồng, Xã Phước Tân, TP. Biên Hòa, T. Đồng Nai  <br />
           Số TK: 200970509 Ngân Hàng ACB CN Long Bình Tân, Biên Hòa, Đồng Nai<br />
-          Điện thoại: 0163.937.677 - Fax: 0613.937.677<br />
+          Điện thoại: 02513.937.677 - Fax: 02513.937.677<br />
           Mã số thuế: <b>3 6 0 3 2 9 5 3 0 2<o:p></o:p></b></span></p>
       </td>
       <!--[if !supportMisalignedRows]-->
@@ -1638,7 +1638,7 @@ Số hóa đơn <input type="text" name="batdau" id="batdau" value="">
   </tbody>
 </table>
 <input type="hidden" name="eHD" id="eHD">
-<h4><button type="button" class="btn" title="Lấy thông tin công ty" id="getMST"><i class="fa fa-info-circle" ></i></button> <button type="button" class="btn" title="Xuất hóa đơn điện tử" id="printEHD"><i class="fa fa-cloud-upload" ></i></button> <button type="button" class="btn" title="In" id="print"><i class="fa fa-print" ></i></button> <button id="remove" type="button" class="btn"><i class="fa fa-times" title="Hủy hóa đơn"></i></button> <button id="refresh" type="button" class="btn"><i class="fa fa-refresh" title="Nhập lại"></i></button></h4>
+<h4><button type="button" class="btn" title="Lấy thông tin công ty" id="getMST"><i class="fa fa-info-circle" ></i></button> <button type="button" class="btn" title="Xuất hóa đơn điện tử" id="printEHD"><i class="fa fa-cloud-upload" ></i></button> <button type="button" class="btn" title="In" id="print"><i class="fa fa-print" ></i></button> <button id="remove" type="button" class="btn"><i class="fa fa-times" title="Hủy hóa đơn"></i></button> <button id="delete" type="button" class="btn"><i class="fa fa-trash" title="Xóa hóa đơn"></i></button> <button id="refresh" type="button" class="btn"><i class="fa fa-refresh" title="Nhập lại"></i></button></h4>
 </form>
 <i class="error"><u><b>Lưu ý trước khi in:</b></u> Bằng việc bấm <b>"In"</b> là bạn đã xác nhận các thông tin là đúng.</i>
 <div id="show_item"></div>
@@ -1973,6 +1973,27 @@ $('#remove').click(function(){
       var kyhieu = $('#kyhieu').val().trim();
       $.ajax({
         url: '<?php echo BASE_URL ?>/vat/delete',
+        type: 'POST',
+        data: {data:sohd,mauso:mauso,kyhieu:kyhieu},
+        success:function(data){
+          $('input[name!="batdau"][name!="ketthuc"][name!="ngay"][name!="thang"][name!="nam"][name!="sohd"][name!="thanhtoan"][name!="mauso"][name!="kyhieu"]').val("");
+          $('.tt').attr('data',"");
+          $('.dg').attr('data',"");
+          $('.ten:eq(0)').val("Lốp xe bố kẽm:");
+          $('.selectpicker').selectpicker('refresh');
+        },
+      });
+    }
+});
+
+$('#delete').click(function(){
+  var r = confirm("Bạn có chắc chắn không?");
+    if (r == true){
+      var sohd = $('#sohd').val().trim();
+      var mauso = $('#mauso').val().trim();
+      var kyhieu = $('#kyhieu').val().trim();
+      $.ajax({
+        url: '<?php echo BASE_URL ?>/vat/deleteall',
         type: 'POST',
         data: {data:sohd,mauso:mauso,kyhieu:kyhieu},
         success:function(data){

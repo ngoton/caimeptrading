@@ -35,7 +35,7 @@ Class tirepricediscountController Extends baseController {
 
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'tire_brand_name ASC, start_date';
 
-            $order = $this->registry->router->order ? $this->registry->router->order : 'ASC, tire_price_discount_id ASC';
+            $order = $this->registry->router->order ? $this->registry->router->order : 'DESC, tire_price_discount_id ASC';
 
             $page = $this->registry->router->page ? (int) $this->registry->router->page : 1;
 
@@ -549,6 +549,16 @@ Class tirepricediscountController Extends baseController {
                                     'tire_150' => $val[11],
                                     'tire_180' => $val[12],
                                     'tire_cont' => $val[13],
+                                    'tire_agent_10' => $val[14],
+                                    'tire_agent_20' => $val[15],
+                                    'tire_agent_40' => $val[16],
+                                    'tire_agent_60' => $val[17],
+                                    'tire_agent_80' => $val[18],
+                                    'tire_agent_100' => $val[19],
+                                    'tire_agent_120' => $val[20],
+                                    'tire_agent_150' => $val[21],
+                                    'tire_agent_180' => $val[22],
+                                    'tire_agent_cont' => $val[23],
                                 );
                                 $tirepricediscount->createTire($data);
                             }
@@ -569,6 +579,16 @@ Class tirepricediscountController Extends baseController {
                                     'tire_150' => $val[11],
                                     'tire_180' => $val[12],
                                     'tire_cont' => $val[13],
+                                    'tire_agent_10' => $val[14],
+                                    'tire_agent_20' => $val[15],
+                                    'tire_agent_40' => $val[16],
+                                    'tire_agent_60' => $val[17],
+                                    'tire_agent_80' => $val[18],
+                                    'tire_agent_100' => $val[19],
+                                    'tire_agent_120' => $val[20],
+                                    'tire_agent_150' => $val[21],
+                                    'tire_agent_180' => $val[22],
+                                    'tire_agent_cont' => $val[23],
                                 );
                                 $tirepricediscount->updateTire($data,array('tire_price_discount_id'=>$id_quotation));
                             }
