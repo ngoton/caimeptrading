@@ -174,6 +174,10 @@ Class ordertireController Extends baseController {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
 
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+
         $order = $this->registry->router->param_id;
         $ngay = $this->registry->router->order;
         $thang = $this->registry->router->order_by;
@@ -248,6 +252,10 @@ Class ordertireController Extends baseController {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
 
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+
         $order = $this->registry->router->param_id;
 
         include('lib/phpqrcode/qrlib.php'); 
@@ -302,6 +310,10 @@ Class ordertireController Extends baseController {
     public function printview2() {
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
+
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
 
         $order = $this->registry->router->param_id;
 
@@ -2251,6 +2263,7 @@ Class ordertireController Extends baseController {
 
             if ($customers) {
                 $order_tire = $_POST['order_tire'];
+                $vat_check = trim($_POST['vat']);
 
                 $data = array(
                     'customer_type' => $customers->customer_tire_type,
@@ -2274,17 +2287,22 @@ Class ordertireController Extends baseController {
                     'ck_sl' => 0,
                     'discount' => null,
                     'reduce' => null,
-                    'vat_percent' => 10,
+                    'vat_percent' => null,
                     'vat' => null,
                     'delivery_date' => null,
                     'due_date' => strtotime(date('d-m-Y')),
                     'total' => null,
                     'order_tire_number' => null,
                     'order_tire_status' => 0,
-                    'check_price_vat' => 1,
+                    'check_price_vat' => 0,
                     'id_order_agent' => $_POST['id_order_tire'],
                     'sale_lock'=>1,
                 );
+
+                if ($vat_check > 0) {
+                    $data['vat_percent'] = 10;
+                    $data['check_price_vat'] = 1;
+                }
 
                 $order_tire_model->createTire($data);
                 $id_order_tire = $order_tire_model->getLastTire()->order_tire_id;
@@ -2339,6 +2357,15 @@ Class ordertireController Extends baseController {
                             }
                         }
 
+                        if ($vat_check == "" || $vat_check == null || $vat_check == 0) {
+                            if ($price_vat < 5000000) {
+                                $price_vat = $price_vat-160000;
+                            }
+                            else{
+                                $price_vat = $price_vat-200000;
+                            }
+                        }
+
                         $price_vat = round($price_vat*0.995/1000)*1000;
 
                         if (intval($size_num) > 10) {
@@ -2347,13 +2374,16 @@ Class ordertireController Extends baseController {
                         else{
                         	$price_vat = $price_vat-40000;
                         }
-                        
-                        $pr = $price_vat;
-                        $va = round(($pr*10*0.1)/1.1*0.1);
-                        $n = $pr-$va;
-                        $price = $n;
 
-                        $vat += $va*$v['tire_number'];
+                        $price = $price_vat;
+                        
+                        if ($vat_check > 0) {
+                            $pr = $price_vat;
+                            $va = round(($pr*10*0.1)/1.1*0.1);
+                            $n = $pr-$va;
+                            $price = $n;
+                            $vat += $va*$v['tire_number'];
+                        }
                         
                     }
 
@@ -2450,6 +2480,7 @@ Class ordertireController Extends baseController {
                 );
 
                 $order_tire = $order_tire_model->getTireByWhere(array('id_order_agent'=>$order));
+                $vat_check = $order_tire->vat_percent;
 
                 if ($order_tire->order_tire_status!=1) {
                     if ($_POST['update']==1) {
@@ -2493,19 +2524,33 @@ Class ordertireController Extends baseController {
                                 }
                             }
 
+                            if ($vat_check == "" || $vat_check == null || $vat_check == 0) {
+                                if ($price_vat < 5000000) {
+                                    $price_vat = $price_vat-160000;
+                                }
+                                else{
+                                    $price_vat = $price_vat-200000;
+                                }
+                            }
+
                             $price_vat = round($price_vat*0.995/1000)*1000;
 
-	                        if (intval($size_num) > 10) {
-	                        	$price_vat = $price_vat-70000;
-	                        }
-	                        else{
-	                        	$price_vat = $price_vat-40000;
-	                        }
+                            if (intval($size_num) > 10) {
+                                $price_vat = $price_vat-70000;
+                            }
+                            else{
+                                $price_vat = $price_vat-40000;
+                            }
 
-                            $pr = $price_vat;
-                            $va = round(($pr*10*0.1)/1.1*0.1);
-                            $n = $pr-$va;
-                            $price = $n;
+                            $price = $price_vat;
+                            
+                            if ($vat_check > 0) {
+                                $pr = $price_vat;
+                                $va = round(($pr*10*0.1)/1.1*0.1);
+                                $n = $pr-$va;
+                                $price = $n;
+                            }
+
                             
                         }
 
@@ -2657,19 +2702,33 @@ Class ordertireController Extends baseController {
                                 }
                             }
 
+                            if ($vat_check == "" || $vat_check == null || $vat_check == 0) {
+                                if ($price_vat < 5000000) {
+                                    $price_vat = $price_vat-160000;
+                                }
+                                else{
+                                    $price_vat = $price_vat-200000;
+                                }
+                            }
+
                             $price_vat = round($price_vat*0.995/1000)*1000;
 
-	                        if (intval($size_num) > 10) {
-	                        	$price_vat = $price_vat-70000;
-	                        }
-	                        else{
-	                        	$price_vat = $price_vat-40000;
-	                        }
+                            if (intval($size_num) > 10) {
+                                $price_vat = $price_vat-70000;
+                            }
+                            else{
+                                $price_vat = $price_vat-40000;
+                            }
+
+                            $price = $price_vat;
                             
-                            $pr = $price_vat;
-                            $va = round(($pr*10*0.1)/1.1*0.1);
-                            $n = $pr-$va;
-                            $price = $n;
+                            if ($vat_check > 0) {
+                                $pr = $price_vat;
+                                $va = round(($pr*10*0.1)/1.1*0.1);
+                                $n = $pr-$va;
+                                $price = $n;
+                            }
+
                             
                         }
 
@@ -3399,6 +3458,10 @@ Class ordertireController Extends baseController {
     public function listtire($id){
         $this->view->disableLayout();
         $this->view->data['lib'] = $this->lib;
+
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
 
         $ketthuc = date('d-m-Y',$this->registry->router->order);
         $cus = $this->registry->router->page;

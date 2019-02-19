@@ -58,26 +58,13 @@ $tongdangve = 0;
                                 <td class="fix">11.00R20</td>
                                 <td class="fix">CM987</td>
                             </tr>
-                            <tr>
-                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CB972.jpg" width="30" height="30" /></td>
-                                <td class="fix">11.00R20</td>
-                                <td class="fix">CB972</td>
-                            </tr>
+                            
                             <tr>
                                 <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CR926.jpg" width="30" height="30" /></td>
                                 <td class="fix">12.00R20</td>
                                 <td class="fix">CR926</td>
                             </tr>
-                            <tr>
-                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM913A.jpg" width="30" height="30" /></td>
-                                <td class="fix">12.00R20</td>
-                                <td class="fix">CM913A</td>
-                            </tr>
-                            <tr>
-                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/EZ356.jpg" width="30" height="30" /></td>
-                                <td class="fix">12.00R20</td>
-                                <td class="fix">EZ356</td>
-                            </tr>
+                            
                             <tr>
                                 <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CR976A.jpg" width="30" height="30" /></td>
                                 <td class="fix">11R22.5</td>
@@ -91,6 +78,16 @@ $tongdangve = 0;
                             <tr>
                                 <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM983.jpg" width="30" height="30" /></td>
                                 <td class="fix">11R22.5</td>
+                                <td class="fix">CM983</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CR960A.jpg" width="30" height="30" /></td>
+                                <td class="fix">295/75R22.5</td>
+                                <td class="fix">CR960A</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM983.jpg" width="30" height="30" /></td>
+                                <td class="fix">295/75R22.5</td>
                                 <td class="fix">CM983</td>
                             </tr>
                             <tr>
@@ -114,14 +111,39 @@ $tongdangve = 0;
                                 <td class="fix">MD738</td>
                             </tr>
                             <tr>
-                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CR960A.jpg" width="30" height="30" /></td>
-                                <td class="fix">295/75R22.5</td>
-                                <td class="fix">CR960A</td>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM985.jpg" width="30" height="30" /></td>
+                                <td class="fix">12R22.5</td>
+                                <td class="fix">CM985</td>
                             </tr>
                             <tr>
-                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM983.jpg" width="30" height="30" /></td>
-                                <td class="fix">295/75R22.5</td>
-                                <td class="fix">CM983</td>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CB919.jpg" width="30" height="30" /></td>
+                                <td class="fix">12R22.5</td>
+                                <td class="fix">CB919</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CB972.jpg" width="30" height="30" /></td>
+                                <td class="fix">11.00R20</td>
+                                <td class="fix">CB972</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM958.jpg" width="30" height="30" /></td>
+                                <td class="fix">12.00R20</td>
+                                <td class="fix">CM958</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CM913A.jpg" width="30" height="30" /></td>
+                                <td class="fix">12.00R20</td>
+                                <td class="fix">CM913A</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/EZ356.jpg" width="30" height="30" /></td>
+                                <td class="fix">12.00R20</td>
+                                <td class="fix">EZ356</td>
+                            </tr>
+                            <tr>
+                                <td  class="fix"><img src="<?php echo BASE_URL ?>/public/images/upload/CB919.jpg" width="30" height="30" /></td>
+                                <td class="fix">12.00R20</td>
+                                <td class="fix">CB919</td>
                             </tr>
                             <tr style="font-weight: bold;">
                                 <td colspan="3" class="fix">Tổng cộng</td>
@@ -136,170 +158,280 @@ $tongdangve = 0;
                         <table class="table_data_edit">
                             <thead>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <th class="fix show_order"><?php echo $order->import_tire_order_code ?></th>
-                                    <?php } ?>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <th class="fix show_order"><?php echo date('m',$month) ?></th>
+                                    <?php 
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
                                     <th style="background: rgba(255, 0, 0, 0.2)" class="fix" id="show_order">Tổng order</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t1 = isset($hangorder[$order->import_tire_order_id]['Goodride7.50R16CR926'])?$hangorder[$order->import_tire_order_id]['Goodride7.50R16CR926']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t1 = isset($hangorder[date('m-Y',$month)]['Goodride7.50R16CR926'])?$hangorder[date('m-Y',$month)]['Goodride7.50R16CR926']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride7.50R16CR926'] = isset($sum_arr['Goodride7.50R16CR926'])?$sum_arr['Goodride7.50R16CR926']+$t1:$t1;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride7.50R16CR926']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t19 = isset($hangorder[$order->import_tire_order_id]['Goodride9.00-20CL946'])?$hangorder[$order->import_tire_order_id]['Goodride9.00-20CL946']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t19 = isset($hangorder[date('m-Y',$month)]['Goodride9.00-20CL946'])?$hangorder[date('m-Y',$month)]['Goodride9.00-20CL946']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride9.00-20CL946'] = isset($sum_arr['Goodride9.00-20CL946'])?$sum_arr['Goodride9.00-20CL946']+$t19:$t19;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride9.00-20CL946']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t2 = isset($hangorder[$order->import_tire_order_id]['Goodride10.00R20CR926'])?$hangorder[$order->import_tire_order_id]['Goodride10.00R20CR926']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t2 = isset($hangorder[date('m-Y',$month)]['Goodride10.00R20CR926'])?$hangorder[date('m-Y',$month)]['Goodride10.00R20CR926']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride10.00R20CR926'] = isset($sum_arr['Goodride10.00R20CR926'])?$sum_arr['Goodride10.00R20CR926']+$t2:$t2;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride10.00R20CR926']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t3 = isset($hangorder[$order->import_tire_order_id]['Goodride11.00R20CR926'])?$hangorder[$order->import_tire_order_id]['Goodride11.00R20CR926']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t3 = isset($hangorder[date('m-Y',$month)]['Goodride11.00R20CR926'])?$hangorder[date('m-Y',$month)]['Goodride11.00R20CR926']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11.00R20CR926'] = isset($sum_arr['Goodride11.00R20CR926'])?$sum_arr['Goodride11.00R20CR926']+$t3:$t3;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11.00R20CR926']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t4 = isset($hangorder[$order->import_tire_order_id]['Goodride11.00R20CR976A'])?$hangorder[$order->import_tire_order_id]['Goodride11.00R20CR976A']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t4 = isset($hangorder[date('m-Y',$month)]['Goodride11.00R20CR976A'])?$hangorder[date('m-Y',$month)]['Goodride11.00R20CR976A']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11.00R20CR976A'] = isset($sum_arr['Goodride11.00R20CR976A'])?$sum_arr['Goodride11.00R20CR976A']+$t4:$t4;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11.00R20CR976A']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t5 = isset($hangorder[$order->import_tire_order_id]['Goodride11.00R20CM987'])?$hangorder[$order->import_tire_order_id]['Goodride11.00R20CM987']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t5 = isset($hangorder[date('m-Y',$month)]['Goodride11.00R20CM987'])?$hangorder[date('m-Y',$month)]['Goodride11.00R20CM987']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11.00R20CM987'] = isset($sum_arr['Goodride11.00R20CM987'])?$sum_arr['Goodride11.00R20CM987']+$t5:$t5;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11.00R20CM987']) ?></td>
                                 </tr>
+                                
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t6 = isset($hangorder[$order->import_tire_order_id]['Goodride11.00R20CB972'])?$hangorder[$order->import_tire_order_id]['Goodride11.00R20CB972']:null ?></td>
                                     <?php
-                                    $sum_arr['Goodride11.00R20CB972'] = isset($sum_arr['Goodride11.00R20CB972'])?$sum_arr['Goodride11.00R20CB972']+$t6:$t6;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11.00R20CB972']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t7 = isset($hangorder[$order->import_tire_order_id]['Goodride12.00R20CR926'])?$hangorder[$order->import_tire_order_id]['Goodride12.00R20CR926']:null ?></td>
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t7 = isset($hangorder[date('m-Y',$month)]['Goodride12.00R20CR926'])?$hangorder[date('m-Y',$month)]['Goodride12.00R20CR926']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride12.00R20CR926'] = isset($sum_arr['Goodride12.00R20CR926'])?$sum_arr['Goodride12.00R20CR926']+$t7:$t7;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20CR926']) ?></td>
                                 </tr>
+                                
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t8 = isset($hangorder[$order->import_tire_order_id]['Goodride12.00R20CM913A'])?$hangorder[$order->import_tire_order_id]['Goodride12.00R20CM913A']:null ?></td>
                                     <?php
-                                    $sum_arr['Goodride12.00R20CM913A'] = isset($sum_arr['Goodride12.00R20CM913A'])?$sum_arr['Goodride12.00R20CM913A']+$t8:$t8;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20CM913A']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t9 = isset($hangorder[$order->import_tire_order_id]['Goodride12.00R20EZ356'])?$hangorder[$order->import_tire_order_id]['Goodride12.00R20EZ356']:null ?></td>
-                                    <?php
-                                    $sum_arr['Goodride12.00R20EZ356'] = isset($sum_arr['Goodride12.00R20EZ356'])?$sum_arr['Goodride12.00R20EZ356']+$t9:$t9;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20EZ356']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t10 = isset($hangorder[$order->import_tire_order_id]['Goodride11R22.5CR976A'])?$hangorder[$order->import_tire_order_id]['Goodride11R22.5CR976A']:null ?></td>
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t10 = isset($hangorder[date('m-Y',$month)]['Goodride11R22.5CR976A'])?$hangorder[date('m-Y',$month)]['Goodride11R22.5CR976A']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11R22.5CR976A'] = isset($sum_arr['Goodride11R22.5CR976A'])?$sum_arr['Goodride11R22.5CR976A']+$t10:$t10;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11R22.5CR976A']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t11 = isset($hangorder[$order->import_tire_order_id]['Goodride11R22.5AS668'])?$hangorder[$order->import_tire_order_id]['Goodride11R22.5AS668']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t11 = isset($hangorder[date('m-Y',$month)]['Goodride11R22.5AS668'])?$hangorder[date('m-Y',$month)]['Goodride11R22.5AS668']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11R22.5AS668'] = isset($sum_arr['Goodride11R22.5AS668'])?$sum_arr['Goodride11R22.5AS668']+$t11:$t11;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11R22.5AS668']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t12 = isset($hangorder[$order->import_tire_order_id]['Goodride11R22.5CM983'])?$hangorder[$order->import_tire_order_id]['Goodride11R22.5CM983']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t12 = isset($hangorder[date('m-Y',$month)]['Goodride11R22.5CM983'])?$hangorder[date('m-Y',$month)]['Goodride11R22.5CM983']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride11R22.5CM983'] = isset($sum_arr['Goodride11R22.5CM983'])?$sum_arr['Goodride11R22.5CM983']+$t12:$t12;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11R22.5CM983']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t13 = isset($hangorder[$order->import_tire_order_id]['Goodride12R22.5CR926'])?$hangorder[$order->import_tire_order_id]['Goodride12R22.5CR926']:null ?></td>
                                     <?php
-                                    $sum_arr['Goodride12R22.5CR926'] = isset($sum_arr['Goodride12R22.5CR926'])?$sum_arr['Goodride12R22.5CR926']+$t13:$t13;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CR926']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t14 = isset($hangorder[$order->import_tire_order_id]['Goodride12R22.5CR976A'])?$hangorder[$order->import_tire_order_id]['Goodride12R22.5CR976A']:null ?></td>
-                                    <?php
-                                    $sum_arr['Goodride12R22.5CR976A'] = isset($sum_arr['Goodride12R22.5CR976A'])?$sum_arr['Goodride12R22.5CR976A']+$t14:$t14;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CR976A']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t15 = isset($hangorder[$order->import_tire_order_id]['Goodride12R22.5AS668'])?$hangorder[$order->import_tire_order_id]['Goodride12R22.5AS668']:null ?></td>
-                                    <?php
-                                    $sum_arr['Goodride12R22.5AS668'] = isset($sum_arr['Goodride12R22.5AS668'])?$sum_arr['Goodride12R22.5AS668']+$t15:$t15;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5AS668']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t16 = isset($hangorder[$order->import_tire_order_id]['Goodride12R22.5MD738'])?$hangorder[$order->import_tire_order_id]['Goodride12R22.5MD738']:null ?></td>
-                                    <?php
-                                    $sum_arr['Goodride12R22.5MD738'] = isset($sum_arr['Goodride12R22.5MD738'])?$sum_arr['Goodride12R22.5MD738']+$t16:$t16;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5MD738']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t17 = isset($hangorder[$order->import_tire_order_id]['Goodride295/75R22.5CR960A'])?$hangorder[$order->import_tire_order_id]['Goodride295/75R22.5CR960A']:null ?></td>
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t17 = isset($hangorder[date('m-Y',$month)]['Goodride295/75R22.5CR960A'])?$hangorder[date('m-Y',$month)]['Goodride295/75R22.5CR960A']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride295/75R22.5CR960A'] = isset($sum_arr['Goodride295/75R22.5CR960A'])?$sum_arr['Goodride295/75R22.5CR960A']+$t17:$t17;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride295/75R22.5CR960A']) ?></td>
                                 </tr>
                                 <tr>
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $t18 = isset($hangorder[$order->import_tire_order_id]['Goodride295/75R22.5CM983'])?$hangorder[$order->import_tire_order_id]['Goodride295/75R22.5CM983']:null ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t18 = isset($hangorder[date('m-Y',$month)]['Goodride295/75R22.5CM983'])?$hangorder[date('m-Y',$month)]['Goodride295/75R22.5CM983']:null ?></td>
                                     <?php
                                     $sum_arr['Goodride295/75R22.5CM983'] = isset($sum_arr['Goodride295/75R22.5CM983'])?$sum_arr['Goodride295/75R22.5CM983']+$t18:$t18;
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride295/75R22.5CM983']) ?></td>
                                 </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t13 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5CR926'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5CR926']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5CR926'] = isset($sum_arr['Goodride12R22.5CR926'])?$sum_arr['Goodride12R22.5CR926']+$t13:$t13;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CR926']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t14 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5CR976A'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5CR976A']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5CR976A'] = isset($sum_arr['Goodride12R22.5CR976A'])?$sum_arr['Goodride12R22.5CR976A']+$t14:$t14;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CR976A']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t15 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5AS668'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5AS668']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5AS668'] = isset($sum_arr['Goodride12R22.5AS668'])?$sum_arr['Goodride12R22.5AS668']+$t15:$t15;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5AS668']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t16 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5MD738'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5MD738']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5MD738'] = isset($sum_arr['Goodride12R22.5MD738'])?$sum_arr['Goodride12R22.5MD738']+$t16:$t16;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5MD738']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t19 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5CM985'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5CM985']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5CM985'] = isset($sum_arr['Goodride12R22.5CM985'])?$sum_arr['Goodride12R22.5CM985']+$t19:$t19;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CM985']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t20 = isset($hangorder[date('m-Y',$month)]['Goodride12R22.5CB919'])?$hangorder[date('m-Y',$month)]['Goodride12R22.5CB919']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12R22.5CB919'] = isset($sum_arr['Goodride12R22.5CB919'])?$sum_arr['Goodride12R22.5CB919']+$t20:$t20;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12R22.5CB919']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t6 = isset($hangorder[date('m-Y',$month)]['Goodride11.00R20CB972'])?$hangorder[date('m-Y',$month)]['Goodride11.00R20CB972']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride11.00R20CB972'] = isset($sum_arr['Goodride11.00R20CB972'])?$sum_arr['Goodride11.00R20CB972']+$t6:$t6;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride11.00R20CB972']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t21 = isset($hangorder[date('m-Y',$month)]['Goodride12.00R20CM958'])?$hangorder[date('m-Y',$month)]['Goodride12.00R20CM958']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12.00R20CM958'] = isset($sum_arr['Goodride12.00R20CM958'])?$sum_arr['Goodride12.00R20CM958']+$t21:$t21;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20CM958']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t8 = isset($hangorder[date('m-Y',$month)]['Goodride12.00R20CM913A'])?$hangorder[date('m-Y',$month)]['Goodride12.00R20CM913A']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12.00R20CM913A'] = isset($sum_arr['Goodride12.00R20CM913A'])?$sum_arr['Goodride12.00R20CM913A']+$t8:$t8;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20CM913A']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t9 = isset($hangorder[date('m-Y',$month)]['Goodride12.00R20EZ356'])?$hangorder[date('m-Y',$month)]['Goodride12.00R20EZ356']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12.00R20EZ356'] = isset($sum_arr['Goodride12.00R20EZ356'])?$sum_arr['Goodride12.00R20EZ356']+$t9:$t9;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20EZ356']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $t22 = isset($hangorder[date('m-Y',$month)]['Goodride12.00R20CB919'])?$hangorder[date('m-Y',$month)]['Goodride12.00R20CB919']:null ?></td>
+                                    <?php
+                                    $sum_arr['Goodride12.00R20CB919'] = isset($sum_arr['Goodride12.00R20CB919'])?$sum_arr['Goodride12.00R20CB919']+$t22:$t22;
+                                    $month = strtotime("+1 month", $month);
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($sum_arr['Goodride12.00R20CB919']) ?></td>
+                                </tr>
                                 <tr style="font-weight: bold;">
-                                    <?php foreach ($orders as $order) { ?>
-                                        <td class="fix show_order"><?php echo $lib->formatMoney($order->import_tire_order_total) ?></td>
+                                    <?php
+                                    $month = $minDate;
+                                     while($month <= $maxDate) { ?>
+                                        <td class="fix show_order"><?php echo $lib->formatMoney(array_sum($hangorder[date('m-Y',$month)])) ?></td>
                                     <?php 
-                                    $tongorder += $order->import_tire_order_total;
+                                    $tongorder += array_sum($hangorder[date('m-Y',$month)]);
+                                    $month = strtotime("+1 month", $month);
                                     } ?>
                                     <td style="background-color: rgba(255, 0, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($tongorder) ?></td>
                                 </tr>
@@ -366,14 +498,7 @@ $tongdangve = 0;
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride11.00R20CM987']) ?></td>
                                 </tr>
-                                <tr>
-                                    <?php foreach ($tire_goings as $tire_going) { ?>
-                                        <td class="fix show_going"><?php echo $t6 = isset($dangve[$tire_going->import_tire_order_id]['Goodride11.00R20CB972'])?$dangve[$tire_going->import_tire_order_id]['Goodride11.00R20CB972']:null ?></td>
-                                    <?php
-                                    $go_arr['Goodride11.00R20CB972'] = isset($go_arr['Goodride11.00R20CB972'])?$go_arr['Goodride11.00R20CB972']+$t6:$t6;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride11.00R20CB972']) ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
                                         <td class="fix show_going"><?php echo $t7 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CR926'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CR926']:null ?></td>
@@ -382,22 +507,7 @@ $tongdangve = 0;
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20CR926']) ?></td>
                                 </tr>
-                                <tr>
-                                    <?php foreach ($tire_goings as $tire_going) { ?>
-                                        <td class="fix show_going"><?php echo $t8 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM913A'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM913A']:null ?></td>
-                                    <?php
-                                    $go_arr['Goodride12.00R20CM913A'] = isset($go_arr['Goodride12.00R20CM913A'])?$go_arr['Goodride12.00R20CM913A']+$t8:$t8;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20CM913A']) ?></td>
-                                </tr>
-                                <tr>
-                                    <?php foreach ($tire_goings as $tire_going) { ?>
-                                        <td class="fix show_going"><?php echo $t9 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20EZ356'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20EZ356']:null ?></td>
-                                    <?php
-                                    $go_arr['Goodride12.00R20EZ356'] = isset($go_arr['Goodride12.00R20EZ356'])?$go_arr['Goodride12.00R20EZ356']+$t9:$t9;
-                                    } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20EZ356']) ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
                                         <td class="fix show_going"><?php echo $t10 = isset($dangve[$tire_going->import_tire_order_id]['Goodride11R22.5CR976A'])?$dangve[$tire_going->import_tire_order_id]['Goodride11R22.5CR976A']:null ?></td>
@@ -421,6 +531,22 @@ $tongdangve = 0;
                                     $go_arr['Goodride11R22.5CM983'] = isset($go_arr['Goodride11R22.5CM983'])?$go_arr['Goodride11R22.5CM983']+$t12:$t12;
                                     } ?>
                                     <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride11R22.5CM983']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t17 = isset($dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CR960A'])?$dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CR960A']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride295/75R22.5CR960A'] = isset($go_arr['Goodride295/75R22.5CR960A'])?$go_arr['Goodride295/75R22.5CR960A']+$t17:$t17;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride295/75R22.5CR960A']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t18 = isset($dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CM983'])?$dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CM983']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride295/75R22.5CM983'] = isset($go_arr['Goodride295/75R22.5CM983'])?$go_arr['Goodride295/75R22.5CM983']+$t18:$t18;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride295/75R22.5CM983']) ?></td>
                                 </tr>
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
@@ -456,19 +582,59 @@ $tongdangve = 0;
                                 </tr>
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
-                                        <td class="fix show_going"><?php echo $t17 = isset($dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CR960A'])?$dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CR960A']:null ?></td>
+                                        <td class="fix show_going"><?php echo $t19 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12R22.5CM985'])?$dangve[$tire_going->import_tire_order_id]['Goodride12R22.5C985']:null ?></td>
                                     <?php
-                                    $go_arr['Goodride295/75R22.5CR960A'] = isset($go_arr['Goodride295/75R22.5CR960A'])?$go_arr['Goodride295/75R22.5CR960A']+$t17:$t17;
+                                    $go_arr['Goodride12R22.5CM985'] = isset($go_arr['Goodride12R22.5CM985'])?$go_arr['Goodride12R22.5CM985']+$t19:$t19;
                                     } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride295/75R22.5CR960A']) ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12R22.5CM985']) ?></td>
                                 </tr>
                                 <tr>
                                     <?php foreach ($tire_goings as $tire_going) { ?>
-                                        <td class="fix show_going"><?php echo $t18 = isset($dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CM983'])?$dangve[$tire_going->import_tire_order_id]['Goodride295/75R22.5CM983']:null ?></td>
+                                        <td class="fix show_going"><?php echo $t20 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12R22.5CB919'])?$dangve[$tire_going->import_tire_order_id]['Goodride12R22.5CB919']:null ?></td>
                                     <?php
-                                    $go_arr['Goodride295/75R22.5CM983'] = isset($go_arr['Goodride295/75R22.5CM983'])?$go_arr['Goodride295/75R22.5CM983']+$t18:$t18;
+                                    $go_arr['Goodride12R22.5CB919'] = isset($go_arr['Goodride12R22.5CB919'])?$go_arr['Goodride12R22.5CB919']+$t20:$t20;
                                     } ?>
-                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride295/75R22.5CM983']) ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12R22.5CB919']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t6 = isset($dangve[$tire_going->import_tire_order_id]['Goodride11.00R20CB972'])?$dangve[$tire_going->import_tire_order_id]['Goodride11.00R20CB972']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride11.00R20CB972'] = isset($go_arr['Goodride11.00R20CB972'])?$go_arr['Goodride11.00R20CB972']+$t6:$t6;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride11.00R20CB972']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t21 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM958'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM958']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride12.00R20CM958'] = isset($go_arr['Goodride12.00R20CM958'])?$go_arr['Goodride12.00R20CM958']+$t21:$t21;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20CM958']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t8 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM913A'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CM913A']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride12.00R20CM913A'] = isset($go_arr['Goodride12.00R20CM913A'])?$go_arr['Goodride12.00R20CM913A']+$t8:$t8;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20CM913A']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t9 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20EZ356'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20EZ356']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride12.00R20EZ356'] = isset($go_arr['Goodride12.00R20EZ356'])?$go_arr['Goodride12.00R20EZ356']+$t9:$t9;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20EZ356']) ?></td>
+                                </tr>
+                                <tr>
+                                    <?php foreach ($tire_goings as $tire_going) { ?>
+                                        <td class="fix show_going"><?php echo $t22 = isset($dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CB919'])?$dangve[$tire_going->import_tire_order_id]['Goodride12.00R20CB919']:null ?></td>
+                                    <?php
+                                    $go_arr['Goodride12.00R20CB919'] = isset($go_arr['Goodride12.00R20CB919'])?$go_arr['Goodride12.00R20CB919']+$t22:$t22;
+                                    } ?>
+                                    <td style="font-weight: bold; background-color: rgba(255, 165, 0, 0.2)" class="fix"><?php echo $lib->formatMoney($go_arr['Goodride12.00R20CB919']) ?></td>
                                 </tr>
                                 <tr style="font-weight: bold;">
                                     <?php foreach ($tire_goings as $tire_going) { ?>
@@ -521,18 +687,11 @@ $tongdangve = 0;
                                 <tr>
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CM987'])?$chodat['Goodride11.00R20CM987']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CB972'])?$chodat['Goodride11.00R20CB972']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CR926'])?$chodat['Goodride12.00R20CR926']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CM913A'])?$chodat['Goodride12.00R20CM913A']:null ?></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20EZ356'])?$chodat['Goodride12.00R20EZ356']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11R22.5CR976A'])?$chodat['Goodride11R22.5CR976A']:null ?></td>
                                 </tr>
@@ -541,6 +700,12 @@ $tongdangve = 0;
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11R22.5CM983'])?$chodat['Goodride11R22.5CM983']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CR960A'])?$chodat['Goodride295/75R22.5CR960A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CM983'])?$chodat['Goodride295/75R22.5CM983']:null ?></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5CR926'])?$chodat['Goodride12R22.5CR926']:null ?></td>
@@ -555,10 +720,25 @@ $tongdangve = 0;
                                     <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5MD738'])?$chodat['Goodride12R22.5MD738']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CR960A'])?$chodat['Goodride295/75R22.5CR960A']:null ?></td>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5CM985'])?$chodat['Goodride12R22.5CM985']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride295/75R22.5CM983'])?$chodat['Goodride295/75R22.5CM983']:null ?></td>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12R22.5CB919'])?$chodat['Goodride12R22.5CB919']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride11.00R20CB972'])?$chodat['Goodride11.00R20CB972']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CM958'])?$chodat['Goodride12.00R20CM958']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CM913A'])?$chodat['Goodride12.00R20CM913A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20EZ356'])?$chodat['Goodride12.00R20EZ356']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;" class="fix"><?php echo isset($chodat['Goodride12.00R20CB919'])?$chodat['Goodride12.00R20CB919']:null ?></td>
                                 </tr>
                                 <tr style="font-weight: bold;">
                                     <td class="fix"><?php echo $lib->formatMoney(array_sum($chodat)) ?></td>
@@ -592,18 +772,11 @@ $tongdangve = 0;
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride11.00R20CM987'])?$tonkho['Goodride11.00R20CM987']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride11.00R20CB972'])?$tonkho['Goodride11.00R20CB972']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20CR926'])?$tonkho['Goodride12.00R20CR926']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20CM913A'])?$tonkho['Goodride12.00R20CM913A']:null ?></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20EZ356'])?$tonkho['Goodride12.00R20EZ356']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride11R22.5CR976A'])?$tonkho['Goodride11R22.5CR976A']:null ?></td>
                                 </tr>
@@ -612,6 +785,12 @@ $tongdangve = 0;
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride11R22.5CM983'])?$tonkho['Goodride11R22.5CM983']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride295/75R22.5CR960A'])?$tonkho['Goodride295/75R22.5CR960A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride295/75R22.5CM983'])?$tonkho['Goodride295/75R22.5CM983']:null ?></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12R22.5CR926'])?$tonkho['Goodride12R22.5CR926']:null ?></td>
@@ -626,10 +805,25 @@ $tongdangve = 0;
                                     <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12R22.5MD738'])?$tonkho['Goodride12R22.5MD738']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride295/75R22.5CR960A'])?$tonkho['Goodride295/75R22.5CR960A']:null ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12R22.5CM985'])?$tonkho['Goodride12R22.5CM985']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride295/75R22.5CM983'])?$tonkho['Goodride295/75R22.5CM983']:null ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12R22.5CB919'])?$tonkho['Goodride12R22.5CB919']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride11.00R20CB972'])?$tonkho['Goodride11.00R20CB972']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20CM958'])?$tonkho['Goodride12.00R20CM958']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20CM913A'])?$tonkho['Goodride12.00R20CM913A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20EZ356'])?$tonkho['Goodride12.00R20EZ356']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo isset($tonkho['Goodride12.00R20CB919'])?$tonkho['Goodride12.00R20CB919']:null ?></td>
                                 </tr>
                                 <tr style="font-weight: bold;">
                                     <td style="background-color: rgba(0, 128, 0, 0.2)" class="fix"><?php echo $lib->formatMoney(array_sum($tonkho)) ?></td>
@@ -663,18 +857,11 @@ $tongdangve = 0;
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride11.00R20CM987'])?$dathang['Goodride11.00R20CM987']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride11.00R20CB972'])?$dathang['Goodride11.00R20CB972']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20CR926'])?$dathang['Goodride12.00R20CR926']:null ?></td>
                                 </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20CM913A'])?$dathang['Goodride12.00R20CM913A']:null ?></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20EZ356'])?$dathang['Goodride12.00R20EZ356']:null ?></td>
-                                </tr>
+                                
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride11R22.5CR976A'])?$dathang['Goodride11R22.5CR976A']:null ?></td>
                                 </tr>
@@ -683,6 +870,12 @@ $tongdangve = 0;
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride11R22.5CM983'])?$dathang['Goodride11R22.5CM983']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride295/75R22.5CR960A'])?$dathang['Goodride295/75R22.5CR960A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride295/75R22.5CM983'])?$dathang['Goodride295/75R22.5CM983']:null ?></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12R22.5CR926'])?$dathang['Goodride12R22.5CR926']:null ?></td>
@@ -697,10 +890,25 @@ $tongdangve = 0;
                                     <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12R22.5MD738'])?$dathang['Goodride12R22.5MD738']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride295/75R22.5CR960A'])?$dathang['Goodride295/75R22.5CR960A']:null ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12R22.5CM985'])?$dathang['Goodride12R22.5CM985']:null ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride295/75R22.5CM983'])?$dathang['Goodride295/75R22.5CM983']:null ?></td>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12R22.5CB919'])?$dathang['Goodride12R22.5CB919']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride11.00R20CB972'])?$dathang['Goodride11.00R20CB972']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20CM958'])?$dathang['Goodride12.00R20CM958']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20CM913A'])?$dathang['Goodride12.00R20CM913A']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20EZ356'])?$dathang['Goodride12.00R20EZ356']:null ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo isset($dathang['Goodride12.00R20CB919'])?$dathang['Goodride12.00R20CB919']:null ?></td>
                                 </tr>
                                 <tr style="font-weight: bold;">
                                     <td style="background-color: rgba(0, 0, 255, 0.2)" class="fix"><?php echo $lib->formatMoney(array_sum($dathang)) ?></td>

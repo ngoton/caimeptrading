@@ -124,6 +124,9 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_date','<?php echo $url_order ?>')">Ngày order <?php if ($order_by == 'import_tire_order_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th  class="fix">
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_month','<?php echo $url_order ?>')">Tháng <?php if ($order_by == 'import_tire_order_month'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+        </th>
+        <th  class="fix">
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_tire_order_port_date','<?php echo $url_order ?>')">Cập cảng <?php if ($order_by == 'import_tire_order_port_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
         </th>
         <th  class="fix">
@@ -185,6 +188,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <td  class="fix"><?php echo $i++; ?></td>
             <td class="fix" id="import_tire_order_code_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_code; ?></td>
             <td class="fix" id="import_tire_order_date_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_tire_order->import_tire_order_date); ?></td>
+            <td class="fix" id="import_tire_order_month_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_month>0?date('m/Y',$import_tire_order->import_tire_order_month):""; ?></td>
             <td class="fix" id="import_tire_order_port_date_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_tire_order->import_tire_order_port_date); ?></td>
             <td class="fix" id="import_tire_order_expect_date_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_tire_order->import_tire_order_expect_date); ?></td>
             <td class="fix" id="import_tire_order_comment_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_comment; ?></td>
@@ -263,7 +267,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
 
     <?php endforeach; ?>
         <tr style="font-weight:bold">
-          <td colspan="7" class="fix">Tổng cộng</td>
+          <td colspan="8" class="fix">Tổng cộng</td>
           <td  class="fix text-right"><?php echo $lib->formatMoney($tongsl); ?></td>
           <td  class="fix text-right"><?php echo $lib->formatMoney($tongtien); ?></td>
           <td  class="fix text-right"><?php echo $lib->formatMoney($tongthue); ?></td>
@@ -493,6 +497,14 @@ $this->helper('slidePaginator');
                     </div>
                     <div class="box-body nopadding">
                       <div class="form-group col-xs-4 nopadding">
+                        <label for="import_tire_order_month">Tháng </label>
+                      </div>
+                      <div class="form-group col-xs-8 nopadding">
+                        <input type="text" class="date_mask2" data-inputmask="'alias': 'mm/yyyy'" data-mask id="import_tire_order_month"  name="import_tire_order_month" tabindex="10" required="required" autocomplete="off" >
+                      </div>
+                    </div>
+                    <div class="box-body nopadding">
+                      <div class="form-group col-xs-4 nopadding">
                         <label for="import_tire_order_expect_date">Ngày dự kiến về </label>
                       </div>
                       <div class="form-group col-xs-8 nopadding">
@@ -707,6 +719,7 @@ $this->helper('slidePaginator');
 <script type="text/javascript">
 $('.add-field').hide();
 $(".date_mask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});  
+$(".date_mask2").inputmask("mm/yyyy", {"placeholder": "mm/yyyy"});  
 
 $('#find_excel').click(function(e) {
   $( "#import_order" ).dialog( "open" );
@@ -1205,6 +1218,7 @@ function add_click(){
         $('.add-field input').attr("data","");
         $('.add-field input').attr("alt","");
         $('.add-field .date_mask').val("<?php echo date('d-m-Y') ?>");
+        $('.add-field .date_mask2').val("<?php echo date('m-Y', strtotime('+1 month')) ?>");
         //$('#import_tire_order_number').val('0000000');
         $('#import_tire_order_code').val('<?php echo ++$lastID ?>');
         $('#import_tire_order_bank_rate').val('<?php echo $lib->formatMoney($last_bank_rate) ?>');
@@ -1517,6 +1531,7 @@ $(document).ready(function(){
         var import_tire_order_supplier = $('#import_tire_order_supplier').attr('data');
         var import_tire_order_type = $('input[name="import_tire_order_type"]:checked').val();
         var import_tire_order_date = $('#import_tire_order_date').val();
+        var import_tire_order_month = $('#import_tire_order_month').val();
         var import_tire_order_expect_date = $('#import_tire_order_expect_date').val();
         var import_tire_order_claim = $('#import_tire_order_claim').val();
         var import_tire_order_rate_diff = $('#import_tire_order_rate_diff').val();
@@ -1667,6 +1682,7 @@ $(document).ready(function(){
             import_tire_order_supplier_name: import_tire_order_supplier_name,
             import_tire_order_type: import_tire_order_type,
             import_tire_order_date: import_tire_order_date,
+            import_tire_order_month: import_tire_order_month,
             import_tire_order_expect_date: import_tire_order_expect_date,
             import_tire_order_claim: import_tire_order_claim,
             import_tire_order_rate_diff: import_tire_order_rate_diff,
@@ -2164,7 +2180,7 @@ function updateprice(cont_change){
     var cuoctau = roundDecimal((ocean_freight*tienmua)/tonggia,6);
     $('.tire_ocean_freight:eq('+rowIndex+')').val(cuoctau);
 
-    $('#import_tire_order_claim').val(roundDecimal(tonggia*0.005,2));
+    //$('#import_tire_order_claim').val(roundDecimal(tonggia*0.005,2));
 
     var tygia = parseFloat(get_number('#import_tire_order_bank_rate')) || 0;
     var tygiathue = parseFloat(get_number('#import_tire_order_tax_rate')) || 0;

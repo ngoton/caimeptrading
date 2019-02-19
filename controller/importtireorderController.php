@@ -70,7 +70,7 @@ Class importtireorderController Extends baseController {
         $pagination_stages = 2;
         
         $data = array(
-            'where' => 'import_tire_order_date >= '.strtotime($batdau).' AND import_tire_order_date < '.strtotime($ngayketthuc),
+            'where' => '(import_tire_order_status=1 OR import_tire_order_status IS NULL) OR (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')',
         );
 
         $import_tire_orders = $import_tire_order_model->getAllImport($data,null);
@@ -104,7 +104,7 @@ Class importtireorderController Extends baseController {
             'order_by'=>$order_by,
             'order'=>$order,
             'limit'=>$x.','.$sonews,
-            'where' => 'import_tire_order_date >= '.strtotime($batdau).' AND import_tire_order_date < '.strtotime($ngayketthuc),
+            'where' => '(import_tire_order_status=1 OR import_tire_order_status IS NULL) OR (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')',
             );
         
       
@@ -1137,6 +1137,7 @@ Class importtireorderController Extends baseController {
                 'import_tire_order_supplier' => trim($_POST['import_tire_order_supplier']),
                 'import_tire_order_type' => trim($_POST['import_tire_order_type']),
                 'import_tire_order_date' => strtotime(str_replace('/', '-', $_POST['import_tire_order_date'])),
+                'import_tire_order_month' => strtotime('01-'.str_replace('/', '-', $_POST['import_tire_order_month'])),
                 'import_tire_order_expect_date' => strtotime(str_replace('/', '-', $_POST['import_tire_order_expect_date'])),
                 'import_tire_order_claim' => str_replace(',', '', $_POST['import_tire_order_claim']),
                 'import_tire_order_rate_diff' => str_replace(',', '', $_POST['import_tire_order_rate_diff']),

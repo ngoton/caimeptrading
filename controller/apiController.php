@@ -2510,7 +2510,7 @@ Class apiController Extends baseController {
         }
 
 
-        $tire_goings = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND (import_tire_order_status=2 OR import_tire_order_status=4)','order_by'=>'import_tire_order_expect_date ASC'));
+        $tire_goings = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND import_tire_order_status=2','order_by'=>'import_tire_order_expect_date ASC'));
         foreach ($tire_goings as $tire_going) {
             $goings = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$tire_going->import_tire_order_id),array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id')); //tire_brand thay tire_brand_group
             foreach ($goings as $going) {
@@ -2533,6 +2533,8 @@ Class apiController Extends baseController {
             "Goodride@12.00R20@CR926",
             "Goodride@12.00R20@CM913A",
             "Goodride@12.00R20@EZ356",
+            "Goodride@12.00R20@CM958",
+            "Goodride@12.00R20@CB919",
             "Goodride@11R22.5@CR976A",
             "Goodride@11R22.5@AS668",
             "Goodride@11R22.5@CM983",
@@ -2540,6 +2542,8 @@ Class apiController Extends baseController {
             "Goodride@12R22.5@CR976A",
             "Goodride@12R22.5@AS668",
             "Goodride@12R22.5@MD738",
+            "Goodride@12R22.5@CM985",
+            "Goodride@12R22.5@CB919",
             "Goodride@295/75R22.5@CR960A",
             "Goodride@295/75R22.5@CM983"
         );
@@ -2560,10 +2564,10 @@ Class apiController Extends baseController {
             $dat = isset($dathang[$str])?$dathang[$str]:'';
             $or = isset($hangorder[$str])?$hangorder[$str]:'';
 
-            $tongton+=$ton;
-            $tongdangve+=$ve;
-            $tongdathang+=$dat;
-            $tongorder+=$or;
+            $tongton+=intval($ton);
+            $tongdangve+=intval($ve);
+            $tongdathang+=intval($dat);
+            $tongorder+=intval($or);
 
             $result[] = array(
                 'tire_id'=>(string)$i++,
@@ -3516,7 +3520,7 @@ Class apiController Extends baseController {
     }
     public function writeHTML($data,$user){
         $staff_model = $this->model->get('staffModel');
-        $staffs = $staff_model->getStaffByWhere('account'=>$user);
+        $staffs = $staff_model->getStaffByWhere(array('account'=>$user));
 
         $this->view->data['tires'] = $data;
         $this->view->data['staffs'] = $staffs;

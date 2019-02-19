@@ -765,7 +765,7 @@ Class adminController Extends baseController {
         $today = date('d-m-Y');
         $before = date('d-m-Y', strtotime($today. ' - 15 days'));
 
-        $orders = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status=0) AND id_order_agent > 0 AND order_tire_date <= '.strtotime($before)));
+        $orders = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status=0) AND (approve IS NULL OR approve=0) AND id_order_agent > 0 AND order_tire_date <= '.strtotime($before)));
         $arr = array();
         foreach ($orders as $order) {
             $ton = 0;

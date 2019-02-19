@@ -19,12 +19,33 @@ Class stockanalyticsController Extends baseController {
         $dathang = array();
         $dangve = array();
         $chodat = array();
+
+        $minDate = 0;
+        $maxDate = 0;
         
         $orders = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND (import_tire_order_status IS NULL OR import_tire_order_status=1 OR import_tire_order_status=0)','order_by'=>'import_tire_order_date ASC'));
         foreach ($orders as $order) {
+            if ($order->import_tire_order_month > 0) {
+                if ($minDate==0 && $maxDate==0) {
+                    $minDate = $order->import_tire_order_month;
+                    $maxDate = $order->import_tire_order_month;
+                }
+
+                if ($order->import_tire_order_month < $minDate) {
+                    $minDate = $order->import_tire_order_month;
+                }
+                if ($order->import_tire_order_month > $maxDate) {
+                    $maxDate = $order->import_tire_order_month;
+                }
+
+            }
+            
+
             $tire_orders = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$order->import_tire_order_id),array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id')); //tire_brand thay tire_brand_group
             foreach ($tire_orders as $tire_order) {
-                $hangorder[$order->import_tire_order_id][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name] = isset($hangorder[$order->import_tire_order_id][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name])?$hangorder[$order->import_tire_order_id][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name]+$tire_order->tire_number:$tire_order->tire_number;
+                if ($order->import_tire_order_month > 0) {
+                    $hangorder[date('m-Y',$order->import_tire_order_month)][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name] = isset($hangorder[date('m-Y',$order->import_tire_order_month)][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name])?$hangorder[date('m-Y',$order->import_tire_order_month)][$tire_order->tire_brand_name.$tire_order->tire_size_number.$tire_order->tire_pattern_name]+$tire_order->tire_number:$tire_order->tire_number;
+                }
             }
         }
         
@@ -76,6 +97,8 @@ Class stockanalyticsController Extends baseController {
         }
         $this->view->data['total_cont'] = $total_cont;
         
+        $this->view->data['minDate'] = $minDate;
+        $this->view->data['maxDate'] = $maxDate;
 
         $this->view->data['orders'] = $orders;
         $this->view->data['hangorder'] = $hangorder;
@@ -152,7 +175,7 @@ Class stockanalyticsController Extends baseController {
         $dangve = array();
         $chodat = array();
         
-        $orders = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND (import_tire_order_status IS NULL OR import_tire_order_status=1 OR import_tire_order_status=0)','order_by'=>'import_tire_order_date ASC'));
+        $orders = $import_tire_order_model->getAllImport(array('where'=>'import_tire_order_total > 0 AND (import_tire_order_status IS NULL OR import_tire_order_status=1 OR import_tire_order_status=0)','order_by'=>'import_tire_order_month ASC'));
         foreach ($orders as $order) {
             $tire_orders = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$order->import_tire_order_id),array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id')); //tire_brand thay tire_brand_group
             foreach ($tire_orders as $tire_order) {
@@ -198,19 +221,23 @@ Class stockanalyticsController Extends baseController {
             "Goodride11.00R20CR926",
             "Goodride11.00R20CR976A",
             "Goodride11.00R20CM987",
-            "Goodride11.00R20CB972",
             "Goodride12.00R20CR926",
-            "Goodride12.00R20CM913A",
-            "Goodride12.00R20EZ356",
             "Goodride11R22.5CR976A",
             "Goodride11R22.5AS668",
             "Goodride11R22.5CM983",
+            "Goodride295/75R22.5CR960A",
+            "Goodride295/75R22.5CM983",
             "Goodride12R22.5CR926",
             "Goodride12R22.5CR976A",
             "Goodride12R22.5AS668",
             "Goodride12R22.5MD738",
-            "Goodride295/75R22.5CR960A",
-            "Goodride295/75R22.5CM983"
+            "Goodride12R22.5CM985",
+            "Goodride12R22.5CB919",
+            "Goodride11.00R20CB972",
+            "Goodride12.00R20CM958",
+            "Goodride12.00R20CM913A",
+            "Goodride12.00R20EZ356",
+            "Goodride12.00R20CB919"
         );
 
         
@@ -231,20 +258,25 @@ Class stockanalyticsController Extends baseController {
                 ->setCellValue('A7', '11.00R20')
                ->setCellValue('A8', '11.00R20')
                ->setCellValue('A9', '11.00R20')
-               ->setCellValue('A10', '11.00R20')
-               ->setCellValue('A11', '12.00R20')
-               ->setCellValue('A12', '12.00R20')
-               ->setCellValue('A13', '12.00R20')
-               ->setCellValue('A14', '11R22.5')
-                ->setCellValue('A15', '11R22.5')
-                ->setCellValue('A16', '11R22.5')
+               
+               ->setCellValue('A10', '12.00R20')
+               ->setCellValue('A11', '11R22.5')
+                ->setCellValue('A12', '11R22.5')
+                ->setCellValue('A13', '11R22.5')
+                ->setCellValue('A14', '295/75R22.5')
+               ->setCellValue('A15', '295/75R22.5')
+                ->setCellValue('A16', '12R22.5')
                 ->setCellValue('A17', '12R22.5')
                 ->setCellValue('A18', '12R22.5')
-                ->setCellValue('A19', '12R22.5')
+               ->setCellValue('A19', '12R22.5')
                ->setCellValue('A20', '12R22.5')
-               ->setCellValue('A21', '295/75R22.5')
-               ->setCellValue('A22', '295/75R22.5')
-               ->setCellValue('A23', 'TỔNG CỘNG')
+               ->setCellValue('A21', '12R22.5')
+               ->setCellValue('A22', '11.00R20')
+               ->setCellValue('A23', '12.00R20')
+               ->setCellValue('A24', '12.00R20')
+               ->setCellValue('A25', '12.00R20')
+               ->setCellValue('A26', '12.00R20')
+               ->setCellValue('A27', 'TỔNG CỘNG')
 
                 ->setCellValue('B4', 'CR926')
                 ->setCellValue('B5', 'CL946')
@@ -252,19 +284,26 @@ Class stockanalyticsController Extends baseController {
                 ->setCellValue('B7', 'CR926')
                ->setCellValue('B8', 'CR976A')
                ->setCellValue('B9', 'CM987')
-               ->setCellValue('B10', 'CB972')
-               ->setCellValue('B11', 'CR926')
-               ->setCellValue('B12', 'CM913A')
-               ->setCellValue('B13', 'EZ356')
-               ->setCellValue('B14', 'CR976A')
-                ->setCellValue('B15', 'AS668')
-                ->setCellValue('B16', 'CM983')
-                ->setCellValue('B17', 'CR926')
-                ->setCellValue('B18', 'CR976A')
-                ->setCellValue('B19', 'AS668')
-               ->setCellValue('B20', 'MD738')
-               ->setCellValue('B21', 'CR960A')
-               ->setCellValue('B22', 'CM983');
+               
+               ->setCellValue('B10', 'CR926')
+               
+               ->setCellValue('B11', 'CR976A')
+                ->setCellValue('B12', 'AS668')
+                ->setCellValue('B13', 'CM983')
+                ->setCellValue('B14', 'CR960A')
+               ->setCellValue('B15', 'CM983')
+                ->setCellValue('B16', 'CR926')
+                ->setCellValue('B17', 'CR976A')
+                ->setCellValue('B18', 'AS668')
+               ->setCellValue('B19', 'MD738')
+               ->setCellValue('B20', 'CM985')
+               ->setCellValue('B21', 'CB919')
+               
+               ->setCellValue('B22', 'CB972')
+               ->setCellValue('B23', 'CM958')
+               ->setCellValue('B24', 'CM913A')
+               ->setCellValue('B25', 'EZ356')
+               ->setCellValue('B26', 'CB919');
             
             
             $sum_arr = array();
