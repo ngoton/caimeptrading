@@ -74,7 +74,7 @@ Class importtireorderController Extends baseController {
         );
 
         $import_tire_orders = $import_tire_order_model->getAllImport($data,null);
-        $total_cont = 1;
+        $total_cont = 0;
         foreach ($import_tire_orders as $import_tire_order) {
             if ($import_tire_order->import_tire_order_status == 3 && $import_tire_order->import_tire_order_total >= 200) {
                 $total_cont += $import_tire_order->import_tire_order_cont_total;
