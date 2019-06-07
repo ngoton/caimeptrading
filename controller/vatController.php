@@ -182,7 +182,10 @@ Class vatController Extends baseController {
             $res = json_decode($eHD->Object);
             if (isset($res[0]->InvoiceGUID)) {
                 $guid = $res[0]->InvoiceGUID;
-                $invoice_code = $res[0]->InvoiceCode;
+                if (isset($res[0]->InvoiceCode)) {
+                    $invoice_code = $res[0]->InvoiceCode;
+                }
+                
             }
         }
 
@@ -285,11 +288,12 @@ Class vatController Extends baseController {
         $this->view->data['errorHD'] = 0;
         if ($items['eHD'][0] == 1 && ($guid == null || $guid == "00000000-0000-0000-0000-000000000000")) {
             $this->view->data['errorHD'] = 1;
+            $this->view->data['errorMessHD'] = json_encode($res);
         }
 
         
 
-        $customers = $customer_model->getCustomerByWhere(array('customer_mst'=>$params['mst'][0]));
+        $customers = $customer_model->getCustomerByWhere(array('mst'=>$params['mst'][0]));
         if ($customers->company_name != $params['tendv'][0] || $customers->customer_address != $params['diachi'][0]) {
             $customer_model->updateCustomer(array('company_name'=>$params['tendv'][0],'customer_address'=>$params['diachi'][0]),array('customer_id'=>$customers->customer_id));
         }
@@ -302,6 +306,10 @@ Class vatController Extends baseController {
         $fh = fopen($filename, "a") or die("Could not open log file.");
         fwrite($fh, $text) or die("Could not write file!");
         fclose($fh);
+
+        if($guid != null && $guid != "00000000-0000-0000-0000-000000000000"){
+            return $this->view->redirect('https://van.ehoadon.vn/Lookup?InvoiceGUID='.$guid);
+        }
 
         $this->view->show('vat/printpage');
     }
@@ -350,7 +358,10 @@ Class vatController Extends baseController {
             $res = json_decode($eHD->Object);
             if (isset($res[0]->InvoiceGUID)) {
                 $guid = $res[0]->InvoiceGUID;
-                $invoice_code = $res[0]->InvoiceCode;
+                if (isset($res[0]->InvoiceCode)) {
+                    $invoice_code = $res[0]->InvoiceCode;
+                }
+                
             }
         }
         
@@ -451,6 +462,10 @@ Class vatController Extends baseController {
         $this->view->data['errorHD'] = 0;
         if ($items['eHD'][0] == 1 && ($guid == null || $guid == "00000000-0000-0000-0000-000000000000")) {
             $this->view->data['errorHD'] = 1;
+            $this->view->data['errorMessHD'] = json_encode($res);
+        }
+        if($guid != null && $guid != "00000000-0000-0000-0000-000000000000"){
+            return $this->view->redirect('https://van.ehoadon.vn/Lookup?InvoiceGUID='.$guid);
         }
 
         $this->view->show('vat/printview');

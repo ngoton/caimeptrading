@@ -648,12 +648,12 @@ $tongdangve = 0;
                                     <?php foreach ($tire_goings as $tire_going) { 
                                         if ($tire_going->import_tire_order_status==4) {
                                     ?>
-                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" value="2">Cho đặt</button></td>
+                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" alt="<?php echo date('d-m-Y',$tire_going->import_tire_order_expect_date) ?>" value="2">Về</button></td>
                                     <?php 
                                         }
                                         else{
                                     ?>
-                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" value="4">Hủy đặt</button></td>
+                                        <td class="fix show_going"><button class="stock_going" data="<?php echo $tire_going->import_tire_order_id ?>" value="4">x</button></td>
                                     <?php
                                         }
                                     } ?>
@@ -920,6 +920,23 @@ $tongdangve = 0;
             
 </div>
 
+<div id="dialogContent3" title="Ngày dự kiến về">
+    
+    
+    <form action="#" method="post" id="editForm3">
+        
+        
+        <label>
+            <span class="add-on"><i class="icon-calendar" ></i></span>
+            <span>Ngày về: </span>
+            <input type="text" id="i_date" name="i_date" class="ngay" value="" required="required" />
+            <input type="hidden" id="i_order" name="i_order" value="" required="required" />
+            <input type="hidden" id="i_status" name="i_status" value="" required="required" />
+        </label>
+        
+    </form>
+</div>
+
 <script type="text/javascript">
     $('#show_order').toggle(function(){
         $('.show_order').show();
@@ -935,14 +952,69 @@ $tongdangve = 0;
 $('.stock_going').click(function(){
     var data = $(this).attr('data');
     var val = $(this).attr('value');
-    $.post("<?php echo BASE_URL ?>/stockanalytics/going", {data: data, value: val},
+    var date = "<?php echo date('d-m-Y') ?>";
+    if (val == 4) {
+        $.post("<?php echo BASE_URL ?>/stockanalytics/going", {data: data, value: val, date: date},
        function(data){
         setTimeout(function() {
             sapxep('1','','');
           }, 200);
        
-       }); 
+       });
+    }
+    else{
+        $('#i_date').val(date);
+        $('#i_order').val(data);
+        $('#i_status').val(val);
+
+        $( "#dialogContent3" ).dialog( "open" );
+    }
+
 });
+$( "#dialogContent3" ).dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+        OK: function() {
+            var data = $('#i_order').val();
+            var val = $('#i_status').val();
+            var date = $('#i_date').val();
+                
+            $.post("<?php echo BASE_URL ?>/stockanalytics/going", {data: data, value: val, date: date},
+               function(data){
+                setTimeout(function() {
+                    sapxep('1','','');
+                  }, 200);
+               
+               }); 
+              
+            $( this ).dialog( "close" );
+        },        
+        Cancel: function() {
+            $( this ).dialog( "close" );
+        }
+    }
+});
+
+var pickerOpay2 = {
+        closeText: "Đóng",
+        currentText: "Hiện tại",
+        nextText: "Tiếp",
+        prevText: "Quay lại",
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        dateFormat: 'dd-mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        firstDay: 1,
+        isRTL: false,
+        showButtonPanel: true
+    }; 
+    $(".ngay").datepicker(pickerOpay2);
 </script>
 
 <style type="text/css">

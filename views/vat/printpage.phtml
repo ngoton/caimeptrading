@@ -1664,6 +1664,8 @@
 <?php if($errorHD == 1) { ?>
 <script type="text/javascript">
   alert('Có lỗi trong quá trình xuất hóa đơn điện tử. Vui lòng xóa hóa đơn và làm lại!');
+  var mess = "<?php echo $errorMessHD ?>";
+  console.log(mess);
 </script>
 <?php } ?>
   

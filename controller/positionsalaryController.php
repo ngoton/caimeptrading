@@ -142,7 +142,7 @@ Class positionsalaryController Extends baseController {
                         
                         'position_salary' => trim(str_replace(',','',$_POST['position_salary'])),
                         'create_time' => strtotime('01-'.$_POST['create_time']),
-                        
+                        'reduce_time' => trim($_POST['reduce_time']),
                         );
 
             

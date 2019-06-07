@@ -95,7 +95,7 @@ Class stockanalyticsController Extends baseController {
                 $total_cont += $import_tire_order->import_tire_order_cont_total;
             }
         }
-        $this->view->data['total_cont'] = $total_cont;
+        $this->view->data['total_cont'] = $total_cont-9;
         
         $this->view->data['minDate'] = $minDate;
         $this->view->data['maxDate'] = $maxDate;
@@ -122,8 +122,9 @@ Class stockanalyticsController Extends baseController {
 
             $id = $_POST['data'];
             $status = $_POST['value'];
+            $date = strtotime($_POST['date']);
 
-            $import_tire_order_model->updateImport(array('import_tire_order_status'=>$status),array('import_tire_order_id'=>$id));
+            $import_tire_order_model->updateImport(array('import_tire_order_status'=>$status,'import_tire_order_expect_date'=>$date),array('import_tire_order_id'=>$id));
             $import_orders = $import_tire_order_model->getImport($id);
             
             $list_orders = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$id));

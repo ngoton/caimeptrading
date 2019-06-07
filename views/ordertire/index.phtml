@@ -40,6 +40,10 @@
             <h2 class="fs-title">Sản phẩm</h2>
             <h3 class="fs-subtitle">Bước 2</h3>
 
+            <div style="text-align:right;font-weight:bold">
+                (%) <input type="text" name="discount_percent" id="discount_percent" style="width:50px"> 
+                <input type="text" name="discount_vnd" id="discount_vnd" class="number" style="width:50px"> (đ)
+            </div>
             <table id="dataTable" border="1" style="width: 100%; border: 1px solid rgb(221, 217, 217); margin-bottom: 10px" >
                     <tbody>
                     <tr>
@@ -185,7 +189,7 @@
             <input style="width:100px" type="text" class="numbers" name="warranty_percent" id="warranty_percent" placeholder="Bảo hành (%)" />
             <input style="width:450px" type="text" class="number" name="warranty" id="warranty" placeholder="Giảm bảo hành" />
             <input type="text" class="iform ngay" name="delivery_date" id="delivery_date" placeholder="Ngày giao hàng" />
-            <input type="text" class="iform ngay" name="due_date" id="due_date" placeholder="Hạn thanh toán" required="required" />
+            <input type="text" class="iform ngay" name="due_date" id="due_date" placeholder="Hạn thanh toán" required="required" value="<?php echo date('d-m-Y') ?>" />
             <input type="hidden" id="max_discount" value="0">
             <input type="button" name="previous" class="previous action-button" value="Quay lại" />
             <input type="button" name="next" class="next action-button" value="Tiếp tục" id="last_next" />
@@ -788,7 +792,9 @@ $('.tire_brand').change(function(){
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                 $('.tire_price:eq('+rowIndex+')').val(data.price);
+                $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                 $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                 $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                     return value
@@ -894,7 +900,9 @@ $('.tire_size').change(function(){
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                 $('.tire_price:eq('+rowIndex+')').val(data.price);
+                $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                 $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                 $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                     return value
@@ -987,10 +995,15 @@ $('.tire_pattern').change(function(){
                     $('.noti:eq('+rowIndex+')').hide();
                 }
 
+                $('#discount_percent').val(data.discount_percent);
+                $('#discount_vnd').val(data.discount_vnd);
+
                 $('.stock_number:eq('+rowIndex+')').val(data.max);
                 $('.going_number:eq('+rowIndex+')').val(data.going);
                 $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                 $('.tire_price:eq('+rowIndex+')').val(data.price);
+                $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                 $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                 $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                     return value
@@ -1095,6 +1108,84 @@ $('.tire_price').keyup(function(){
     $('#discount').val("");
 
     $('.tire_price_vat:eq('+rowIndex+')').val(val);
+    $('.tire_price:eq('+rowIndex+')').attr('data-old',val);
+});
+
+$('#discount_percent').keyup(function(){
+    var val = parseFloat($(this).val()) || 0;
+    var ds = parseInt($('#discount_vnd').val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+    var thanhtien = 0;
+
+    $('.tire_price').each(function() { 
+        var row4 = $(this).parent().parent().parent().parent().parent().parent();
+        var rowIndex4 = row4[0].rowIndex;
+
+        var new_price = Math.round(((parseInt($(this).attr('data'))*(100-val)/100)-ds)/1000)*1000;
+        $(this).val(new_price);
+        $('.tire_price_vat:eq('+rowIndex4+')').val(new_price);
+        $('.tire_price:eq('+rowIndex4+')').attr('data-old',new_price);
+
+        var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+        var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+        thanhtien += soluong*dongia;
+    });
+
+    $('#thanhtien').val(thanhtien);
+
+    $('#thanhtien').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+    $('.tire_price').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+
+    $(':checkbox[name=dis]').prop('checked',false);
+    $('#discount').val("");
+});
+$('#discount_vnd').keyup(function(){
+    var val = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+    var thanhtien = 0;
+
+    $('.tire_price').each(function() { 
+        var row4 = $(this).parent().parent().parent().parent().parent().parent();
+        var rowIndex4 = row4[0].rowIndex;
+
+        var new_price = parseInt($(this).attr('data-old'))-val;
+        $(this).val(new_price);
+        $('.tire_price_vat:eq('+rowIndex4+')').val(new_price);
+
+        var soluong = parseInt($('.tire_number:eq('+rowIndex4+')').val()) || 0;
+        var dongia = parseInt($(this).val().replace(/[^0-9\.-]+/g,"")) || 0;
+
+        thanhtien += soluong*dongia;
+    });
+
+    $('#thanhtien').val(thanhtien);
+
+    $('#thanhtien').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+    $('.tire_price').val(function(index, value) {
+        return value
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+    });
+
+    $(':checkbox[name=dis]').prop('checked',false);
+    $('#discount').val("");
 });
 
 $('input[name="payment"]').click(function(){
@@ -1848,6 +1939,9 @@ $("#msform").validate({
                     var contact = $('#contact').attr('value');
                     var order_staff = $('#order_staff').attr('value');
 
+                    var discount_percent = $('#discount_percent').attr('value');
+                    var discount_vnd = $('#discount_vnd').attr('value');
+
                     var payment = $('input[name=payment]:checked').val();
                     var debt = $('input[name=debt]:checked').val();
                     var debt_number_day = $('#debt_number_day').attr('value');
@@ -1954,6 +2048,8 @@ $("#msform").validate({
                             email: email,
                             contact: contact,
                             order_tire: order_tire,
+                            discount_percent: discount_percent,
+                            discount_vnd: discount_vnd,
                             payment: payment,
                             debt: debt,
                             debt_number_day: debt_number_day,
@@ -2159,6 +2255,8 @@ function addRow(tableID){
 
     $('.tire_number:last').val("");
     $('.tire_price:last').val("");
+    $('.tire_price:last').attr('data',"");
+    $('.tire_price:last').attr('data-old',"");
     $('.tire_price_vat:last').val("");
     $('.max_number:last').val(0);
     $('.stock_number:last').val(0);
@@ -2234,7 +2332,9 @@ function addRow(tableID){
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                    $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                     $('.tire_price:eq('+rowIndex+')').val(data.price);
+                    $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                     $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                     $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                         return value
@@ -2339,7 +2439,9 @@ function addRow(tableID){
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                    $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                     $('.tire_price:eq('+rowIndex+')').val(data.price);
+                    $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                     $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                     $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                         return value
@@ -2434,7 +2536,9 @@ function addRow(tableID){
                     $('.stock_number:eq('+rowIndex+')').val(data.max);
                     $('.going_number:eq('+rowIndex+')').val(data.going);
                     $('.max_number:eq('+rowIndex+')').val(parseInt(data.max)+parseInt(data.going));
+                    $('.tire_price:eq('+rowIndex+')').attr('data',data.price_origin);
                     $('.tire_price:eq('+rowIndex+')').val(data.price);
+                    $('.tire_price:eq('+rowIndex+')').attr('data-old',data.price);
                     $('.tire_price_vat:eq('+rowIndex+')').val(data.price);
                     $('.tire_price:eq('+rowIndex+')').val(function(index, value) {
                         return value
@@ -2538,6 +2642,7 @@ function addRow(tableID){
         $('#discount').val("");
 
         $('.tire_price_vat:eq('+rowIndex+')').val(val);
+        $('.tire_price:eq('+rowIndex+')').attr('data-old',val);
     });
 
 

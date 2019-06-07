@@ -145,11 +145,14 @@ Class checksalarytotalController Extends baseController {
         $qr = 'SELECT * FROM (SELECT * FROM position_salary WHERE create_time <= '.strtotime($ketthuc).' ORDER BY create_time DESC) d GROUP BY d.staff';
         $position_salarys = $position_salary_model->querySalary($qr);
         $arr_position_salary = array();
+        $arr_position_salary_reduce = array();
         foreach ($position_salarys as $position_salary) {
             $arr_position_salary[$position_salary->staff] = isset($arr_position_salary[$position_salary->staff])?$arr_position_salary[$position_salary->staff]+$position_salary->position_salary:$position_salary->position_salary;
+            $arr_position_salary_reduce[$position_salary->staff] = isset($arr_position_salary_reduce[$position_salary->staff])?$arr_position_salary_reduce[$position_salary->staff]+$position_salary->reduce_time:$position_salary->reduce_time;
         }
 
         $this->view->data['arr_position_salary'] = $arr_position_salary;
+        $this->view->data['arr_position_salary_reduce'] = $arr_position_salary_reduce;
 
         $data = array(
             'where' => 'create_time >= '.strtotime($batdau).' AND create_time <= '.strtotime($ketthuc),

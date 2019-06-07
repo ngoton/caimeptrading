@@ -424,6 +424,9 @@ Class checksalaryController Extends baseController {
                             if ($tire_price_agents<5000000) {
                                 $discount = 160000;
                             }
+                            else if($tire_price_agents>=7000000){
+                                $discount = 300000;
+                            }
                             else{
                                 $discount = 200000;
                             }
@@ -437,6 +440,9 @@ Class checksalaryController Extends baseController {
                         if ($order_tire->vat==0) {
                             if ($tire_prices<5000000) {
                                 $discount = 160000;
+                            }
+                            else if($tire_prices>=7000000){
+                                $discount = 300000;
                             }
                             else{
                                 $discount = 200000;
@@ -813,6 +819,9 @@ Class checksalaryController Extends baseController {
                             if ($tire_price_agents<5000000) {
                                 $discount = 160000;
                             }
+                            else if($tire_price_agents>=7000000){
+                                $discount = 300000;
+                            }
                             else{
                                 $discount = 200000;
                             }
@@ -826,6 +835,9 @@ Class checksalaryController Extends baseController {
                         if ($order_tire->vat==0) {
                             if ($tire_prices<5000000) {
                                 $discount = 160000;
+                            }
+                            else if($tire_prices>=7000000){
+                                $discount = 300000;
                             }
                             else{
                                 $discount = 200000;

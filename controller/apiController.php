@@ -56,6 +56,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function approve(){
@@ -145,6 +146,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function unlock(){
@@ -189,6 +191,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function adddiscount(){
@@ -261,6 +264,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function addordernumber(){
@@ -326,6 +330,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function addorder(){
@@ -536,7 +541,7 @@ Class apiController Extends baseController {
             );
         }
         
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function editorder(){
@@ -918,7 +923,7 @@ Class apiController Extends baseController {
             }
         }
 
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function exstock(){
@@ -1150,6 +1155,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function revert(){
@@ -1252,6 +1258,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function delete(){
@@ -1325,6 +1332,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function deletedetail(){
@@ -1461,6 +1469,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function deleteordercost(){
@@ -1517,6 +1526,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
 
@@ -1545,6 +1555,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function vendors() {
@@ -1573,6 +1584,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
 
@@ -1897,6 +1909,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function detailorder() {
@@ -1926,6 +1939,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function detailorderlist() {
@@ -1973,7 +1987,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
         
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function ordercost() {
@@ -2035,6 +2049,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function detailordercost() {
@@ -2082,7 +2097,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
         
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function editordercost(){
@@ -2247,7 +2262,7 @@ Class apiController Extends baseController {
             }
         }
 
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function maxorder() {
@@ -2332,7 +2347,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
         
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function brands() {
@@ -2416,6 +2431,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function prices() {
@@ -2443,6 +2459,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function stock() {
@@ -2604,6 +2621,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function customer() {
@@ -2628,6 +2646,7 @@ Class apiController Extends baseController {
             );
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function getcustomer(){
@@ -2685,6 +2704,8 @@ Class apiController Extends baseController {
                 'err'=>1
             );
         }
+
+        header("Content-Type: application/json");
         echo json_encode($result);
         
     }
@@ -2781,7 +2802,7 @@ Class apiController Extends baseController {
             
         }
 
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function getcustomerinfo(){
@@ -2967,6 +2988,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function debit() {
@@ -3297,6 +3319,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function report() {
@@ -3423,6 +3446,7 @@ Class apiController Extends baseController {
             'err'=>1
         );
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     function cmp($a, $b){
@@ -3468,7 +3492,7 @@ Class apiController Extends baseController {
             );
         }
         
-
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
 
@@ -3495,6 +3519,7 @@ Class apiController Extends baseController {
             $this->writeHTML($value,$user);
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function createquotation(){
@@ -3516,6 +3541,7 @@ Class apiController Extends baseController {
             $this->writeHTML($value,$user);
         }
 
+        header("Content-Type: application/json");
         echo json_encode($result);
     }
     public function writeHTML($data,$user){

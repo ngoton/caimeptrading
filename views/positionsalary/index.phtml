@@ -175,6 +175,7 @@ $tongthanhtien = 0;
             <td class="fix" id="position_salary_<?php echo $salary->position_salary_id; ?>"><?php echo $lib->formatMoney($salary->position_salary); ?></td>
             
             <td style="display:none;"  id="create_time_<?php echo $salary->position_salary_id; ?>"><?php echo date('m-Y',$salary->create_time); ?></td>
+            <td style="display:none;"  id="reduce_time_<?php echo $salary->position_salary_id; ?>"><?php echo $salary->reduce_time; ?></td>
             
             <td>
                 <?php if($_SESSION['role_logined'] != 10){ ?>
@@ -216,6 +217,8 @@ $this->helper('slidePaginator');
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                             <td style="float:right;padding:10px">Tháng</td>
                             <td><input readonly type="text" id="create_time" name="create_time" tabindex="1" required="required"></td>
                             
@@ -227,16 +230,15 @@ $this->helper('slidePaginator');
                             </td>
                             <td>Số tiền </td>
                             <td><input type="text" id="position_salary" class="number" name="position_salary" tabindex="3"  required="required"></td> 
-    
-                            
-    
+                            <td>Số giờ được nghỉ </td>
+                            <td><input type="text" id="reduce_time" name="reduce_time" tabindex="4" ></td> 
                         </tr>
                         
                         <?php if($_SESSION['role_logined'] != 10){ ?>
                          <tr>
                             <td><input type="hidden" readonly id="yes" name="yes" required="required" ></td>
-                            <td><input type="submit" name="submit" value="Hoàn tất" tabindex="4"></td>
-                            <td ><input type="reset" name="reset" value="Nhập lại" tabindex="5"></td>
+                            <td><input type="submit" name="submit" value="Hoàn tất" tabindex="5"></td>
+                            <td ><input type="reset" name="reset" value="Nhập lại" tabindex="6"></td>
                             
                              
                         </tr>
@@ -262,11 +264,13 @@ $('html').click(function(e) {
             var staff_name = $(this).find("#staff_name_"+$(this).attr('id')).text();
             var position_salary = $(this).find("#position_salary_"+$(this).attr('id')).text();
             var create_time = $(this).find("#create_time_"+$(this).attr('id')).text();
+            var reduce_time = $(this).find("#reduce_time_"+$(this).attr('id')).text();
             //alert(staff_name);
             $('#yes').val($(this).attr('id'));
             $('#staff_name').val(staff_name);
             $('#position_salary').val(position_salary);
             $('#create_time').val(create_time);
+            $('#reduce_time').val(reduce_time);
 
             $('#staff_name').attr('data',"");
             $("#staff_name").prop('readonly', true);
@@ -294,6 +298,7 @@ function add_click(){
         $('#position_salary').val("");
         $('#create_time').prop('readonly',false);
         $('#create_time').val("<?php echo date('m-Y',strtotime('-1 month')) ?>");
+        $('#reduce_time').val("");
 
         $('.number').focus(function(){
             if ( $(this).val() == '0') {
@@ -366,6 +371,7 @@ $(document).ready(function(){
                     var staff = $('#staff_name').attr('data');
                     var position_salary = $('#position_salary').attr('value');
                     var create_time = $('#create_time').attr('value');
+                    var reduce_time = $('#reduce_time').attr('value');
                     var yes = $('#yes').attr('value');
                     
                     var action      = "them";
@@ -377,6 +383,7 @@ $(document).ready(function(){
                             staff: staff,
                             position_salary: position_salary,
                             create_time: create_time,
+                            reduce_time: reduce_time,
                             yes: yes,
                             }, // giá trị post
                         success: function(answer){ // if everything goes well

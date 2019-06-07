@@ -915,7 +915,7 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValue('A' . $hang, $i++)
 
-                                    ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
+                                    ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->delivery_date))
 
                                     ->setCellValue('C' . $hang, $row->order_number)
 
@@ -973,7 +973,7 @@ Class tiredebitController Extends baseController {
 
                                     ->setCellValue('A' . $hang, $i++)
 
-                                    ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
+                                    ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->delivery_date))
 
                                     ->setCellValue('C' . $hang, $row->order_number)
 
@@ -1033,7 +1033,7 @@ Class tiredebitController Extends baseController {
 
                                 ->setCellValue('A' . $hang, $i++)
 
-                                ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->order_tire_date))
+                                ->setCellValueExplicit('B' . $hang, $this->lib->hien_thi_ngay_thang($row->delivery_date))
 
                                 ->setCellValue('C' . $hang, $row->order_number)
 

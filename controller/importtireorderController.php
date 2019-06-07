@@ -19,6 +19,7 @@ Class importtireorderController Extends baseController {
             $nv = isset($_POST['nv']) ? $_POST['nv'] : null;
             $tha = isset($_POST['tha']) ? $_POST['tha'] : null;
             $na = isset($_POST['na']) ? $_POST['na'] : null;
+            $status = isset($_POST['trangthai']) ? $_POST['trangthai'] : null;
         }
         else{
             $order_by = $this->registry->router->order_by ? $this->registry->router->order_by : 'import_tire_order_code';
@@ -31,6 +32,7 @@ Class importtireorderController Extends baseController {
             $nv = 1;
             $tha = date('m');
             $na = date('Y');
+            $status = "";
         }
 
         $ngayketthuc = date('d-m-Y', strtotime($ketthuc. ' + 1 days'));
@@ -73,6 +75,15 @@ Class importtireorderController Extends baseController {
             'where' => '(import_tire_order_status=1 OR import_tire_order_status IS NULL) OR (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')',
         );
 
+        if ($status!="") {
+            if ($status==1) {
+                $data['where'] = '(import_tire_order_status=1 OR import_tire_order_status IS NULL) AND (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')';
+            }
+            else{
+                $data['where'] = '(import_tire_order_status='.$status.') AND (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')';
+            }
+        }
+
         $import_tire_orders = $import_tire_order_model->getAllImport($data,null);
         $total_cont = 0;
         foreach ($import_tire_orders as $import_tire_order) {
@@ -80,7 +91,7 @@ Class importtireorderController Extends baseController {
                 $total_cont += $import_tire_order->import_tire_order_cont_total;
             }
         }
-        $this->view->data['total_cont'] = $total_cont;
+        $this->view->data['total_cont'] = $total_cont-9;
         
         $tongsodong = count($import_tire_orders);
         $tongsotrang = ceil($tongsodong / $sonews);
@@ -99,6 +110,7 @@ Class importtireorderController Extends baseController {
         $this->view->data['nv'] = $nv;
         $this->view->data['tha'] = $tha;
         $this->view->data['na'] = $na;
+        $this->view->data['status'] = $status;
 
         $data = array(
             'order_by'=>$order_by,
@@ -106,10 +118,18 @@ Class importtireorderController Extends baseController {
             'limit'=>$x.','.$sonews,
             'where' => '(import_tire_order_status=1 OR import_tire_order_status IS NULL) OR (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')',
             );
-        
+        if ($status!="") {
+            if ($status==1) {
+                $data['where'] = '(import_tire_order_status=1 OR import_tire_order_status IS NULL) AND (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')';
+            }
+            else{
+                $data['where'] = '(import_tire_order_status='.$status.') AND (import_tire_order_expect_date >= '.strtotime($batdau).' AND import_tire_order_expect_date < '.strtotime($ngayketthuc).')';
+            }
+            
+        }
       
         if ($keyword != '') {
-            $search = '( import_tire_order_name LIKE "%'.$keyword.'%"  )';
+            $search = '( import_tire_order_code LIKE "%'.$keyword.'%"  OR import_tire_order_comment LIKE "%'.$keyword.'%")';
             
                 $data['where'] = $data['where'].' AND '.$search;
         }
@@ -206,6 +226,53 @@ Class importtireorderController Extends baseController {
             $import_tire_order_model->updateImport(array('import_tire_order_lock'=>$_POST['lock']),array('import_tire_order_id'=>$_POST['data']));
 
             echo "Thành công";
+        }
+    }
+    public function complete(){
+        if (!isset($_SESSION['userid_logined'])) {
+            return $this->view->redirect('user/login');
+        }
+        if (isset($_POST['data'])) {
+            $import_tire_order_model = $this->model->get('importtireorderModel');
+            $import_tire_list_model = $this->model->get('importtirelistModel');
+
+            $imports = $import_tire_order_model->getImport($_POST['data']);
+
+            if($imports->import_tire_order_complete != 1){
+                $import_tire_order_model->updateImport(array('import_tire_order_complete'=>1),array('import_tire_order_id'=>$_POST['data']));
+                $impost_lists = $import_tire_list_model->getAllImport(array('where'=>'import_tire_order='.$_POST['data'],'field'=>'import_tire_list_id,tire_brand,tire_size,tire_pattern,tire_number,import_tire_order'));
+
+                foreach ($impost_lists as $import) {
+                    $number = $import->tire_number;
+                    $import_order_lists = $import_tire_list_model->getAllImport(array('where'=>'import_tire_list_id!= '.$import->import_tire_list_id.' AND tire_number>0 AND tire_brand='.$import->tire_brand.' AND tire_size='.$import->tire_size.' AND tire_pattern='.$import->tire_pattern,'order_by'=>'import_tire_order_month ASC, import_tire_order_id ASC','field'=>'import_tire_list_id,tire_brand,tire_size,tire_pattern,tire_number,import_tire_order'),array('table'=>'import_tire_order','where'=>'import_tire_order=import_tire_order_id AND (import_tire_order_status IS NULL OR import_tire_order_status=0 OR import_tire_order_status=1)'));
+
+                    foreach ($import_order_lists as $order) {
+                        if($number>0){
+                            $sl = $order->tire_number;
+                            if ($number>=$sl) {
+                                $import_tire_list_model->updateImport(array('tire_number'=>0),array('import_tire_list_id'=>$order->import_tire_list_id));
+                                $number = $number-$sl;
+                            }
+                            else{
+                                $import_tire_list_model->updateImport(array('tire_number'=>($sl-$number)),array('import_tire_list_id'=>$order->import_tire_list_id));
+                                $number = 0;
+                            }
+                        }
+                    }
+                }
+
+            }
+            
+
+            echo "Thành công";
+
+            date_default_timezone_set("Asia/Ho_Chi_Minh"); 
+                    $filename = "action_logs.txt";
+                    $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|complete|".$_POST['data']."|import_tire_order|"."\n"."\r\n";
+                    
+                    $fh = fopen($filename, "a") or die("Could not open log file.");
+                    fwrite($fh, $text) or die("Could not write file!");
+                    fclose($fh);
         }
     }
     
@@ -1130,7 +1197,7 @@ Class importtireorderController Extends baseController {
                 'import_tire_order_bill_number' => trim($_POST['import_tire_order_bill_number']),
                 'import_tire_order_contract_number' => trim($_POST['import_tire_order_contract_number']),
                 'import_tire_order_code' => trim($_POST['import_tire_order_code']),
-                'import_tire_order_comment' => trim($_POST['import_tire_order_comment']),
+                'import_tire_order_comment' => addslashes(trim($_POST['import_tire_order_comment'])),
                 'import_tire_order_seller' => trim($_POST['import_tire_order_seller']),
                 'import_tire_order_port_from' => trim($_POST['import_tire_order_port_from']),
                 'import_tire_order_port_to' => trim($_POST['import_tire_order_port_to']),

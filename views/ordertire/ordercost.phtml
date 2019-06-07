@@ -1,12 +1,11 @@
 
 <?php 
 $lock = 0;
-$check_date = $order_tire->order_tire_status==1?(strtotime(date('t-m-Y',$order_tire->delivery_date))+691200):(strtotime(date('t-m-Y'))+691200); 
+$check_date = $order_tire->order_tire_status==1?($order_tire->delivery_date+259200):(strtotime(date('t-m-Y'))+259200); 
 $today = strtotime(date('d-m-Y'));
-if ($_SESSION['role_logined'] != 1 && $_SESSION['role_logined'] != 9 && $_SESSION['role_logined'] != 3  && $_SESSION['role_logined'] != 2  && $_SESSION['role_logined'] != 8) { 
-  if ($today > $check_date) {
-    $lock = 1;
-  }
+
+if ($today > $check_date) {
+	$lock = 1;
 }
 if ($order_tire->sale_lock != 1) {
   $lock=0;

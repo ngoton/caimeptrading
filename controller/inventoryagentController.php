@@ -7,224 +7,162 @@ Class inventoryagentController Extends baseController {
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Tồn kho lốp xe';
 
-        $thuonghieu = isset($_POST['thuonghieu'])?$_POST['thuonghieu']:0;
-        $kichco = isset($_POST['kichco'])?$_POST['kichco']:0;
-        $magai = isset($_POST['magai'])?$_POST['magai']:0;
-
-        $this->view->data['thuonghieu'] = $thuonghieu;
-        $this->view->data['kichco'] = $kichco;
-        $this->view->data['magai'] = $magai;
-
-        $ngay = date('d-m-Y');
-        if (isset($_POST['date'])) {
-            $ngay = $_POST['date'];
-        }
-        $this->view->data['ngay'] = $ngay;
-
-        $ngayketthuc = date('d-m-Y', strtotime($ngay. ' + 1 days'));
-
-        $tire_order_model = $this->model->get('tireorderModel');
-        $tire_sale_model = $this->model->get('tiresaleModel');
-        $tire_buy_model = $this->model->get('tirebuyModel');
-
-        $tire_brand_model = $this->model->get('tirebrandModel');
-        $tire_size_model = $this->model->get('tiresizeModel');
-        $tire_pattern_model = $this->model->get('tirepatternModel');
-
-        $tire_brands = $tire_brand_model->getAllTire(array('order_by'=>'tire_brand_name ASC'));
-        $tire_sizes = $tire_size_model->getAllTire(array('order_by'=>'tire_size_number ASC'));
-        $tire_patterns = $tire_pattern_model->getAllTire(array('order_by'=>'tire_pattern_name ASC'));
-
-        $this->view->data['tire_brands'] = $tire_brands;
-        $this->view->data['tire_sizes'] = $tire_sizes;
-        $this->view->data['tire_patterns'] = $tire_patterns;
-
-        $query = "SELECT t2.soluong, t1.*, t2.tire_brand_name, t2.tire_size_number, t2.tire_pattern_name FROM tire_buy t1 JOIN (SELECT sum(tire_buy_volume) as soluong, tire_buy_brand, tire_buy_size, tire_buy_pattern, MAX(tire_buy_id) as lonnhat, tire_brand_name, tire_size_number, tire_pattern_name, tire_buy_id FROM tire_buy, tire_brand, tire_size, tire_pattern WHERE tire_buy_date < ".strtotime($ngayketthuc)." AND tire_brand.tire_brand_id = tire_buy.tire_buy_brand AND tire_size.tire_size_id = tire_buy.tire_buy_size AND tire_pattern.tire_pattern_id = tire_buy.tire_buy_pattern GROUP BY tire_buy_brand, tire_buy_size, tire_buy_pattern ORDER BY tire_brand_name ASC, tire_size_number ASC, tire_pattern_name ASC) t2 ON t1.tire_buy_id = t2.lonnhat AND t1.tire_buy_brand = t2.tire_buy_brand AND t1.tire_buy_size = t2.tire_buy_size AND t1.tire_buy_pattern = t2.tire_buy_pattern";
-        if ($thuonghieu > 0) {
-            $query .= " AND t1.tire_buy_brand = ".$thuonghieu;
-        }
-        if ($kichco > 0) {
-            $query .= " AND t1.tire_buy_size = ".$kichco;
-        }
-        if ($magai > 0) {
-            $query .= " AND t1.tire_buy_pattern = ".$magai;
-        }
-
-        $tire_buys = $tire_buy_model->queryTire($query);
-        $this->view->data['tire_buys'] = $tire_buys;
-
+        $tire_brand_group_model = $this->model->get('tirebrandgroupModel');
         $tire_going_model = $this->model->get('tiregoingModel');
+        $import_tire_list_model = $this->model->get('importtirelistModel');
+
+        $tire_buy_model = $this->model->get('tirebuyModel');
+        $tire_sale_model = $this->model->get('tiresaleModel');
+        $tire_desired_model = $this->model->get('tiredesiredModel');
+        $order_tire_model = $this->model->get('ordertireModel');
         $order_tire_list_model = $this->model->get('ordertirelistModel');
 
-        $link_picture = array();
-        $going = array();
-        $sell = array();
-        $order_tire = array();
-        foreach ($tire_buys as $tire_buy) {
-            $link_picture[$tire_buy->tire_buy_id]['image'] = $tire_buy->tire_pattern_name.'.jpg';
+        $tire_size_model = $this->model->get('tiresizeModel');
+        $tire_sizes = $tire_size_model->getAllTire();
+        $this->view->data['tire_sizes'] = $tire_sizes;
 
-            $data_sale = array(
-                'where'=>'tire_sale_date < '.strtotime($ngayketthuc).' AND tire_brand='.$tire_buy->tire_buy_brand.' AND tire_size='.$tire_buy->tire_buy_size.' AND tire_pattern='.$tire_buy->tire_buy_pattern,
-            );
-            $tire_sales = $tire_sale_model->getAllTire($data_sale);
+        $tonkho_brand_group = array();
+        $tonkho = array();
+        $ban = array();
+        $dathang = array();
+        $dangve = array();
+        $dangorder = array();
+        $kho_brand = array();
+        $ban_brand = array();
+        $dathang_brand = array();
+        $nhaphang_brand = array();
+        $dangve_brand = array();
+        $dangorder_brand = array();
 
-            foreach ($tire_sales as $tire_sale) {
-                
-                if ($tire_sale->customer != 119) {
-                    $sell[$tire_buy->tire_buy_id]['number'] = isset($sell[$tire_buy->tire_buy_id]['number'])?$sell[$tire_buy->tire_buy_id]['number']+$tire_sale->volume:$tire_sale->volume;
+        $pattern_data = array();
+        $size_data = array();
+
+        $order_tires = $order_tire_model->getAllTire(array('where'=>'(order_tire_status IS NULL OR order_tire_status = 0)'));
+        foreach ($order_tires as $order) {
+            $order_tire_lists = $order_tire_list_model->getAllTire(array('where'=>'order_tire = '.$order->order_tire_id),array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id'));
+            foreach ($order_tire_lists as $list) {
+                $pt_type = explode(',', $list->tire_pattern_type);
+                for ($l=0; $l < count($pt_type); $l++) { 
+                    $ban[$list->tire_brand_group][$pt_type[$l]][$list->tire_size_number] = isset($ban[$list->tire_brand_group][$pt_type[$l]][$list->tire_size_number])?$ban[$list->tire_brand_group][$pt_type[$l]][$list->tire_size_number]+$list->tire_number:$list->tire_number;
+
+                    $pattern_data[$pt_type[$l]] = true;
+                    $size_data[$pt_type[$l]][$list->tire_size_number] = true;
                 }
+            }
+        }
+        $tire_goings = $tire_going_model->getAllTire(null,array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id AND (status IS NULL OR status=0)')); //tire_brand thay tire_brand_group
+        $tire_orders = $import_tire_list_model->getAllImport(null,array('table'=>'tire_size, tire_pattern, tire_brand','where'=>'tire_brand=tire_brand_id AND tire_pattern=tire_pattern_id AND tire_size=tire_size_id AND import_tire_list_id NOT IN (SELECT import_tire_list FROM tire_going WHERE import_tire_list IS NOT NULL)')); //tire_brand thay tire_brand_group
+        $tire_desireds = $tire_desired_model->getAllTire(null,array('table'=>'tire_size','where'=>'tire_size=tire_size_id AND (tire_desired_status IS NULL OR tire_desired_status=0)')); //tire_brand thay tire_brand_group
+        $tire_buys = $tire_buy_model->getAllTire(null,array('table'=>'tire_pattern, tire_size, tire_brand','where'=>'tire_buy_pattern=tire_pattern_id and tire_buy_size=tire_size_id AND tire_buy_brand=tire_brand_id'));
+        $tire_sales = $tire_sale_model->getAllTire(null,array('table'=>'tire_pattern, tire_size, tire_brand','where'=>'tire_pattern=tire_pattern_id and tire_size=tire_size_id AND tire_brand=tire_brand_id'));
+        
+        $tire_brand_groups = $tire_brand_group_model->getAllTire();
+
+        $last_code = 0;
+        foreach ($tire_goings as $going) {
+            $pt_type = explode(',', $going->tire_pattern_type);
+            for ($l=0; $l < count($pt_type); $l++) {
+                $dangve[$going->tire_brand_group][$pt_type[$l]][$going->tire_size_number] = isset($dangve[$going->tire_brand_group][$pt_type[$l]][$going->tire_size_number])?$dangve[$going->tire_brand_group][$pt_type[$l]][$going->tire_size_number]+$going->tire_number:$going->tire_number;
+
+                $pattern_data[$pt_type[$l]] = true;
+                $size_data[$pt_type[$l]][$going->tire_size_number] = true;
+            }
+            
+            $last_code = $last_code==0?$going->code:$last_code;
+        }
+
+        foreach ($tire_orders as $order) {
+            $pt_type = explode(',', $order->tire_pattern_type);
+            for ($l=0; $l < count($pt_type); $l++) {
+                $dangorder[$order->tire_brand_group][$pt_type[$l]][$order->tire_size_number] = isset($dangorder[$order->tire_brand_group][$pt_type[$l]][$order->tire_size_number])?$dangorder[$order->tire_brand_group][$pt_type[$l]][$order->tire_size_number]+$order->tire_number:$order->tire_number;
+
+                $pattern_data[$pt_type[$l]] = true;
+                $size_data[$pt_type[$l]][$order->tire_size_number] = true;
+            }
+            
+        }
+
+        foreach ($tire_desireds as $desired) {
+            $dathang[$desired->tire_brand][$desired->tire_pattern][$desired->tire_size_number] = isset($dathang[$desired->tire_brand][$desired->tire_pattern][$desired->tire_size_number])?$dathang[$desired->tire_brand][$desired->tire_pattern][$desired->tire_size_number]+$desired->tire_number:$desired->tire_number;
+
+            $pattern_data[$desired->tire_pattern] = true;
+            $size_data[$desired->tire_pattern][$desired->tire_size_number] = true;
+        }
+
+        foreach ($tire_buys as $buy) {
+            $pt_type = explode(',', $buy->tire_pattern_type);
+            for ($l=0; $l < count($pt_type); $l++) {
+                $tonkho[$buy->tire_brand_group][$pt_type[$l]][$buy->tire_size_number] = isset($tonkho[$buy->tire_brand_group][$pt_type[$l]][$buy->tire_size_number])?$tonkho[$buy->tire_brand_group][$pt_type[$l]][$buy->tire_size_number]+$buy->tire_buy_volume:$buy->tire_buy_volume;
                 
-            }
-
-            $data_going = array(
-                'where'=>'tire_brand='.$tire_buy->tire_buy_brand.' AND tire_size='.$tire_buy->tire_buy_size.' AND tire_pattern='.$tire_buy->tire_buy_pattern.' AND (status IS NULL OR status=0)',
-            );
-            $tire_goings = $tire_going_model->getAllTire($data_going);
-            foreach ($tire_goings as $tire_going) {
-                $going[$tire_buy->tire_buy_id] = isset($going[$tire_buy->tire_buy_id])?$going[$tire_buy->tire_buy_id]+$tire_going->tire_number:$tire_going->tire_number;
-            }
-
-            $data_order = array(
-                'where'=>'tire_brand='.$tire_buy->tire_buy_brand.' AND tire_size='.$tire_buy->tire_buy_size.' AND tire_pattern='.$tire_buy->tire_buy_pattern,
-            );
-            $tire_orders = $order_tire_list_model->getAllTire($data_order,array('table'=>'order_tire','where'=>'order_tire=order_tire_id AND order_tire_date < '.strtotime($ngayketthuc).' AND (order_tire_status IS NULL OR order_tire_status=0)'));
-            foreach ($tire_orders as $tire_order) {
-                $order_tire[$tire_buy->tire_buy_id] = isset($order_tire[$tire_buy->tire_buy_id])?$order_tire[$tire_buy->tire_buy_id]+$tire_order->tire_number:$tire_order->tire_number;
+                $tonkho_brand_group[$buy->tire_brand_group] = isset($tonkho_brand_group[$buy->tire_brand_group])?$tonkho_brand_group[$buy->tire_brand_group]+$buy->tire_buy_volume:$buy->tire_buy_volume;
+                $pattern_data[$pt_type[$l]] = isset($pattern_data[$pt_type[$l]])?$pattern_data[$pt_type[$l]]+$buy->tire_buy_volume:$buy->tire_buy_volume;
+                $size_data[$pt_type[$l]][$buy->tire_size_number] = isset($size_data[$pt_type[$l]][$buy->tire_size_number])?$size_data[$pt_type[$l]][$buy->tire_size_number]+$buy->tire_buy_volume:$buy->tire_buy_volume;
             }
         }
 
-        $this->view->data['link_picture'] = $link_picture;
+        foreach ($tire_sales as $sale) {
+            $pt_type = explode(',', $sale->tire_pattern_type);
+            for ($l=0; $l < count($pt_type); $l++) {
+                $tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number] = isset($tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number])?$tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number]-$sale->volume:$sale->volume;
+                $tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number] = $tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number]!=0?$tonkho[$sale->tire_brand_group][$pt_type[$l]][$sale->tire_size_number]:null;
 
-        $this->view->data['tire_buys'] = $tire_buys;
-        $this->view->data['sell'] = $sell;
-        $this->view->data['going'] = $going;
-        $this->view->data['order_tire'] = $order_tire;
-        $this->view->data['page'] = NULL;
-        $this->view->data['order_by'] = NULL;
-        $this->view->data['order'] = NULL;
-        $this->view->data['keyword'] = NULL;
-        $this->view->data['pagination_stages'] = NULL;
-        $this->view->data['tongsotrang'] = NULL;
-        $this->view->data['limit'] = NULL;
-        $this->view->data['sonews'] = NULL;
-
-        $qr = "WHERE 1=1";
-        if ($thuonghieu > 0) {
-            $qr .= " AND tire_buy_brand = ".$thuonghieu;
-        }
-        if ($kichco > 0) {
-            $qr .= " AND tire_buy_size = ".$kichco;
-        }
-        if ($magai > 0) {
-            $qr .= " AND tire_buy_pattern = ".$magai;
-        }
-        
-        $buy = $tire_buy_model->queryTire('SELECT max(tire_buy_date) AS max FROM tire_buy '.$qr);  
-
-        $qr = "WHERE 1=1";
-        if ($thuonghieu > 0) {
-            $qr .= " AND tire_brand = ".$thuonghieu;
-        }
-        if ($kichco > 0) {
-            $qr .= " AND tire_size = ".$kichco;
-        }
-        if ($magai > 0) {
-            $qr .= " AND tire_pattern = ".$magai;
-        }
-        $sale = $tire_sale_model->queryTire('SELECT max(tire_sale_date) AS max FROM tire_sale '.$qr); 
-        $order = $tire_order_model->queryTire('SELECT max(tire_receive_date) AS max FROM tire_order '.$qr);
-
-        $max = 0;
-
-        foreach ($buy as $b) {
-             $max = $b->max;
+                $tonkho_brand_group[$sale->tire_brand_group] = isset($tonkho_brand_group[$sale->tire_brand_group])?$tonkho_brand_group[$sale->tire_brand_group]-$sale->volume:(0-$sale->volume);
+                $pattern_data[$pt_type[$l]] = isset($pattern_data[$pt_type[$l]])?$pattern_data[$pt_type[$l]]-$sale->volume:(0-$sale->volume);
+                $size_data[$pt_type[$l]][$sale->tire_size_number] = isset($size_data[$pt_type[$l]][$sale->tire_size_number])?$size_data[$pt_type[$l]][$sale->tire_size_number]-$sale->volume:(0-$sale->volume);
+            }
         }
 
-        foreach ($sale as $s) {
-            if($s->max > $max)
-                $max = $s->max;
+
+        foreach ($tire_brand_groups as $brand) {
+            if (isset($tonkho_brand_group[$brand->tire_brand_group_id]) && $tonkho_brand_group[$brand->tire_brand_group_id]!=0) {
+                $kho_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+                $kho_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+
+                $nhaphang_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+                $nhaphang_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+            }
+            if (isset($ban[$brand->tire_brand_group_id])) {
+                $ban_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+                $ban_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+            }
+            if (isset($dathang[$brand->tire_brand_group_id])) {
+                $dathang_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+                $dathang_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+
+                $nhaphang_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+                $nhaphang_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+            }
+            if (isset($dangve[$brand->tire_brand_group_id])) {
+                $dangve_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+                $dangve_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+
+                $nhaphang_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+                $nhaphang_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+            }
+            if (isset($dangorder[$brand->tire_brand_group_id])) {
+                $dangorder_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+                $dangorder_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+
+                $nhaphang_brand[$brand->tire_brand_group_id]['name'] = $brand->tire_brand_group_name;
+                $nhaphang_brand[$brand->tire_brand_group_id]['id'] = $brand->tire_brand_group_id;
+            }
         }
 
-        foreach ($order as $o) {
-            if($o->max > $max)
-                $max = $o->max;
-        }
+        $this->view->data['last_code'] = $last_code;
 
-        $today = strtotime($ngay);
-
-        $max = $max > $today ? $max : $today;
-
-        $this->view->data['max'] = $max;
-
-
-        $total = 0;
-
-        $qr = " AND 1=1";
-        if ($thuonghieu > 0) {
-            $qr .= " AND tire_buy_brand = ".$thuonghieu;
-        }
-        if ($kichco > 0) {
-            $qr .= " AND tire_buy_size = ".$kichco;
-        }
-        if ($magai > 0) {
-            $qr .= " AND tire_buy_pattern = ".$magai;
-        }
-
-        $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_date < '.$today.$qr);  
-
-        $qr = " AND 1=1";
-        $qr2 = " AND 1=1";
-
-        if ($thuonghieu > 0) {
-            $qr .= " AND tire_brand = ".$thuonghieu;
-            $qr2 .= " AND tire_buy_brand = ".$thuonghieu;
-        }
-        if ($kichco > 0) {
-            $qr .= " AND tire_size = ".$kichco;
-            $qr2 .= " AND tire_buy_size = ".$kichco;
-        }
-        if ($magai > 0) {
-            $qr .= " AND tire_pattern = ".$magai;
-            $qr2 .= " AND tire_buy_pattern = ".$magai;
-        }
-        $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE customer != 119 AND tire_sale_date < '.$today.$qr); 
-        $orders = $tire_order_model->queryTire('SELECT sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date < '.$today.$qr);
-
-        foreach ($buys as $buy) {
-            $total += $buy->total_buy;
-        }
-
-        foreach ($sales as $sale) {
-            $total -= $sale->total_sale;
-        }
-
-        foreach ($orders as $order) {
-            $total -= $order->total_order;
-        }
-
-        $this->view->data['total'] = $total;
-
-        $buys = $tire_buy_model->queryTire('SELECT * FROM tire_buy WHERE tire_buy_date >= '.$today.$qr2);  
-        $sales = $tire_sale_model->queryTire('SELECT * FROM tire_sale WHERE customer != 119 AND tire_sale_date >= '.$today.$qr); 
-        $orders = $tire_order_model->queryTire('SELECT * FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date >= '.$today.$qr);
-
-        $tire = array();
-
-        foreach ($buys as $buy) {
-            $tire[date('d-m-Y',$buy->tire_buy_date)]['buy'] = isset($tire[date('d-m-Y',$buy->tire_buy_date)]['buy'])?$tire[date('d-m-Y',$buy->tire_buy_date)]['buy']+$buy->tire_buy_volume:$buy->tire_buy_volume;
-        }
-
-        foreach ($sales as $sale) {
-            $tire[date('d-m-Y',$sale->tire_sale_date)]['sale'] = isset($tire[date('d-m-Y',$sale->tire_sale_date)]['sale'])?$tire[date('d-m-Y',$sale->tire_sale_date)]['sale']+$sale->volume:$sale->volume;
-        }
-
-        foreach ($orders as $order) {
-            $tire[date('d-m-Y',$order->tire_receive_date)]['order'] = isset($tire[date('d-m-Y',$order->tire_receive_date)]['order'])?$tire[date('d-m-Y',$order->tire_receive_date)]['order']+$order->tire_number:$order->tire_number;
-        }
-
-        $this->view->data['tire'] = $tire;
-        
-        /* Lấy tổng doanh thu*/
+        $this->view->data['tonkhos'] = $tonkho;
+        $this->view->data['orders'] = $ban;
+        $this->view->data['dathangs'] = $dathang;
+        $this->view->data['dangves'] = $dangve;
+        $this->view->data['dangorders'] = $dangorder;
+        $this->view->data['brand_tonkhos'] = $kho_brand;
+        $this->view->data['brand_orders'] = $ban_brand;
+        $this->view->data['brand_dathangs'] = $dathang_brand;
+        $this->view->data['brand_nhaphangs'] = $nhaphang_brand;
+        $this->view->data['brand_dangves'] = $dangve_brand;
+        $this->view->data['brand_dangorders'] = $dangorder_brand;
+        $this->view->data['pattern_data'] = $pattern_data;
+        $this->view->data['size_data'] = $size_data;
         
         /*************/
         $this->view->show('inventoryagent/index');
@@ -244,251 +182,6 @@ Class inventoryagentController Extends baseController {
 
         $this->view->show('inventoryagent/order');
     }
-
-    public function brand(){
-        $tire_order_model = $this->model->get('tireorderModel');
-        $tire_order_type_model = $this->model->get('tireordertypeModel');
-        $tire_sale_model = $this->model->get('tiresaleModel');
-        $tire_buy_model = $this->model->get('tirebuyModel');
-        $tire_brand_model = $this->model->get('tirebrandModel');
-        $tire_brands = $tire_brand_model->getAllTire();
-
-        $today = strtotime(date('d-m-Y'));
-        $ngay = $this->registry->router->order_by;
-        if ($ngay != "") {
-            $today = strtotime($ngay);
-        }
-
-        $table = array();
-        $table['cols'] = array(
-            array('label' => 'Thương hiệu', 'type' => 'string'),
-            array('label' => 'Tồn kho', 'type' => 'number'),
-        );
-
-        foreach ($tire_brands as $b) {
-            
-            $total = 0;
-
-            $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_brand = '.$b->tire_brand_id.' AND tire_buy_date <= '.$today);  
-            $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE tire_brand = '.$b->tire_brand_id.' AND customer != 119 AND tire_sale_date <= '.$today); 
-            $orders = $tire_order_model->queryTire('SELECT tire_order_id, sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date <= '.$today);
-
-            foreach ($buys as $buy) {
-                $total += $buy->total_buy;
-            }
-
-            foreach ($sales as $sale) {
-                $total -= $sale->total_sale;
-            }
-
-            foreach ($orders as $order) {
-                $order_types = $tire_order_type_model->queryTire('SELECT sum(tire_order_type.tire_number) AS total_order FROM tire_order_type WHERE tire_order = '.$order->tire_order_id.' AND tire_order_type.tire_brand = '.$b->tire_brand_id);
-                foreach ($order_types as $order_type) {
-                    $total -= $order_type->total_order;
-                }
-                
-            }
-
-            
-            $temp = array();
-            $temp[] = array('v' => $b->tire_brand_name);
-            $temp[] = array('v' => $total);
-            $rows = array();
-            $rows = array('c' => $temp);
-
-            $table['rows'][] = $rows;
-        }
-       
-        echo json_encode($table);
-        
-    }
-
-    public function size(){
-        $tire_order_model = $this->model->get('tireorderModel');
-        $tire_order_type_model = $this->model->get('tireordertypeModel');
-        $tire_sale_model = $this->model->get('tiresaleModel');
-        $tire_buy_model = $this->model->get('tirebuyModel');
-        $tire_size_model = $this->model->get('tiresizeModel');
-        $tire_brand_model = $this->model->get('tirebrandModel');
-        $tire_sizes = $tire_size_model->getAllTire();
-
-        $today = strtotime(date('d-m-Y'));
-        $ngay = $this->registry->router->order_by;
-        if ($ngay != "") {
-            $today = strtotime($ngay);
-        }
-
-        $table = array();
-        $table['cols'] = array(
-            array('label' => 'Kích cỡ', 'type' => 'string'),
-        );
-
-        $tire_brands = $tire_brand_model->getAllTire();
-        foreach ($tire_brands as $b) {
-            array_push($table['cols'], array('label' => $b->tire_brand_name, 'type' => 'number'));
-        }
-
-        array_push($table['cols'], array('type'=> 'string', 'role'=> 'annotation'));
-
-        foreach ($tire_sizes as $s) {
-            
-            $temp = array();
-            $temp[] = array('v' => $s->tire_size_number);
-
-            foreach ($tire_brands as $b) {
-                $total = 0;
-
-                $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_size = '.$s->tire_size_id.' AND tire_buy_brand = '.$b->tire_brand_id.' AND tire_buy_date <= '.$today);  
-                $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE tire_size = '.$s->tire_size_id.' AND tire_brand = '.$b->tire_brand_id.' AND customer != 119 AND tire_sale_date <= '.$today); 
-                $orders = $tire_order_model->queryTire('SELECT tire_order_id, sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date <= '.$today);
-
-                foreach ($buys as $buy) {
-                    $total += $buy->total_buy;
-                }
-
-                foreach ($sales as $sale) {
-                    $total -= $sale->total_sale;
-                }
-
-                foreach ($orders as $order) {
-                    $order_types = $tire_order_type_model->queryTire('SELECT sum(tire_order_type.tire_number) AS total_order FROM tire_order_type WHERE tire_order = '.$order->tire_order_id.' AND tire_order_type.tire_size = '.$s->tire_size_id.' AND tire_order_type.tire_brand = '.$b->tire_brand_id);
-                    foreach ($order_types as $order_type) {
-                        $total -= $order_type->total_order;
-                    }
-                    
-                }
-
-                $temp[] = array('v' => $total);
-            }
-
-            $total = 0;
-
-            $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_size = '.$s->tire_size_id.' AND tire_buy_date <= '.$today);  
-            $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE tire_size = '.$s->tire_size_id.' AND customer != 119 AND tire_sale_date <= '.$today); 
-            $orders = $tire_order_model->queryTire('SELECT tire_order_id, sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date <= '.$today);
-
-            foreach ($buys as $buy) {
-                $total += $buy->total_buy;
-            }
-
-            foreach ($sales as $sale) {
-                $total -= $sale->total_sale;
-            }
-
-            foreach ($orders as $order) {
-                $order_types = $tire_order_type_model->queryTire('SELECT sum(tire_order_type.tire_number) AS total_order FROM tire_order_type WHERE tire_order = '.$order->tire_order_id.' AND tire_order_type.tire_size = '.$s->tire_size_id);
-                foreach ($order_types as $order_type) {
-                    $total -= $order_type->total_order;
-                }
-                
-            }
-
-            $temp[] = array('v' => $total);
-
-
-            $rows = array();
-            $rows = array('c' => $temp);
-
-            $table['rows'][] = $rows;
-        }
-
-        echo json_encode($table);
-    }
-
-    public function pattern(){
-        $tire_order_model = $this->model->get('tireorderModel');
-        $tire_order_type_model = $this->model->get('tireordertypeModel');
-        $tire_sale_model = $this->model->get('tiresaleModel');
-        $tire_buy_model = $this->model->get('tirebuyModel');
-        $tire_size_model = $this->model->get('tiresizeModel');
-        $tire_brand_model = $this->model->get('tirebrandModel');
-        $tire_pattern_model = $this->model->get('tirepatternModel');
-        $tire_patterns = $tire_pattern_model->getAllTire();
-
-        $today = strtotime(date('d-m-Y'));
-        $ngay = $this->registry->router->order_by;
-        if ($ngay != "") {
-            $today = strtotime($ngay);
-        }
-
-        $table = array();
-        $table['cols'] = array(
-            array('label' => 'Mã gai', 'type' => 'string'),
-        );
-
-        $tire_sizes = $tire_size_model->getAllTire();
-        foreach ($tire_sizes as $b) {
-            array_push($table['cols'], array('label' => $b->tire_size_number, 'type' => 'number'));
-        }
-
-        array_push($table['cols'], array('type'=> 'string', 'role'=> 'annotation'));
-
-        foreach ($tire_patterns as $s) {
-            
-            $temp = array();
-            $temp[] = array('v' => $s->tire_pattern_name);
-
-            foreach ($tire_sizes as $b) {
-                $total = 0;
-
-                $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_pattern = '.$s->tire_pattern_id.' AND tire_buy_size = '.$b->tire_size_id.' AND tire_buy_date <= '.$today);  
-                $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE tire_pattern = '.$s->tire_pattern_id.' AND tire_size = '.$b->tire_size_id.' AND customer != 119 AND tire_sale_date <= '.$today); 
-                $orders = $tire_order_model->queryTire('SELECT tire_order_id, sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date <= '.$today);
-
-                foreach ($buys as $buy) {
-                    $total += $buy->total_buy;
-                }
-
-                foreach ($sales as $sale) {
-                    $total -= $sale->total_sale;
-                }
-
-                foreach ($orders as $order) {
-                    $order_types = $tire_order_type_model->queryTire('SELECT sum(tire_order_type.tire_number) AS total_order FROM tire_order_type WHERE tire_order = '.$order->tire_order_id.' AND tire_order_type.tire_pattern = '.$s->tire_pattern_id.' AND tire_order_type.tire_size = '.$b->tire_size_id);
-                    foreach ($order_types as $order_type) {
-                        $total -= $order_type->total_order;
-                    }
-                    
-                }
-
-                $temp[] = array('v' => $total);
-            }
-
-            $total = 0;
-
-            $buys = $tire_buy_model->queryTire('SELECT sum(tire_buy_volume) AS total_buy FROM tire_buy WHERE tire_buy_pattern = '.$s->tire_pattern_id.' AND tire_buy_date <= '.$today);  
-            $sales = $tire_sale_model->queryTire('SELECT sum(volume) AS total_sale FROM tire_sale WHERE tire_pattern = '.$s->tire_pattern_id.' AND customer != 119 AND tire_sale_date <= '.$today); 
-            $orders = $tire_order_model->queryTire('SELECT tire_order_id, sum(tire_number) AS total_order FROM tire_order WHERE (status IS NULL OR status != 1) AND tire_receive_date > 0 AND tire_receive_date <= '.$today);
-
-            foreach ($buys as $buy) {
-                $total += $buy->total_buy;
-            }
-
-            foreach ($sales as $sale) {
-                $total -= $sale->total_sale;
-            }
-
-            foreach ($orders as $order) {
-                $order_types = $tire_order_type_model->queryTire('SELECT sum(tire_order_type.tire_number) AS total_order FROM tire_order_type WHERE tire_order = '.$order->tire_order_id.' AND tire_order_type.tire_pattern = '.$s->tire_pattern_id);
-                foreach ($order_types as $order_type) {
-                    $total -= $order_type->total_order;
-                }
-                
-            }
-
-            $temp[] = array('v' => $total);
-
-
-            $rows = array();
-            $rows = array('c' => $temp);
-
-            $table['rows'][] = $rows;
-        }
-
-        echo json_encode($table);
-    }
-
-       
     
 }
 ?>

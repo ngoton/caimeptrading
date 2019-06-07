@@ -164,14 +164,15 @@ elseif ($order_by == 'staff_name')
         <th rowspan="2" class="fix">Thâm niên</th>
         <th rowspan="2" class="fix">Lương <br> SP</th>
         <th rowspan="2" class="fix">Lương <br> giao nhận</th>
-        <th rowspan="2" class="fix">Thưởng <br> doanh số</th>
+        <th rowspan="2" class="fix">Thưởng</th>
         <th colspan="5" class="fix">Phụ cấp</th>
         <th rowspan="2" class="fix">Cộng lương</th>
-        <th colspan="3" class="fix">Trừ</th>
+        <th rowspan="2" class="fix">Trừ BH</th>
+        <th colspan="2" class="fix">Ngày làm việc</th>
+        <th rowspan="2" class="fix">Trừ</th>
         <th rowspan="2" class="fix">Tổng lương</th>
         <th rowspan="2" class="fix">Giữ lương</th>
         <th rowspan="2" class="fix">Thực lĩnh</th>
-        <th colspan="3" class="fix">Ghi chú</th>
             
     </tr>
     <tr>
@@ -180,12 +181,9 @@ elseif ($order_by == 'staff_name')
         <th class="fix">ĐT</th>
         <th class="fix">Cơm</th>
         <th class="fix">Bảo hiểm</th>
-        <th class="fix">Trừ BH</th>
-        <th class="fix">Số phút <br> bị trừ</th>
-        <th class="fix">Trừ</th>
-        <th class="fix">Nợ</th>
-        <th class="fix">Nợ trả</th>
-        <th class="fix">Nợ trước</th>
+        <th class="fix">Tháng</th>
+        <th class="fix">Thực tế</th>
+        
     </tr>
    </thead>
    <tbody>
@@ -259,11 +257,25 @@ elseif ($order_by == 'staff_name')
             $tongluong += $luong1;
 
             $tongsophut = $tongngaylamviec*8*60;
-            $sophutlam = isset($arr_minute[$salary->staff_id])?$arr_minute[$salary->staff_id]:$tongsophut;
-            $sophuttru = $tongsophut-$sophutlam;
-            $tongphut += $sophuttru;
-            
-            $tru = round(($luong1-$tienbhnv)/$tongsophut*$sophuttru);
+            $sophutlam = isset($arr_minute[$salary->staff_id])?$arr_minute[$salary->staff_id]:0;
+            $duocnghi = isset($arr_position_salary_reduce[$salary->staff_id])?$arr_position_salary_reduce[$salary->staff_id]:0;
+
+            $thucte = 0;
+            $sophuttru = 0;
+            $tru = 0;
+
+            if ($sophutlam > 0) {
+                $thucte = round($sophutlam/60/8,2);
+
+                $sophuttru = $tongsophut-$sophutlam-($duocnghi*60);
+                $tongphut += $sophuttru;
+
+            }
+ 
+            $tru = round(($luong1-$tienbhnv)/($tongsophut-($duocnghi*60))*$sophuttru);
+            if ($tru<=0) {
+                $tru = 0;
+            }
             $tongtru += $tru;
 
             $luong2 = round(($luong1-$tienbhnv-$tru)/1000)*1000;
@@ -314,7 +326,7 @@ elseif ($order_by == 'staff_name')
                 <td class="fix text-right" id="chucvu_<?php echo $salary->staff_id; ?>"><a href="positionsalary/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($chucvu); ?></a></td>
                 <td class="fix text-right" id="thamnien_<?php echo $salary->staff_id; ?>"><a href="timesalary/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($thamnien); ?></a></td>
                 <td class="fix text-right" id="luongsp_<?php echo $salary->staff_id; ?>"><a href="checksalary/index/<?php echo $salary->staff_id ?>/1/order_number/ASC/<?php echo strtotime('01-'.$ngaytao) ?>"><?php echo $lib->formatMoney($sanpham); ?></a></td>
-                <td class="fix text-right" id="luonggiaonhan_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($giaonhan); ?></td>
+                <td class="fix text-right" id="luonggiaonhan_<?php echo $salary->staff_id; ?>"><a><?php echo $lib->formatMoney($giaonhan); ?></a></td>
                 <td class="fix text-right editable5" data="<?php echo $salary->staff_id; ?>" id="thuongds_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($thuongds) ?></td>
                 <td class="fix text-right editable" data="<?php echo $salary->staff_id; ?>" id="ngoaikhoa_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($ngoaikhoa) ?></td>
                 <td class="fix text-right editable4" data="<?php echo $salary->staff_id; ?>" id="ngoaigio_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($ngoaigio) ?></td>
@@ -322,15 +334,15 @@ elseif ($order_by == 'staff_name')
                 <td class="fix text-right"><a href="eatingallowance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($com) ?><a></td>
                 <td class="fix text-right"><a href="insurrance/index/<?php echo strtotime('01-'.$ngaytao).'/'.$salary->staff_id ?>"><?php echo $lib->formatMoney($tienbh) ?></a></td>
                 <td class="fix text-right"><b><?php echo $lib->formatMoney($luong1) ?></b></td>
-                <td class="fix text-right"><?php echo $lib->formatMoney($tienbhnv) ?></td>
-                <td class="fix text-right"><?php echo $lib->formatMoney($sophuttru) ?></td>
-                <td class="fix text-right"><?php echo $lib->formatMoney($tru) ?></td>
-                <td class="fix text-right"><?php echo $lib->formatMoney($luong2) ?></td>
+                <td class="fix text-right"><a><?php echo $lib->formatMoney($tienbhnv) ?></a></td>
+                <td class="fix text-right"><a><?php echo $sophutlam>0?round($tongngaylamviec-($duocnghi/8),2):null ?></a></td>
+                <td class="fix text-right"><a><?php echo $sophutlam>0?$thucte:null ?></a></td>
+                <td class="fix text-right"><a><?php echo $lib->formatMoney($tru) ?></a></td>
+                
+                
+                <td class="fix text-right"><a><?php echo $lib->formatMoney($luong2) ?></a></td>
                 <td class="fix text-right editable2" data="<?php echo $salary->staff_id; ?>" id="giuluong_<?php echo $salary->staff_id; ?>"><?php echo $lib->formatMoney($giuluong) ?></td>
                 <td class="fix text-right"><b><?php echo $lib->formatMoney($thuclinh) ?></b></td>
-                <td class="fix text-right"><?php echo $sono ?></td>
-                <td class="fix text-right"><?php echo $sonodatra ?></td>
-                <td class="fix text-right"><?php echo $sonothangtruoc ?></td>
                 
             </tr>
         
@@ -339,26 +351,24 @@ elseif ($order_by == 'staff_name')
    <tfoot>
        <tr style="font-weight:bold"> 
            <td colspan="3">Tổng cộng</td>
-           <td class="fix text-right"><?php echo $lib->formatMoney($tongchucvu) ?></td>
-           <td class="fix text-right"><?php echo $lib->formatMoney($tongthamnien) ?></td>
-           <td class="fix text-right"><?php echo $lib->formatMoney($tongsp) ?></td>
-           <td class="fix text-right"><?php echo $lib->formatMoney($tonggiaonhan) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongthuong) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongngoaikhoa) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongngoaigio) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongphone) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongcom) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongbh) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongluong) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongbhnv) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongphut) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongtru) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongcongluong) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tonggiuluong) ?></td>
-            <td class="fix text-right"><?php echo $lib->formatMoney($tongthuclinh) ?></td>
-            <td class="fix text-right"><?php echo $tongkhnothangnay ?></td>
-            <td class="fix text-right"><?php echo $tongkhdatra ?></td>
-            <td class="fix text-right"><?php echo $tongkhnothangtruoc ?></td>
+           <td class="fix text-right"><b><?php echo $lib->formatMoney($tongchucvu) ?></b></td>
+           <td class="fix text-right"><b><?php echo $lib->formatMoney($tongthamnien) ?></b></td>
+           <td class="fix text-right"><b><?php echo $lib->formatMoney($tongsp) ?></b></td>
+           <td class="fix text-right"><b><?php echo $lib->formatMoney($tonggiaonhan) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongthuong) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongngoaikhoa) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongngoaigio) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongphone) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongcom) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongbh) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongluong) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongbhnv) ?></b></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongtru) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongcongluong) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tonggiuluong) ?></b></td>
+            <td class="fix text-right"><b><?php echo $lib->formatMoney($tongthuclinh) ?></b></td>
        </tr>
        
    </tfoot>
