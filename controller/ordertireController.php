@@ -2285,6 +2285,7 @@ Class ordertireController Extends baseController {
                     'check_price_vat' => 0,
                     'id_order_agent' => $_POST['id_order_tire'],
                     'sale_lock'=>1,
+                    'order_cont' => $_POST['order_cont'],
                 );
 
                 if ($vat_check > 0) {
@@ -2336,6 +2337,10 @@ Class ordertireController Extends baseController {
                     $prices = $tire_price_agent_model->getAllTire(array('where'=>'customer='.$customers->customer_id.' AND tire_brand='.$brand.' AND tire_size='.$size.' AND tire_pattern='.$pattern.' AND start_date < '.$ngaysau.' AND (end_date IS NULL OR end_date > '.$ngaytruoc.')  ORDER BY start_date DESC LIMIT 1'));
                     foreach ($prices as $p) {
                         $price_vat = $p->tire_price;
+                        if ($data['order_cont']==1) {
+                            $o = round(($price_vat*100/69)*0.68/1000)*1000;
+                            $price_vat = $o;
+                        }
                         // foreach ($tire_price_discount_events as $event) {
                         //     if ($event->percent_discount > 0) {
                         //         $price_vat = $p->tire_price*((100-$event->percent_discount)/100);
@@ -2503,6 +2508,10 @@ Class ordertireController Extends baseController {
 
                         foreach ($prices as $p) {
                             $price_vat = $p->tire_price;
+                            if ($order_tire->order_cont==1) {
+                                $o = round(($price_vat*100/69)*0.68/1000)*1000;
+                                $price_vat = $o;
+                            }
                             // foreach ($tire_price_discount_events as $event) {
                             //     if ($event->percent_discount > 0) {
                             //         $price_vat = $p->tire_price*((100-$event->percent_discount)/100);
@@ -2681,6 +2690,10 @@ Class ordertireController Extends baseController {
 
                         foreach ($prices as $p) {
                             $price_vat = $p->tire_price;
+                            if ($order_tire->order_cont==1) {
+                                $o = round(($price_vat*100/69)*0.68/1000)*1000;
+                                $price_vat = $o;
+                            }
                             // foreach ($tire_price_discount_events as $event) {
                             //     if ($event->percent_discount > 0) {
                             //         $price_vat = $p->tire_price*((100-$event->percent_discount)/100);

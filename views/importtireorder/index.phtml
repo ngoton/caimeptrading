@@ -189,7 +189,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
       $tongboc += $import_tire_order->import_tire_order_stevedore;
       $tongkhac += $import_tire_order->import_tire_order_bank_cost;
       $tongkhac += $import_tire_order->import_tire_order_other_cost;
-      $tongusd += ($import_tire_order->import_tire_order_sum_usd>0 && $import_tire_order->import_tire_order_sum_usd<1000000)?($import_tire_order->import_tire_order_sum_usd+$import_tire_order->import_tire_order_oceanfreight+$import_tire_order->import_tire_order_claim):0;
+      $tongusd += ($import_tire_order->import_tire_order_sum_usd>0 && $import_tire_order->import_tire_order_sum_usd<1000000)?($import_tire_order->import_tire_order_sum_usd+$import_tire_order->import_tire_order_oceanfreight+$import_tire_order->import_tire_order_claim+$import_tire_order->import_tire_order_rebate):0;
     ?>
         <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $import_tire_order->import_tire_order_id ?>" class="edit_tr" >
             
@@ -205,7 +205,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <td class="fix" id="import_tire_order_expect_date_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_tire_order->import_tire_order_expect_date); ?></td>
             <td class="fix" id="import_tire_order_comment_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_comment; ?></td>
             <td class="fix text-right" id="import_tire_order_total_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_total; ?></td>
-            <td class="fix text-right" id="import_tire_order_sum_usd_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney((($import_tire_order->import_tire_order_sum_usd>0 && $import_tire_order->import_tire_order_sum_usd<1000000)?($import_tire_order->import_tire_order_sum_usd+$import_tire_order->import_tire_order_oceanfreight+$import_tire_order->import_tire_order_claim):null),2); ?></td>
+            <td class="fix text-right" id="import_tire_order_sum_usd_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney((($import_tire_order->import_tire_order_sum_usd>0 && $import_tire_order->import_tire_order_sum_usd<1000000)?($import_tire_order->import_tire_order_sum_usd+$import_tire_order->import_tire_order_oceanfreight+$import_tire_order->import_tire_order_claim+$import_tire_order->import_tire_order_rebate):null),2); ?></td>
             <td class="fix text-right" id="import_tire_order_sum_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_sum); ?></td>
             <td class="fix text-right" id="import_tire_order_tax_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_tax); ?></td>
             <td class="fix text-right" id="import_tire_order_logistics_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_logistics); ?></td>
@@ -227,6 +227,7 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <td class="fix" style="display: none;" id="import_tire_order_port_to_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_port_to; ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_type_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_type; ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_claim_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_claim; ?></td>
+            <td class="fix" style="display: none;" id="import_tire_order_rebate_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $import_tire_order->import_tire_order_rebate; ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_bank_rate_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_bank_rate); ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_tax_rate_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_tax_rate); ?></td>
             <td class="fix" style="display: none;" id="import_tire_order_bank_cost_<?php echo $import_tire_order->import_tire_order_id; ?>"><?php echo $lib->formatMoney($import_tire_order->import_tire_order_bank_cost); ?></td>
@@ -535,6 +536,14 @@ $this->helper('slidePaginator');
                       </div>
                       <div class="form-group col-xs-8 nopadding">
                         <input type="text" id="import_tire_order_claim" class="numbers" name="import_tire_order_claim" tabindex="12" autocomplete="off" >
+                      </div>
+                    </div>
+                    <div class="box-body nopadding">
+                      <div class="form-group col-xs-4 nopadding">
+                        <label for="import_tire_order_rebate">Hoàn trả </label>
+                      </div>
+                      <div class="form-group col-xs-8 nopadding">
+                        <input type="text" id="import_tire_order_rebate" class="numbers" name="import_tire_order_rebate" tabindex="12" autocomplete="off" >
                       </div>
                     </div>
                     <div class="box-body nopadding">
@@ -1551,6 +1560,7 @@ $(document).ready(function(){
         var import_tire_order_month = $('#import_tire_order_month').val();
         var import_tire_order_expect_date = $('#import_tire_order_expect_date').val();
         var import_tire_order_claim = $('#import_tire_order_claim').val();
+        var import_tire_order_rebate = $('#import_tire_order_rebate').val();
         var import_tire_order_rate_diff = $('#import_tire_order_rate_diff').val();
         var import_tire_order_bank_rate = $('#import_tire_order_bank_rate').val();
         var import_tire_order_tax_rate = $('#import_tire_order_tax_rate').val();
@@ -1702,6 +1712,7 @@ $(document).ready(function(){
             import_tire_order_month: import_tire_order_month,
             import_tire_order_expect_date: import_tire_order_expect_date,
             import_tire_order_claim: import_tire_order_claim,
+            import_tire_order_rebate: import_tire_order_rebate,
             import_tire_order_rate_diff: import_tire_order_rate_diff,
             import_tire_order_bank_rate: import_tire_order_bank_rate,
             import_tire_order_tax_rate:import_tire_order_tax_rate,

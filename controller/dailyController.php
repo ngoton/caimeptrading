@@ -1991,10 +1991,13 @@ Class dailyController Extends baseController {
     }
    
     public function add(){
+        $this->view->disableLayout();
         if (!isset($_SESSION['userid_logined'])) {
             return $this->view->redirect('user/login');
         }
-        if (isset($_POST['yes'])) {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json,true);
+        if (isset($obj['yes'])) {
             
             $daily_model = $this->model->get('dailyModel');
             $additional_model = $this->model->get('additionalModel');
@@ -2012,37 +2015,38 @@ Class dailyController Extends baseController {
             $deposit_model = $this->model->get('deposittireModel');
             $payment_request_model = $this->model->get('paymentrequestModel');
 
+            
             $data = array(
                         
-                        'service' => trim($_POST['service']),
-                        'owner' => trim($_POST['owner']),
-                        'owner_request' => trim($_POST['owner_request']),
-                        'owner_approve' => trim($_POST['owner_approve']),
-                        'note' => trim($_POST['note']),
-                        'account' => trim($_POST['account']),
-                        'daily_date' => strtotime(str_replace('/','-',$_POST['daily_date'])),
-                        'comment' => trim($_POST['comment']),
-                        'debit' => trim($_POST['debit']),
-                        'credit' => trim($_POST['credit']),
-                        'code' => trim($_POST['code']),
-                        'money_in' => trim(str_replace(',','',$_POST['money_in'])),
-                        'money_out' => trim(str_replace(',','',$_POST['money_out'])),
-                        'receivable' => trim($_POST['receivable']),
-                        'payable' => trim($_POST['payable']),
-                        'deposit' => trim($_POST['deposit']),
-                        'customer' => trim($_POST['customer']),
-                        'daily_check_lohang' => trim($_POST['daily_check_lohang']),
-                        'daily_check_cost' => trim($_POST['daily_check_cost']),
-                        'internal_transfer' => trim($_POST['internal_transfer']),
-                        'account_out' => trim($_POST['account_out']),
-                        'daily_rate' => trim(str_replace(',','',$_POST['daily_rate'])),
+                        'service' => trim($obj['service']),
+                        'owner' => trim($obj['owner']),
+                        'owner_request' => trim($obj['owner_request']),
+                        'owner_approve' => trim($obj['owner_approve']),
+                        'note' => trim($obj['note']),
+                        'account' => trim($obj['account']),
+                        'daily_date' => strtotime(str_replace('/','-',$obj['daily_date'])),
+                        'comment' => trim($obj['comment']),
+                        'debit' => trim($obj['debit']),
+                        'credit' => trim($obj['credit']),
+                        'code' => trim($obj['code']),
+                        'money_in' => trim(str_replace(',','',$obj['money_in'])),
+                        'money_out' => trim(str_replace(',','',$obj['money_out'])),
+                        'receivable' => trim($obj['receivable']),
+                        'payable' => trim($obj['payable']),
+                        'deposit' => trim($obj['deposit']),
+                        'customer' => trim($obj['customer']),
+                        'daily_check_lohang' => trim($obj['daily_check_lohang']),
+                        'daily_check_cost' => trim($obj['daily_check_cost']),
+                        'internal_transfer' => trim($obj['internal_transfer']),
+                        'account_out' => trim($obj['account_out']),
+                        'daily_rate' => trim(str_replace(',','',$obj['daily_rate'])),
                         );
-            if (trim($_POST['payment_request_number'])!="") {
-                if ($_POST['payment_request']>0) {
-                    $data['payment_request'] = $_POST['payment_request'];
+            if (trim($obj['payment_request_number'])!="") {
+                if ($obj['payment_request']>0) {
+                    $data['payment_request'] = $obj['payment_request'];
                 }
                 else{
-                    $payments = $payment_request_model->getPaymentByWhere(array('payment_request_number'=>trim($_POST['payment_request_number'])));
+                    $payments = $payment_request_model->getPaymentByWhere(array('payment_request_number'=>trim($obj['payment_request_number'])));
                     if ($payments) {
                         $data['payment_request'] = $payments->payment_request_id;
                     }
@@ -2059,8 +2063,8 @@ Class dailyController Extends baseController {
             
             $data['clearing'] = null;
             $clearing = "";
-            if(trim($_POST['clearing']) != ""){
-                $support = explode(',', trim($_POST['clearing']));
+            if(trim($obj['clearing']) != ""){
+                $support = explode(',', trim($obj['clearing']));
 
                 if ($support) {
                     foreach ($support as $key) {
@@ -2075,14 +2079,14 @@ Class dailyController Extends baseController {
                 $data['clearing'] = $clearing;
             }
 
-            if ($_POST['yes'] != "") {
+            if ($obj['yes'] != "") {
 
                 
                 
-                    $daily = $daily_model->getDaily(trim($_POST['yes']));
+                    $daily = $daily_model->getDaily(trim($obj['yes']));
 
-                    $daily_model->updateDaily($data,array('daily_id' => trim($_POST['yes'])));
-                    echo "Cập nhật thành công";
+                    $daily_model->updateDaily($data,array('daily_id' => trim($obj['yes'])));
+                    
 
                     $week = (int)date('W', $data['daily_date']);
                     $year = (int)date('Y', $data['daily_date']);
@@ -2095,12 +2099,12 @@ Class dailyController Extends baseController {
                         $year = (int)date('Y', $data['daily_date'])+1;
                     }
 
-                    $id_daily_last = $_POST['yes'];
+                    $id_daily_last = $obj['yes'];
 
                     if ($daily->deposit != 1 && $data['deposit']>0) {
                         $data_deposit = array(
                             'customer' => $data['customer'],
-                            'daily' => trim($_POST['yes']),
+                            'daily' => trim($obj['yes']),
                         );
                         $deposit_model->createDeposit($data_deposit);
                     }
@@ -2108,10 +2112,10 @@ Class dailyController Extends baseController {
                         $data_deposit = array(
                             'customer' => $data['customer'],
                         );
-                        $deposit_model->updateDeposit($data_deposit,array('daily'=>trim($_POST['yes'])));
+                        $deposit_model->updateDeposit($data_deposit,array('daily'=>trim($obj['yes'])));
                     }
                     if ($daily->deposit == 1 && $data['deposit'] != 1) {
-                        $deposit_model->queryDeposit('DELETE FROM deposit_tire WHERE daily = '.trim($_POST['yes']));
+                        $deposit_model->queryDeposit('DELETE FROM deposit_tire WHERE daily = '.trim($obj['yes']));
                     }
 
                     if ($data['internal_transfer']==1) {
@@ -2121,13 +2125,13 @@ Class dailyController Extends baseController {
                         $bank = $bank_model->getBankByWhere(array('symbol'=>$data['account']))->bank_id;
                         $bank_out = $bank_model->getBankByWhere(array('symbol'=>$data['account_out']))->bank_id;
 
-                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$_POST['yes'],'bank'=>$bank_old));
+                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$obj['yes'],'bank'=>$bank_old));
                         if (!$daily_banks) {
                             $data_daily_bank = array(
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => $data['money_in'],
                                 'bank' => $bank,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
                             $daily_bank_model->createDaily($data_daily_bank);
                         }
@@ -2136,18 +2140,18 @@ Class dailyController Extends baseController {
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => $data['money_in'],
                                 'bank' => $bank,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
                             $daily_bank_model->updateDaily($data_daily_bank,array('daily_bank_id' => $daily_banks->daily_bank_id));
                         }
 
-                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$_POST['yes'],'bank'=>$bank_out_old));
+                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$obj['yes'],'bank'=>$bank_out_old));
                         if (!$daily_banks) {
                             $data_daily_bank = array(
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => 0-$data['money_out'],
                                 'bank' => $bank_out,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
                             $daily_bank_model->createDaily($data_daily_bank);
                         }
@@ -2156,12 +2160,12 @@ Class dailyController Extends baseController {
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => 0-$data['money_out'],
                                 'bank' => $bank_out,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
                             $daily_bank_model->updateDaily($data_daily_bank,array('daily_bank_id' => $daily_banks->daily_bank_id));
                         }
 
-                        $d_costs = $costs_model->getCostsByWhere(array('additional'=>$_POST['yes']));
+                        $d_costs = $costs_model->getCostsByWhere(array('additional'=>$obj['yes']));
                         if (!$d_costs) {
                             $data_costs = array(
                                 'costs_create_date' => $data['daily_date'],
@@ -2180,7 +2184,7 @@ Class dailyController Extends baseController {
                                 'code' => $data['code'],
                                 'check_office' => 1,
                                 'check_other' => 1,
-                                'additional' => $_POST['yes'],
+                                'additional' => $obj['yes'],
                                 'check_lohang' => $data['daily_check_lohang'],
                                 'check_costs' => $data['daily_check_cost'],
                                 );
@@ -2242,8 +2246,8 @@ Class dailyController Extends baseController {
                                 'check_lohang' => $data['daily_check_lohang'],
                                 'check_costs' => $data['daily_check_cost'],
                                 );
-                            $costs_model->updateCosts($data_costs,array('additional' => $_POST['yes']));
-                            $cost = $costs_model->getCostsByWhere(array('additional' => $_POST['yes']));
+                            $costs_model->updateCosts($data_costs,array('additional' => $obj['yes']));
+                            $cost = $costs_model->getCostsByWhere(array('additional' => $obj['yes']));
 
                             $data_asset = array(
                                         'bank' => $bank,
@@ -2252,7 +2256,7 @@ Class dailyController Extends baseController {
                                         'week' => $week,
                                         'year' => $year,
                                     );
-                            $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id,'bank'=>$daily->account));
+                            $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'costs'=>$cost->costs_id,'bank'=>$daily->account));
 
                             $data_asset = array(
                                         'bank' => $bank_out,
@@ -2261,7 +2265,7 @@ Class dailyController Extends baseController {
                                         'week' => $week,
                                         'year' => $year,
                                     );
-                            $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id,'bank'=>$daily->account_out));
+                            $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'costs'=>$cost->costs_id,'bank'=>$daily->account_out));
 
 
                             $data_pay = array(
@@ -2271,7 +2275,7 @@ Class dailyController Extends baseController {
                                         'week' => $week,
                                         'year' => $year,
                                     );
-                            $pay_model->updateCosts($data_pay,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id));
+                            $pay_model->updateCosts($data_pay,array('additional' => $obj['yes'],'costs'=>$cost->costs_id));
                         }
 
                         
@@ -2279,13 +2283,13 @@ Class dailyController Extends baseController {
                     else{
                         $bank = $bank_model->getBankByWhere(array('symbol'=>$data['account']))->bank_id;
 
-                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$_POST['yes']));
+                        $daily_banks = $daily_bank_model->getDailyByWhere(array('daily'=>$obj['yes']));
                         if (!$daily_banks) {
                             $data_daily_bank = array(
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => $data['money_in'] > 0 ? $data['money_in'] : ($data['money_out'] > 0 ? 0-$data['money_out']:null),
                                 'bank' => $bank,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
                             $daily_bank_model->createDaily($data_daily_bank);
                         }
@@ -2294,9 +2298,9 @@ Class dailyController Extends baseController {
                                 'daily_bank_date' => $data['daily_date'],
                                 'money' => $data['money_in'] > 0 ? $data['money_in'] : ($data['money_out'] > 0 ? 0-$data['money_out']:null),
                                 'bank' => $bank,
-                                'daily' => trim($_POST['yes']),
+                                'daily' => trim($obj['yes']),
                             );
-                            $daily_bank_model->updateDaily($data_daily_bank,array('daily' => trim($_POST['yes'])));
+                            $daily_bank_model->updateDaily($data_daily_bank,array('daily' => trim($obj['yes'])));
                         }
                         
 
@@ -2356,8 +2360,8 @@ Class dailyController Extends baseController {
                                     'check_costs' => $data['daily_check_cost'],
                                     );
 
-                                $costs_model->updateCosts($data_costs,array('additional' => $_POST['yes']));
-                                $cost = $costs_model->getCostsByWhere(array('additional' => $_POST['yes']));
+                                $costs_model->updateCosts($data_costs,array('additional' => $obj['yes']));
+                                $cost = $costs_model->getCostsByWhere(array('additional' => $obj['yes']));
 
                                 $data_asset = array(
                                             'bank' => $bank,
@@ -2366,7 +2370,7 @@ Class dailyController Extends baseController {
                                             'week' => $week,
                                             'year' => $year,
                                         );
-                                $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id));
+                                $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'costs'=>$cost->costs_id));
 
 
                                 $data_pay = array(
@@ -2376,7 +2380,7 @@ Class dailyController Extends baseController {
                                             'week' => $week,
                                             'year' => $year,
                                         );
-                                $pay_model->updateCosts($data_pay,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id));
+                                $pay_model->updateCosts($data_pay,array('additional' => $obj['yes'],'costs'=>$cost->costs_id));
                             }
                             if ($data['money_in'] > 0) {
                                 $data_costs = array(
@@ -2399,8 +2403,8 @@ Class dailyController Extends baseController {
                                     'check_lohang' => $data['daily_check_lohang'],
                                     'check_costs' => $data['daily_check_cost'],
                                     );
-                                $costs_model->updateCosts($data_costs,array('additional' => $_POST['yes']));
-                                $cost = $costs_model->getCostsByWhere(array('additional' => $_POST['yes']));
+                                $costs_model->updateCosts($data_costs,array('additional' => $obj['yes']));
+                                $cost = $costs_model->getCostsByWhere(array('additional' => $obj['yes']));
 
                                 $data_asset = array(
                                             'bank' => $bank,
@@ -2409,7 +2413,7 @@ Class dailyController Extends baseController {
                                             'week' => $week,
                                             'year' => $year,
                                         );
-                                $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'costs'=>$cost->costs_id));
+                                $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'costs'=>$cost->costs_id));
                             }
                         }
                         else if ($daily->service > 1 && $data['service'] == 1) {
@@ -2429,7 +2433,7 @@ Class dailyController Extends baseController {
                                     'code' => $data['code'],
                                     'check_office' => 1,
                                     'check_other' => 1,
-                                    'additional' => $_POST['yes'],
+                                    'additional' => $obj['yes'],
                                     'check_lohang' => $data['daily_check_lohang'],
                                     'check_costs' => $data['daily_check_cost'],
                                     );
@@ -2445,7 +2449,7 @@ Class dailyController Extends baseController {
                                             'costs' => $cost_id,
                                             'week' => $week,
                                             'year' => $year,
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 $assets_model->createAssets($data_asset);
 
@@ -2457,7 +2461,7 @@ Class dailyController Extends baseController {
                                             'costs' => $cost_id,
                                             'week' => $week,
                                             'year' => $year,
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 $pay_model->createCosts($data_pay);
                             }
@@ -2479,7 +2483,7 @@ Class dailyController Extends baseController {
                                     'code' => $data['code'],
                                     'check_office' => 1,
                                     'check_other' => 1,
-                                    'additional' => $_POST['yes'],
+                                    'additional' => $obj['yes'],
                                     'check_lohang' => $data['daily_check_lohang'],
                                     'check_costs' => $data['daily_check_cost'],
                                     );
@@ -2494,13 +2498,13 @@ Class dailyController Extends baseController {
                                             'costs' => $cost_id,
                                             'week' => $week,
                                             'year' => $year,
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 $assets_model->createAssets($data_asset);
                             }
                         }
                         else if ($daily->service == 1 && $data['service'] > 1) {
-                            $cost = $costs_model->getCostsByWhere(array('additional' => $_POST['yes']));
+                            $cost = $costs_model->getCostsByWhere(array('additional' => $obj['yes']));
                             $costs_model->queryCosts('DELETE FROM costs WHERE costs_id = '.$cost->costs_id);
                             $assets_model->queryAssets('DELETE FROM assets WHERE costs = '.$cost->costs_id);
                             $pay_model->queryCosts('DELETE FROM pay WHERE costs = '.$cost->costs_id);
@@ -2523,7 +2527,7 @@ Class dailyController Extends baseController {
                                             'receivable' => $data['receivable'],
                                             'week' => $week,
                                             'year' => $year,
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 $assets_model->createAssets($data_asset);
 
@@ -2536,7 +2540,7 @@ Class dailyController Extends baseController {
                                             'week' => $week,
                                             'year' => $year,
                                             'receive_comment' => $data['comment'],
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 
                                 $receive_model->createCosts($data_receive);
@@ -2554,16 +2558,16 @@ Class dailyController Extends baseController {
                                     'invoice' => $receivable->invoice,
                                     'import_tire' => $receivable->import_tire,
                                     'order_tire' => $receivable->order_tire,
-                                    'additional' => $_POST['yes'],
+                                    'additional' => $obj['yes'],
                                 );
                                 $obtain_model->createObtain($data_obtain);
                             }
                         }
                         elseif ($daily->receivable > 0) {
                             if ($data['receivable'] == "" || $data['receivable'] == 0) {
-                                $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$_POST['yes'].' AND receivable = '.$daily->receivable);
-                                $receive_model->queryCosts('DELETE FROM receive WHERE additional = '.$_POST['yes']);
-                                $obtain_model->queryObtain('DELETE FROM obtain WHERE additional = '.$_POST['yes']);
+                                $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$obj['yes'].' AND receivable = '.$daily->receivable);
+                                $receive_model->queryCosts('DELETE FROM receive WHERE additional = '.$obj['yes']);
+                                $obtain_model->queryObtain('DELETE FROM obtain WHERE additional = '.$obj['yes']);
 
                                 $receivable = $receivable_model->getCosts($daily->receivable);
                                 $data_receivable = array(
@@ -2588,9 +2592,9 @@ Class dailyController Extends baseController {
                                                 'receivable' => $data['receivable'],
                                                 'week' => $week,
                                                 'year' => $year,
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
-                                    $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'receivable'=>$daily->receivable));
+                                    $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'receivable'=>$daily->receivable));
 
                                     
                                     $data_receive = array(
@@ -2601,10 +2605,10 @@ Class dailyController Extends baseController {
                                                 'week' => $week,
                                                 'year' => $year,
                                                 'receive_comment' => $data['comment'],
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
                                     
-                                    $receive_model->updateCosts($data_receive,array('additional' => $_POST['yes']));
+                                    $receive_model->updateCosts($data_receive,array('additional' => $obj['yes']));
 
                                     $data_obtain = array(
                                         'customer' => $receivable->customer,
@@ -2619,14 +2623,14 @@ Class dailyController Extends baseController {
                                         'invoice' => $receivable->invoice,
                                         'import_tire' => $receivable->import_tire,
                                         'order_tire' => $receivable->order_tire,
-                                        'additional' => $_POST['yes'],
+                                        'additional' => $obj['yes'],
                                     );
-                                    $obtain_model->updateObtain($data_obtain,array('additional' => $_POST['yes']));
+                                    $obtain_model->updateObtain($data_obtain,array('additional' => $obj['yes']));
                                 }
                                 else{
-                                    $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$_POST['yes'].' AND receivable = '.$daily->receivable);
-                                    $receive_model->queryCosts('DELETE FROM receive WHERE additional = '.$_POST['yes']);
-                                    $obtain_model->queryObtain('DELETE FROM obtain WHERE additional = '.$_POST['yes']);
+                                    $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$obj['yes'].' AND receivable = '.$daily->receivable);
+                                    $receive_model->queryCosts('DELETE FROM receive WHERE additional = '.$obj['yes']);
+                                    $obtain_model->queryObtain('DELETE FROM obtain WHERE additional = '.$obj['yes']);
 
                                     $receivable = $receivable_model->getCosts($daily->receivable);
                                     $data_receivable = array(
@@ -2650,7 +2654,7 @@ Class dailyController Extends baseController {
                                                 'receivable' => $data['receivable'],
                                                 'week' => $week,
                                                 'year' => $year,
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
                                     $assets_model->createAssets($data_asset);
 
@@ -2663,7 +2667,7 @@ Class dailyController Extends baseController {
                                                 'week' => $week,
                                                 'year' => $year,
                                                 'receive_comment' => $data['comment'],
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
                                     
                                     $receive_model->createCosts($data_receive);
@@ -2681,7 +2685,7 @@ Class dailyController Extends baseController {
                                         'invoice' => $receivable->invoice,
                                         'import_tire' => $receivable->import_tire,
                                         'order_tire' => $receivable->order_tire,
-                                        'additional' => $_POST['yes'],
+                                        'additional' => $obj['yes'],
                                     );
                                     $obtain_model->createObtain($data_obtain);
                                 }
@@ -2706,7 +2710,7 @@ Class dailyController Extends baseController {
                                             'payable' => $data['payable'],
                                             'week' => $week,
                                             'year' => $year,
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
                                 $assets_model->createAssets($data_asset);
 
@@ -2719,7 +2723,7 @@ Class dailyController Extends baseController {
                                             'week' => $week,
                                             'year' => $year,
                                             'pay_comment' => $data['comment'],
-                                            'additional' => $_POST['yes'],
+                                            'additional' => $obj['yes'],
                                         );
 
                                 $pay_model->createCosts($data_pay);
@@ -2737,16 +2741,16 @@ Class dailyController Extends baseController {
                                     'invoice' => $payable->invoice,
                                     'import_tire' => $payable->import_tire,
                                     'order_tire' => $payable->order_tire,
-                                    'additional' => $_POST['yes'],
+                                    'additional' => $obj['yes'],
                                 );
                                 $owe_model->createOwe($data_owe);
                             }
                         }
                         elseif ($daily->payable > 0) {
                             if ($data['payable'] == "" || $data['payable'] == 0) {
-                                $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$_POST['yes'].' AND payable = '.$daily->payable);
-                                $pay_model->queryCosts('DELETE FROM pay WHERE additional = '.$_POST['yes'].' AND payable = '.$daily->payable);
-                                $owe_model->queryOwe('DELETE FROM owe WHERE additional = '.$_POST['yes']);
+                                $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$obj['yes'].' AND payable = '.$daily->payable);
+                                $pay_model->queryCosts('DELETE FROM pay WHERE additional = '.$obj['yes'].' AND payable = '.$daily->payable);
+                                $owe_model->queryOwe('DELETE FROM owe WHERE additional = '.$obj['yes']);
 
                                 $payable = $payable_model->getCosts($daily->payable);
                                 $data_payable = array(
@@ -2772,9 +2776,9 @@ Class dailyController Extends baseController {
                                                 'payable' => $data['payable'],
                                                 'week' => $week,
                                                 'year' => $year,
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
-                                    $assets_model->updateAssets($data_asset,array('additional' => $_POST['yes'],'payable'=>$daily->payable));
+                                    $assets_model->updateAssets($data_asset,array('additional' => $obj['yes'],'payable'=>$daily->payable));
 
                                     
                                     $data_pay = array(
@@ -2785,10 +2789,10 @@ Class dailyController Extends baseController {
                                                 'week' => $week,
                                                 'year' => $year,
                                                 'pay_comment' => $data['comment'],
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
 
-                                    $pay_model->updateCosts($data_pay,array('additional' => $_POST['yes'],'payable'=>$daily->payable));
+                                    $pay_model->updateCosts($data_pay,array('additional' => $obj['yes'],'payable'=>$daily->payable));
 
                                     $data_owe = array(
                                         'vendor' => $payable->vendor,
@@ -2803,14 +2807,14 @@ Class dailyController Extends baseController {
                                         'invoice' => $payable->invoice,
                                         'import_tire' => $payable->import_tire,
                                         'order_tire' => $payable->order_tire,
-                                        'additional' => $_POST['yes'],
+                                        'additional' => $obj['yes'],
                                     );
-                                    $owe_model->updateOwe($data_owe,array('additional' => $_POST['yes']));
+                                    $owe_model->updateOwe($data_owe,array('additional' => $obj['yes']));
                                 }
                                 else{
-                                    $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$_POST['yes'].' AND payable = '.$daily->payable);
-                                    $pay_model->queryCosts('DELETE FROM pay WHERE additional = '.$_POST['yes'].' AND payable = '.$daily->payable);
-                                    $owe_model->queryOwe('DELETE FROM owe WHERE additional = '.$_POST['yes']);
+                                    $assets_model->queryAssets('DELETE FROM assets WHERE additional = '.$obj['yes'].' AND payable = '.$daily->payable);
+                                    $pay_model->queryCosts('DELETE FROM pay WHERE additional = '.$obj['yes'].' AND payable = '.$daily->payable);
+                                    $owe_model->queryOwe('DELETE FROM owe WHERE additional = '.$obj['yes']);
 
                                     $payable = $payable_model->getCosts($daily->payable);
                                     $data_payable = array(
@@ -2834,7 +2838,7 @@ Class dailyController Extends baseController {
                                                 'payable' => $data['payable'],
                                                 'week' => $week,
                                                 'year' => $year,
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
                                     $assets_model->createAssets($data_asset);
 
@@ -2847,7 +2851,7 @@ Class dailyController Extends baseController {
                                                 'week' => $week,
                                                 'year' => $year,
                                                 'pay_comment' => $data['comment'],
-                                                'additional' => $_POST['yes'],
+                                                'additional' => $obj['yes'],
                                             );
 
                                     $pay_model->createCosts($data_pay);
@@ -2865,7 +2869,7 @@ Class dailyController Extends baseController {
                                         'invoice' => $payable->invoice,
                                         'import_tire' => $payable->import_tire,
                                         'order_tire' => $payable->order_tire,
-                                        'additional' => $_POST['yes'],
+                                        'additional' => $obj['yes'],
                                     );
                                     $owe_model->createOwe($data_owe);
                                 }
@@ -2874,7 +2878,7 @@ Class dailyController Extends baseController {
                         }
 
                         
-                        $id_daily_last = $_POST['yes'];
+                        $id_daily_last = $obj['yes'];
                             
                         $support = explode(',', $clearing);
                         if ($clearing != null) {
@@ -3148,18 +3152,18 @@ Class dailyController Extends baseController {
 
                     date_default_timezone_set("Asia/Ho_Chi_Minh"); 
                         $filename = "action_logs.txt";
-                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$_POST['yes']."|daily|".implode("-",$data)."\n"."\r\n";
+                        $text = date('d/m/Y H:i:s')."|".$_SESSION['user_logined']."|"."edit"."|".$obj['yes']."|daily|".implode("-",$data)."\n"."\r\n";
                         
                         $fh = fopen($filename, "a") or die("Could not open log file.");
                         fwrite($fh, $text) or die("Could not write file!");
                         fclose($fh);
                 
-                
+
             }
             else{
                 
                     $daily_model->createDaily($data);
-                    echo "Thêm thành công";
+                    
 
                     $id_daily_last = $daily_model->getLastDaily()->daily_id;
 
@@ -3741,12 +3745,11 @@ Class dailyController Extends baseController {
                     $fh = fopen($filename, "a") or die("Could not open log file.");
                     fwrite($fh, $text) or die("Could not write file!");
                     fclose($fh);
-                
-                    
+                  
                 
             }
 
-            $additionals = $_POST['additional'];
+            $additionals = $obj['additional'];
             $arr_item = "";
             foreach ($additionals as $v) {
                 $data_additional = array(
@@ -4372,6 +4375,23 @@ Class dailyController Extends baseController {
                 $pay_model->queryCosts('DELETE FROM pay WHERE costs = '.$costs->costs_id);
                 $costs_model->queryCosts('DELETE FROM costs WHERE costs_id = '.$costs->costs_id);
 
+            }
+
+            if ($obj['yes']!="") {
+                $result = array(
+                    'msg' => 'Cập nhật thành công'
+                );
+        
+                header("Content-Type: application/json");
+                echo json_encode($result);
+            }
+            else{
+                $result = array(
+                    'msg' => 'Thêm thành công'
+                );
+        
+                header("Content-Type: application/json");
+                echo json_encode($result);
             }
                     
         }

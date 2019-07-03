@@ -25,14 +25,20 @@ Class vatController Extends baseController {
 
         $last_num = '0000000';
         $last_date = strtotime(date('d-m-Y'));
+        $last_form = '01GTKT0/001';
+        $last_symbol = 'VT/19E';
 
-        $invoices = $invoice_model->getAllInvoice(array('order_by'=>'invoice_tire_date DESC, invoice_tire_number DESC','limit'=>1));
+        $invoices = $invoice_model->getAllInvoice(array('order_by'=>'invoice_tire_date DESC, invoice_tire_id DESC, invoice_tire_number DESC','limit'=>1));
         foreach ($invoices as $invoice) {
             $last_num = $invoice->invoice_tire_number;
             $last_date = $invoice->invoice_tire_date+86400;
+            $last_form = $invoice->invoice_tire_form;
+            $last_symbol = $invoice->invoice_tire_symbol;
         }
         $this->view->data['last_num'] = $last_num;
         $this->view->data['last_date'] = $last_date;
+        $this->view->data['last_form'] = $last_form;
+        $this->view->data['last_symbol'] = $last_symbol;
 
         $this->view->show('vat/index');
     }
@@ -44,6 +50,24 @@ Class vatController Extends baseController {
         $this->view->data['lib'] = $this->lib;
         $this->view->data['title'] = 'Xuất hóa đơn';
 
+        $invoice_model = $this->model->get('invoicetireModel');
+
+        $last_num = '0000000';
+        $last_date = strtotime(date('d-m-Y'));
+        $last_form = '01GTKT0/001';
+        $last_symbol = 'VT/19E';
+
+        $invoices = $invoice_model->getAllInvoice(array('order_by'=>'invoice_tire_date DESC, invoice_tire_id DESC, invoice_tire_number DESC','limit'=>1));
+        foreach ($invoices as $invoice) {
+            $last_num = $invoice->invoice_tire_number;
+            $last_date = $invoice->invoice_tire_date+86400;
+            $last_form = $invoice->invoice_tire_form;
+            $last_symbol = $invoice->invoice_tire_symbol;
+        }
+        $this->view->data['last_num'] = $last_num;
+        $this->view->data['last_date'] = $last_date;
+        $this->view->data['last_form'] = $last_form;
+        $this->view->data['last_symbol'] = $last_symbol;
 
         $this->view->show('vat/view');
     }
