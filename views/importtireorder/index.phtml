@@ -255,26 +255,27 @@ elseif ($order_by == 'import_tire_order_expect_date   ')
             <?php if(!isset($disable_control)){ ?>
             <td class="fix text-right">
               <?php if($import_tire_order->import_tire_order_complete!=1){ ?>
-              <i class="fa fa-check-square complete" title="Hoàn thành" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i>
+              <i class="fa fa-fw fa-check-square complete" title="Hoàn thành" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
               <?php } ?>
-              <i class="fa fa-eye edit_invoice viewdetail" title="Xem chi tiết" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i>
+              <i class="fa fa-fw fa-eye edit_invoice viewdetail" title="Xem chi tiết" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
               <?php
               if ($_SESSION['role_logined'] == 1 || $_SESSION['role_logined'] == 8 || $_SESSION['role_logined'] == 9) {
                 
                 if($import_tire_order->import_tire_order_lock==1){
               ?>
-                <i class="fa fa-lock lock" title="Mở khóa" value="0" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i>
+                <i class="fa fa-fw fa-lock lock" title="Mở khóa" value="0" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
               <?php }
                 else{ ?>
-                <i class="fa fa-unlock lock" title="Khóa" value="1" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i>
+                <i class="fa fa-fw fa-unlock lock" title="Khóa" value="1" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
               <?php } 
               }
 
               if($import_tire_order->import_tire_order_lock!=1 || $_SESSION['role_logined'] == 1){
               ?>
-                <i class="fa fa-warning updatestatus" title="Cập nhật trạng thái" tabindex="<?php echo $import_tire_order->import_tire_order_status ?>" data="<?php echo $import_tire_order->import_tire_order_id ?>" value="<?php echo date('d-m-Y',$import_tire_order->import_tire_order_expect_date) ?>" alt="<?php echo date('d-m-Y',$import_tire_order->import_tire_order_port_date) ?>" ></i>
-                <i class="fa fa-edit edit_invoice" title="Sửa" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i>
-                <i class="fa fa-trash" onclick="del(<?php echo $import_tire_order->import_tire_order_id ?>)"></i>
+                <i class="fa fa-fw fa-warning updatestatus" title="Cập nhật trạng thái" tabindex="<?php echo $import_tire_order->import_tire_order_status ?>" data="<?php echo $import_tire_order->import_tire_order_id ?>" value="<?php echo date('d-m-Y',$import_tire_order->import_tire_order_expect_date) ?>" alt="<?php echo date('d-m-Y',$import_tire_order->import_tire_order_port_date) ?>" ></i> 
+                <i class="fa fa-fw fa-refresh refreshprice" title="Cập nhật lại giá vốn" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
+                <i class="fa fa-fw fa-edit edit_invoice" title="Sửa" data="<?php echo $import_tire_order->import_tire_order_id ?>"></i> 
+                <i class="fa fa-fw fa-trash" onclick="del(<?php echo $import_tire_order->import_tire_order_id ?>)"></i>
                 
               <?php } ?>
             </td>
@@ -1233,6 +1234,24 @@ $('.viewdetail').click(function(e){
 	$( document ).ajaxComplete(function() {
 		$('.add-field button').attr("disabled",true);
 	});
+});
+
+$('.refreshprice').click(function(e){
+  var r = confirm("Bạn có chắc chắn muốn thực hiện không?");
+  if (r == true){
+    var data = $(this).attr('data');
+    $.ajax({
+      url: '<?php echo BASE_URL ?>/importtireorder/refreshprice',
+      type: 'POST',
+      data: {data: data},
+      success:function(answer){
+        //alert(answer);
+        setTimeout(function() {
+          sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+        }, 200);
+      }
+    });
+  }
 });
 
 function add_click(){
