@@ -1230,6 +1230,10 @@ $('#check_price_vat').click(function(){
             var rowIndex = row[0].rowIndex;
 
             var this_sl = parseInt($(".tire_number:eq("+rowIndex+")").val().replace(/[^0-9\.-]+/g,""));
+            var this_tk = parseInt($(".max_number:eq("+rowIndex+")").val());
+            if(this_tk < this_sl){
+                this_sl = this_tk;
+            }
             gia = gia + Math.round((this_sl*n));
 
             vat += v*this_sl;
@@ -1279,6 +1283,10 @@ $('#check_price_vat').click(function(){
 
             var this_gia = parseInt($(".tire_price_vat:eq("+rowIndex+")").val().replace(/[^0-9\.-]+/g,"")) || 0;
             var this_sl = parseInt($(".tire_number:eq("+rowIndex+")").val().replace(/[^0-9\.-]+/g,""));
+            var this_tk = parseInt($(".max_number:eq("+rowIndex+")").val());
+            if(this_tk < this_sl){
+                this_sl = this_tk;
+            }
             gia = gia + (this_sl*this_gia);
 
             $(this).val(this_gia);
@@ -1393,6 +1401,10 @@ $('#vat_percent').keyup(function(){
             var rowIndex = row[0].rowIndex;
 
             var this_sl = parseInt($(".tire_number:eq("+rowIndex+")").val().replace(/[^0-9\.-]+/g,""));
+            var this_tk = parseInt($(".max_number:eq("+rowIndex+")").val());
+            if(this_tk < this_sl){
+                this_sl = this_tk;
+            }
             gia = gia + Math.round((this_sl*n));
 
             vat += v*this_sl;
