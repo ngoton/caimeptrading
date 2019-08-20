@@ -726,7 +726,8 @@ Class ordertireController Extends baseController {
 
         if ($keyword != '') {
             $search = '( order_number LIKE "%'.$keyword.'%" 
-                OR customer_name LIKE "%'.$keyword.'%"   )';
+                OR customer_name LIKE "%'.$keyword.'%"  
+                OR username LIKE "%'.$keyword.'%"   )';
             
                 $data['where'] = $data['where'].' AND '.$search;
         }
